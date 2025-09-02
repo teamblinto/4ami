@@ -7,6 +7,7 @@ import ManageUsers from '../components/ManageUsers';
 
 export default function DashboardPage() {
   const [activeContent, setActiveContent] = useState('dashboard');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const renderMainContent = () => {
     switch (activeContent) {
@@ -201,68 +202,81 @@ export default function DashboardPage() {
   return (
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md flex flex-col">
-        <div className="p-4 border-b">
-          <Image src="/next.svg" alt="AMI Logo" width={100} height={40} /> {/* Replace with actual AMI logo */}
-          <span className="ml-2 text-lg font-semibold">ASSET MANAGEMENT INTERNATIONAL</span>
+      <aside className={`bg-white shadow-md flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'w-20' : 'w-64'}`}>
+        <div className={`p-4 border-b flex items-center ${isSidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
+          {!isSidebarCollapsed && (
+            <div className="flex items-center">
+              <Image src="/next.svg" alt="AMI Logo" width={100} height={40} /> {/* Replace with actual AMI logo */}
+              <span className="ml-2 text-lg font-semibold">ASSET MANAGEMENT</span>
+            </div>
+          )}
+          <button onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)} className="text-gray-500 hover:text-gray-700">
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+          </button>
         </div>
         <nav className="flex-grow p-4">
           <ul>
             <li className="mb-2">
               <button onClick={() => setActiveContent('dashboard')} className={`flex items-center p-2 w-full text-left ${activeContent === 'dashboard' ? 'text-red-600 bg-red-100' : 'text-gray-700 hover:bg-gray-100'} rounded-md`}>
-                <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                 </svg>
-                Dashboard
+                {!isSidebarCollapsed && <span className="ml-3">Dashboard</span>}
               </button>
             </li>
             <li className="mb-2">
               <Link href="#" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-md">
-                <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2h-2zM11 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2h-2z" />
                 </svg>
-                Manage Services
+                {!isSidebarCollapsed && <span className="ml-3">Manage Services</span>}
               </Link>
             </li>
             <li className="mb-2">
               <button onClick={() => setActiveContent('manage-users')} className={`flex items-center p-2 w-full text-left ${activeContent === 'manage-users' ? 'text-red-600 bg-red-100' : 'text-gray-700 hover:bg-gray-100'} rounded-md`}>
-                <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
                 </svg>
-                Manage Users
+                {!isSidebarCollapsed && <span className="ml-3">Manage Users</span>}
               </button>
             </li>
             <li className="mb-2">
               <Link href="#" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-md">
-                <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M7 3a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V4a1 1 0 00-1-1H7zM7 7a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1H7zM7 11a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1H7zM7 15a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1H7zM11 3a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V4a1 1 0 00-1-1h-2zM11 7a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1h-2zM11 11a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1h-2zM11 15a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1h-2zM15 3a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V4a1 1 0 00-1-1h-2zM15 7a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1h-2z" />
                 </svg>
-                Manage Assets
+                {!isSidebarCollapsed && <span className="ml-3">Manage Assets</span>}
               </Link>
             </li>
           </ul>
         </nav>
         <div className="p-4 border-t">
           <Link href="#" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-md">
-            <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M11.49 3.17c-.38-1.16-1.47-1.16-1.85 0L9 6.17a1 1 0 00-.7.3l-2.83 2.83a1 1 0 00-.3.7l-2.83 2.83c-.38 1.16.7 2.25 1.85 1.85l2.83-.3a1 1 0 00.7-.3l2.83-2.83a1 1 0 00.3-.7l.3-2.83c.38-1.16-1.47-1.16-1.85 0z" clipRule="evenodd" />
             </svg>
-            Settings
+            {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
           </Link>
         </div>
-        <div className="p-4 border-t flex items-center justify-between">
+        <div className={`p-4 border-t flex items-center ${isSidebarCollapsed ? 'justify-center' : 'justify-between'}`}>
           <div className="flex items-center">
             <Image src="/next.svg" alt="User Avatar" width={32} height={32} className="rounded-full" /> {/* Replace with actual user avatar */}
-            <div className="ml-2">
-              <div className="text-sm font-semibold">John Doe</div>
-              <div className="text-xs text-gray-500">Admin</div>
-            </div>
+            {!isSidebarCollapsed && (
+              <div className="ml-2">
+                <div className="text-sm font-semibold">John Doe</div>
+                <div className="text-xs text-gray-500">Admin</div>
+              </div>
+            )}
           </div>
-          <button className="text-gray-500 hover:text-gray-700">
-            <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-            </svg>
-          </button>
+          {!isSidebarCollapsed && (
+            <button className="text-gray-500 hover:text-gray-700">
+              <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+            </button>
+          )}
         </div>
       </aside>
 
