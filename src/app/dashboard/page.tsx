@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import SendInvitationForm from '../components/SendInvitationForm';
+import ManageUsers from '../components/ManageUsers';
 
 export default function DashboardPage() {
   const [activeContent, setActiveContent] = useState('dashboard');
@@ -138,7 +138,7 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
                 <ul>
                   <li className="mb-3">
-                    <button onClick={() => setActiveContent('send-invitation')} className="w-full flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100">
+                    <button onClick={() => setActiveContent('manage-users')} className="w-full flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100">
                       <div className="bg-green-100 p-2 rounded-full mr-3">
                         <svg className="h-5 w-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
@@ -191,8 +191,8 @@ export default function DashboardPage() {
             </div>
           </>
         );
-      case 'send-invitation':
-        return <SendInvitationForm onInvitationSent={() => setActiveContent('dashboard')} />;
+      case 'manage-users':
+        return <ManageUsers />;
       default:
         return null;
     }
@@ -209,7 +209,7 @@ export default function DashboardPage() {
         <nav className="flex-grow p-4">
           <ul>
             <li className="mb-2">
-              <button onClick={() => setActiveContent('dashboard')} className={`flex items-center p-2 w-full text-left ${activeContent === 'dashboard' || activeContent === 'send-invitation' ? 'text-red-600 bg-red-100' : 'text-gray-700 hover:bg-gray-100'} rounded-md`}>
+              <button onClick={() => setActiveContent('dashboard')} className={`flex items-center p-2 w-full text-left ${activeContent === 'dashboard' ? 'text-red-600 bg-red-100' : 'text-gray-700 hover:bg-gray-100'} rounded-md`}>
                 <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                 </svg>
@@ -225,12 +225,12 @@ export default function DashboardPage() {
               </Link>
             </li>
             <li className="mb-2">
-              <Link href="#" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-md">
+              <button onClick={() => setActiveContent('manage-users')} className={`flex items-center p-2 w-full text-left ${activeContent === 'manage-users' ? 'text-red-600 bg-red-100' : 'text-gray-700 hover:bg-gray-100'} rounded-md`}>
                 <svg className="h-5 w-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
                   <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" />
                 </svg>
                 Manage Users
-              </Link>
+              </button>
             </li>
             <li className="mb-2">
               <Link href="#" className="flex items-center p-2 text-gray-700 hover:bg-gray-100 rounded-md">
