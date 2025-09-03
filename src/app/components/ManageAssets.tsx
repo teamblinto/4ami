@@ -85,7 +85,7 @@ export default function ManageAssets() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button className="text-indigo-600 hover:text-indigo-900">View</button>
                   <button className="text-gray-600 hover:text-gray-900 ml-4">Edit</button>
-                  <button className="text-red-600 hover:text-red-900 ml-4">Delete</button>
+                  <button className="bg-[#ED272C] hover:text-red-900 ml-4">Delete</button>
                 </td>
               </tr>
             ))}
