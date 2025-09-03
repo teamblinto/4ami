@@ -86,7 +86,7 @@ export default function ManageUsers() {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{user.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button className="text-indigo-600 hover:text-indigo-900">Edit</button>
-                  <button className="text-red-600 hover:text-red-900 ml-4">Delete</button>
+                  <button className="bg-[#ED272C] hover:text-red-900 ml-4">Delete</button>
                 </td>
               </tr>
             ))}
