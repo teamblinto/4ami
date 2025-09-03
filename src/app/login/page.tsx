@@ -25,8 +25,8 @@ export default function LoginPage() {
       {/* Header */}
       <header className="flex items-center justify-between p-4 bg-white shadow-md">
         <div className="flex items-center">
-          <Image src="/next.svg" alt="AMI Logo" width={100} height={40} style={{ width: 'auto', height: 'auto' }} /> {/* Replace with actual AMI logo */}
-          <span className="ml-2 text-lg font-semibold">ASSET MANAGEMENT INTERNATIONAL</span>
+          <Image src="/logo.svg" alt="AMI Logo" width={230} height={35} style={{ width: '230px', height: 'auto' }} /> {/* Replace with actual AMI logo */}
+          <span className="ml-2 text-lg font-semibold"></span>
         </div>
         <div className="text-sm">
           New to 4AMI? <Link href="#" className="text-red-500 hover:underline">Sign Up</Link>
@@ -35,9 +35,9 @@ export default function LoginPage() {
 
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center bg-gray-100">
-        <div className="bg-white shadow-lg rounded-lg flex max-w-4xl w-full">
+        <div className="bg-white shadow-lg rounded-lg grid md:flex max-w-4xl w-full">
           {/* Left Section - Login Form */}
-          <div className="w-1/2 p-8">
+          <div className="w-full md:w-1/2 p-8">
             <h2 className="text-2xl font-bold mb-2">Log In</h2>
             <p className="text-gray-600 mb-6">
               <span className="font-semibold">Welcome back!</span> Log in to access AMI's full suite of services designed to support your physical asset management needs.
@@ -99,8 +99,8 @@ export default function LoginPage() {
           </div>
 
           {/* Right Section - Image */}
-          <div className="w-1/2 bg-gray-200 flex items-center justify-center p-4">
-          <Image src="/window.svg" alt="Dashboard Illustration" width={400} height={300} /> {/* Replace with actual illustration */}
+          <div className="w-full md:w-1/2 flex items-center justify-center pl-4">
+          <Image src="/login-img.jpg" alt="Dashboard Illustration" width={600} height={1000} /> {/* Replace with actual illustration */}
           </div>
         </div>
       </main>
