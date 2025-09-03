@@ -129,13 +129,13 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <button
                 type="submit"
-                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
+                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
               >
                 Send Invitation
               </button>
               <button
                 type="button"
-                className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
+                className="text-gray-800 font-bold py-2 px-4 border rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -149,8 +149,8 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             src="/invitation-img.png"
             alt="Dashboard Illustration"
             width={600}
-            height={1000}
-            className="max-w-full h-auto"
+            height={800}
+            className="max-w-full max-h-[800px]"
           />
 
           <div className="w-full mt-6 text-sm text-end flex flex-wrap justify-end gap-4">
