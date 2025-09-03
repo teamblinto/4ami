@@ -34,10 +34,10 @@ export default function LoginPage() {
       </header>
 
       {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center bg-gray-100">
-        <div className="bg-white shadow-lg rounded-lg grid md:flex max-w-4xl w-full">
+      <main className="flex-grow flex items-center justify-center bg-gray-100 pt-20 pb-20">
+        <div className="bg-white shadow-lg rounded-lg grid md:flex items-center justify-center w-full h-full m-10">
           {/* Left Section - Login Form */}
-          <div className="w-full md:w-1/2 p-8">
+          <div className="w-full md:w-2/5 p-10">
             <h2 className="text-2xl font-bold mb-2">Log In</h2>
             <p className="text-gray-600 mb-6">
               <span className="font-semibold text-red-500">Welcome back!</span> Log in to access AMI's full suite of services designed to support your physical asset management needs.
@@ -99,8 +99,8 @@ export default function LoginPage() {
           </div>
 
           {/* Right Section - Image */}
-          <div className="w-full md:w-1/2 flex items-center justify-center p-4">
-          <Image src="/login-img.jpg" alt="Dashboard Illustration" width={600} height={1000} /> {/* Replace with actual illustration */}
+          <div className="w-full md:w-3/5 flex items-center justify-end p-12">
+          <Image src="/login-img.jpg" alt="Dashboard Illustration" width={600} height={1000} style={{ width: '1000px', height: 'auto' }} /> {/* Replace with actual illustration */}
           </div>
         </div>
       </main>
