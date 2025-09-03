@@ -43,13 +43,13 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                 <label htmlFor="firstName" className="block text-gray-700 text-sm font-bold mb-2">
                   First Name
                 </label>
-                <input type="text" id="firstName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+                <input type="text" id="firstName" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
               </div>
               <div>
                 <label htmlFor="lastName" className="block text-gray-700 text-sm font-bold mb-2">
                   Last Name
                 </label>
-                <input type="text" id="lastName" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+                <input type="text" id="lastName" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
               </div>
             </div>
 
@@ -59,13 +59,13 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                 <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
                   Title
                 </label>
-                <input type="text" id="title" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+                <input type="text" id="title" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
               </div>
               <div>
                 <label htmlFor="company" className="block text-gray-700 text-sm font-bold mb-2">
                   Company
                 </label>
-                <input type="text" id="company" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+                <input type="text" id="company" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
               </div>
             </div>
 
@@ -74,7 +74,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
               <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
                 Email
               </label>
-              <input type="email" id="email" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+              <input type="email" id="email" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
             </div>
 
             {/* Role/Source */}
@@ -98,7 +98,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                   Source
                 </label>
                 <p className="text-sm text-gray-500 mb-1">Where or how did we meet this person</p>
-                <input type="text" id="source" className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+                <input type="text" id="source" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
               </div>
             </div>
 
@@ -118,7 +118,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                 <input
                   type="text"
                   id="invitationCode"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                  className="shadow appearance-none border rounded border-gray-300 bg-gray-50 w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
                   value={invitationCode}
                   readOnly
                 />

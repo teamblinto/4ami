@@ -21,21 +21,19 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
+      <div className="w-full max-w-[1146px] mx-auto">
       {/* Header */}
       <header className="flex items-center justify-between p-4 bg-gray-100">
         <div className="flex items-center cursor-pointer">
           <Image src="/logo.svg" alt="AMI Logo" width={230} height={35} style={{ width: '230px', height: 'auto' }} /> {/* Replace with actual AMI logo */}
           <span className="ml-2 text-lg font-semibold"></span>
         </div>
-        {/* <div className="text-sm">
-          New to 4AMI? <Link href="#" className="text-red-500 hover:underline">Sign Up</Link>
-        </div> */}
       </header>
 
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center bg-gray-100 pt-20 pb-20">
-        <div className="bg-white shadow-lg rounded-lg grid md:flex items-center justify-center w-full h-full m-10">
+        <div className="bg-white shadow-md rounded-lg grid md:flex items-center justify-center w-full h-full m-10">
           {/* Left Section - Login Form */}
           <div className="w-full md:w-2/5 p-10">
             <h2 className="text-2xl font-bold mb-2">Log In</h2>
@@ -104,6 +102,7 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
+    </div>
     </div>
   );
 }
