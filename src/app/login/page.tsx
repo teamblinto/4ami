@@ -23,14 +23,14 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
-      <header className="flex items-center justify-between p-4 bg-white shadow-md">
-        <div className="flex items-center">
+      <header className="flex items-center justify-between p-4 bg-gray-100">
+        <div className="flex items-center cursor-pointer">
           <Image src="/logo.svg" alt="AMI Logo" width={230} height={35} style={{ width: '230px', height: 'auto' }} /> {/* Replace with actual AMI logo */}
           <span className="ml-2 text-lg font-semibold"></span>
         </div>
-        <div className="text-sm">
+        {/* <div className="text-sm">
           New to 4AMI? <Link href="#" className="text-red-500 hover:underline">Sign Up</Link>
-        </div>
+        </div> */}
       </header>
 
       {/* Main Content */}
@@ -40,7 +40,7 @@ export default function LoginPage() {
           <div className="w-full md:w-1/2 p-8">
             <h2 className="text-2xl font-bold mb-2">Log In</h2>
             <p className="text-gray-600 mb-6">
-              <span className="font-semibold">Welcome back!</span> Log in to access AMI's full suite of services designed to support your physical asset management needs.
+              <span className="font-semibold text-red-500">Welcome back!</span> Log in to access AMI's full suite of services designed to support your physical asset management needs.
             </p>
 
             <form onSubmit={handleLogin}>
@@ -70,7 +70,7 @@ export default function LoginPage() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
-                  <span className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5">
+                  <span className="absolute inset-y-0 right-0 pr-3 pb-4 flex items-center text-sm leading-5">
                     <svg className="h-5 w-5 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -99,7 +99,7 @@ export default function LoginPage() {
           </div>
 
           {/* Right Section - Image */}
-          <div className="w-full md:w-1/2 flex items-center justify-center pl-4">
+          <div className="w-full md:w-1/2 flex items-center justify-center p-4">
           <Image src="/login-img.jpg" alt="Dashboard Illustration" width={600} height={1000} /> {/* Replace with actual illustration */}
           </div>
         </div>
