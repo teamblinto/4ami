@@ -1,317 +1,194 @@
 "use client";
 
-import Link from "next/link";
+import React from 'react';
+import Link from 'next/link';
 
+// --- MOCK DATA ---
+const statsData = [
+  { title: 'Pending Requests', value: '10', change: 'Requests awaiting approval', changeColor: 'text-red-600', icon: '📋' },
+  { title: 'Users', value: '52', change: '↑ 12.5% from last month', changeColor: 'text-green-600', icon: '👥' },
+  { title: 'Ongoing Projects', value: '20', change: 'Services currently enabled', changeColor: 'text-gray-500', icon: '🚧' },
+  { title: 'Completed Project', value: '30', change: '↓ 5% from last month', changeColor: 'text-red-500', icon: '✔️' },
+];
+
+const projectsData = [
+    { id: 'P101', name: 'Residual Analysis', time: '12 June - 25 June', status: 'Completed' },
+    { id: 'P102', name: 'Comparative Analysis', time: '11 June - 22 June', status: 'Completed' },
+    { id: 'P103', name: 'Transportation Quotation', time: '25 July - 12 August', status: 'In Process' },
+];
+
+const activityData = [  
+    { user: 'Emma Johnson', action: 'Created new analysis report', date: '28 April, 2025' },
+    { user: 'John Smith', action: 'Updated service pricing', date: '18 April, 2025' },
+    { user: 'David Chen', action: 'Added new role permissions', date: '15 April, 2025' },
+    { user: 'Sarah Wilson', action: 'Created new user account', date: '12 April, 2025' },
+];
+
+const quickActionsData = [
+    { title: 'Add New User', subtitle: 'Text need to change', icon: '👤' },
+    { title: 'Generate Test', subtitle: 'Create a new service offering', icon: '🔬' },
+    { title: 'Add New asset', subtitle: '', icon: '+' },
+];
+
+
+// --- HELPER FUNCTIONS & PROPS ---
 interface DashboardContentProps {
   setActiveContent: (content: string) => void;
 }
 
+const getStatusClass = (status: string) => {
+    return status === 'Completed' 
+        ? 'border border-red-200 bg-red-50 text-red-600' 
+        : 'border border-gray-300 bg-white text-gray-600';
+};
+
+
+// --- SUB-COMPONENTS ---
+
+const StatCard = ({ title, value, change, changeColor, icon }: typeof statsData[0]) => (
+    <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
+        <div>
+            <div className="text-sm text-gray-500 flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs">▼</span>}</div>
+            <div className="text-2xl font-bold text-[#080607]">{value}</div>
+            <div className={`text-xs font-semibold ${changeColor}`}>{change}</div>
+        </div>
+        <div className="text-2xl bg-gray-100 p-2 rounded-md">{icon}</div>
+    </div>
+);
+
+const ProjectsTable = () => (
+    <div className="bg-white p-4 rounded-lg shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold">Projects</h3>
+            <Link href="#" className="text-red-500 hover:underline text-sm font-semibold">View All</Link>
+        </div>
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+            <div className="flex items-center gap-2 flex-wrap">
+                <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+                    <option>ProjectID All</option>
+                </select>
+                <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+                    <option>Status All</option>
+                </select>
+                <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-1">
+                    <span className="text-[10px]">▼</span>
+                    Add Filter
+                </button>
+                <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600">
+                    Clear Filter
+                </button>
+                <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-1">
+                    Edit Column
+                    <span className="text-[10px]">▼</span>
+                </button>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-gray-600">
+                <span className="text-gray-500">Rows per page:</span>
+                <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+                    <option>10</option>
+                    <option>20</option>
+                    <option>50</option>
+                </select>
+            </div>
+        </div>
+        <div className="overflow-x-auto">
+            <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-gray-200">
+                <thead>
+                    <tr className="bg-white">
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-l border-r">Project ID</th>
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Project</th>
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Time (Month to Date)</th>
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {projectsData.map((project, index) => {
+                        const isStriped = index % 2 === 0;
+                        return (
+                            <tr key={project.id} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
+                                <td className="p-3 text-gray-800 font-medium border-b border-gray-200 border-l border-r">{project.id}</td>
+                                <td className="p-3 text-gray-800 border-b border-gray-200 border-r">{project.name}</td>
+                                <td className="p-3 text-gray-800 border-b border-gray-200 border-r">{project.time}</td>
+                                <td className="p-3 border-b border-gray-200 border-r">
+                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(project.status)}`}>{project.status}</span>
+                                </td>
+                            </tr>
+                        );
+                    })}
+                </tbody>
+            </table>
+        </div>
+    </div>
+);
+
+const RecentActivity = () => (
+    <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-bold">Recent Activity</h3>
+            <Link href="#" className="text-red-500 text-sm font-semibold inline-block">View All</Link>
+        </div>
+        <div className="overflow-x-auto">
+            <table className="min-w-full text-sm border-separate border-spacing-0 border border-gray-200 rounded-md">
+                <thead>
+                    <tr className="bg-white">
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">User</th>
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Action</th>
+                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {activityData.map((activity, index) => (
+                        <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                            <td className="p-3 whitespace-nowrap text-gray-800 border-b border-gray-200 border-r">{activity.user}</td>
+                            <td className="p-3 whitespace-nowrap text-gray-800 border-b border-gray-200 border-r">{activity.action}</td>
+                            <td className="p-3 whitespace-nowrap text-gray-500 border-b border-gray-200">{activity.date}</td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+);
+
+const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
+    <div className="bg-white p-4 rounded-lg shadow-sm">
+        <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
+        <ul>
+            {quickActionsData.map((action, index) => (
+                <li key={index} className="mb-3">
+                    <button className="w-full flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
+                        <div className={`p-2 rounded-full mr-3 text-lg flex items-center justify-center w-8 h-8 ${
+                            action.title === 'Add New asset' ? 'bg-red-500 text-white' : 'bg-gray-200'
+                        }`}>
+                           {action.icon}
+                        </div>
+                        <div className="text-left">
+                            <div className="font-semibold">{action.title}</div>
+                            {action.subtitle && <div className="text-sm text-gray-500">{action.subtitle}</div>}
+                        </div>
+                    </button>
+                </li>
+            ))}
+        </ul>
+    </div>
+);
+
+
+// --- MAIN COMPONENT ---
+
 export default function DashboardContent({ setActiveContent }: DashboardContentProps) {
   return (
-    <>
-      <h1 className="text-3xl font-bold mb-2">Dashboard</h1>
-      <p className="text-gray-600 mb-6">
-        Good Morning, John! Here's a quick overview of your platform's
-        activity
-      </p>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
-          <div>
-            <div className="text-sm text-gray-500">Pending Requests</div>
-            <div className="text-2xl font-bold">10</div>
-            <div className="text-xs text-gray-400">
-              Requests awaiting approval
-            </div>
-          </div>
-          <div className="bg-blue-100 p-2 rounded-full">
-            <svg
-              className="h-6 w-6 text-blue-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z" />
-              <path
-                fillRule="evenodd"
-                d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13zm-3 4a1 1 0 000 2h.01a1 1 0 100-2H10zm3 0a1 1 0 000 2h.01a1 1 0 100-2H13z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
-          <div>
-            <div className="text-sm text-gray-500">Users</div>
-            <div className="text-2xl font-bold">52</div>
-            <div className="text-xs text-green-500">
-              ↑ 12.5% from last month
-            </div>
-          </div>
-          <div className="bg-green-100 p-2 rounded-full">
-            <svg
-              className="h-6 w-6 text-green-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z" />
-            </svg>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
-          <div>
-            <div className="text-sm text-gray-500">Open Projects</div>
-            <div className="text-2xl font-bold">20</div>
-            <div className="text-xs text-gray-400">
-              Services currently enabled
-            </div>
-          </div>
-          <div className="bg-yellow-100 p-2 rounded-full">
-            <svg
-              className="h-6 w-6 text-yellow-600"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path d="M7 3a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V4a1 1 0 00-1-1H7zM7 7a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1H7zM7 11a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1H7zM7 15a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1H7zM11 3a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V4a1 1 0 00-1-1h-2zM11 7a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1h-2zM11 11a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1h-2zM11 15a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1v-1a1 1 0 00-1-1h-2zM15 3a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V4a1 1 0 00-1-1h-2zM15 7a1 1 0 00-1 1v1a1 1 0 001 1h2a1 1 0 001-1V8a1 1 0 00-1-1h-2z" />
-            </svg>
-          </div>
-        </div>
-        <div className="bg-white p-4 rounded-lg shadow flex items-center justify-between">
-          <div>
-            <div className="text-sm text-gray-500">Sales by Service</div>
-            <div className="text-2xl font-bold">30</div>
-            <div className="text-xs text-red-500">
-              ↓ 1.5% from last month
-            </div>
-          </div>
-          <div className="text-[#FFFFFF] p-2 rounded-full">
-            <svg
-              className="h-6 w-6 bg-[#ED272C]"
-              fill="currentColor"
-              viewBox="0 0 20 20"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-        </div>
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {statsData.map(stat => <StatCard key={stat.title} {...stat} />)}
       </div>
+      
+      <ProjectsTable />
 
-      {/* Select Responsible Party */}
-      <div className="mb-6">
-        <label
-          htmlFor="responsibleParty"
-          className="block text-gray-700 text-sm font-bold mb-2"
-        >
-          Select Responsible Party
-        </label>
-        <div className="relative">
-          <select
-            id="responsibleParty"
-            className="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-          >
-            <option>Select a party</option>
-            <option>Party A</option>
-            <option>Party B</option>
-            <option>Party C</option>
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg
-              className="fill-current h-4 w-4"
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-            >
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
-            </svg>
-          </div>
-        </div>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <RecentActivity />
+        <QuickActions setActiveContent={setActiveContent} />
       </div>
-
-      {/* Recent Activity and Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold">Recent Activity</h3>
-            <Link
-              href="#"
-              className="text-red-500 hover:underline text-sm"
-            >
-              View All
-            </Link>
-          </div>
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  User
-                </th>
-                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Action
-                </th>
-                <th className="px-6 py-3 bg-gray-50 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Date
-                </th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  Emma Johnson
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  Created new analysis report
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  28 April, 2025
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  John Smith
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  Updated service pricing
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  18 April, 2025
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  David Chen
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  Added new role permissions
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  15 April, 2025
-                </td>
-              </tr>
-              <tr>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  Sarah Wilson
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  Created new user account
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  12 April, 2025
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        {/* Quick Actions */}
-        <div className="bg-white p-4 rounded-lg shadow">
-          <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
-          <ul>
-            <li className="mb-3">
-              <button
-                onClick={() => setActiveContent("manage-users")}
-                className="w-full flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100"
-              >
-                <div className="bg-green-100 p-2 rounded-full mr-3">
-                  <svg
-                    className="h-5 w-5 text-green-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="text-left">
-                  <div className="font-semibold">Add New Client</div>
-                  <div className="text-sm text-gray-500">
-                    Send an Invitation
-                  </div>
-                </div>
-              </button>
-            </li>
-            <li className="mb-3">
-              <Link
-                href="#"
-                className="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100"
-              >
-                <div className="bg-blue-100 p-2 rounded-full mr-3">
-                  <svg
-                    className="h-5 w-5 text-blue-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div className="font-semibold">Add New Project</div>
-                  <div className="text-sm text-gray-500">
-                    Create a new service offering
-                  </div>
-                </div>
-              </Link>
-            </li>
-            <li className="mb-3">
-              <Link
-                href="#"
-                className="flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100"
-              >
-                <div className="bg-purple-100 p-2 rounded-full mr-3">
-                  <svg
-                    className="h-5 w-5 text-purple-600"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <div className="font-semibold">Create a Report</div>
-                  <div className="text-sm text-gray-500">
-                    Text need to change
-                  </div>
-                </div>
-              </Link>
-            </li>
-            <li>
-              <Link
-                href="#"
-                className="flex items-center p-3 bg-red-50 rounded-md hover:text-[#FFFFFF]"
-              >
-                <div className="text-[#FFFFFF] p-2 rounded-full mr-3">
-                  <svg
-                    className="h-5 w-5 bg-[#ED272C]"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                </div>
-                <div className="font-semibold bg-[#ED272C]">Add New</div>
-              </Link>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </>
+    </div>
   );
 }

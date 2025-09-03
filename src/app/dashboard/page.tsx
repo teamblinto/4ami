@@ -42,11 +42,12 @@ export default function DashboardPage() {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
-        className={`bg-white shadow-md flex flex-col transition-all duration-300 ${
+        className={`bg-white shadow-md flex gap-56 flex-col transition-all duration-300 ${
           isSidebarCollapsed ? "w-16" : "w-58"
         }`}
       >
-        <div
+<div>
+          <div
           className={`p-4 border-b flex gap-3 items-center ${
             isSidebarCollapsed ? "justify-center" : "justify-between"
           }`}
@@ -72,7 +73,7 @@ export default function DashboardPage() {
             <li className="mb-2">
               <button
                 onClick={() => setActiveContent("dashboard")}
-                className={`flex items-center p-2 w-full text-left ${
+                className={`flex cursor-pointer items-center p-2 w-full text-left ${
                   activeContent === "dashboard"
                     ? "text-[#FFFFFF] bg-[#ED272C]"
                     : "text-gray-700 hover:bg-gray-100"
@@ -98,7 +99,7 @@ export default function DashboardPage() {
             <li className="mb-2">
               <button
                 onClick={() => setActiveContent("manage-projects")}
-                className={`flex items-center p-2 w-full text-left ${
+                className={`flex cursor-pointer items-center p-2 w-full text-left ${
                   activeContent === "manage-projects"
                     ? "bg-[#ED272C] text-[#FFFFFF]"
                     : "text-[#080607] hover:bg-gray-100"
@@ -125,7 +126,7 @@ export default function DashboardPage() {
             <li className="mb-2">
               <button
                 onClick={() => setActiveContent("manage-users")}
-                className={`flex items-center p-2 w-full text-left ${
+                className={`flex cursor-pointer items-center p-2 w-full text-left ${
                   activeContent === "manage-users"
                     ? "bg-[#ED272C] text-[#FFFFFF]"
                     : "text-[#080607] hover:bg-gray-100"
@@ -153,7 +154,7 @@ export default function DashboardPage() {
             <li className="mb-2">
               <button
                 onClick={() => setActiveContent("manage-assets")}
-                className={`flex items-center p-2 w-full text-left ${
+                className={`flex cursor-pointer items-center p-2 w-full text-left ${
                   activeContent === "manage-assets"
                     ? "bg-[#ED272C] text-[#FFFFFF]"
                     : "text-gray-700 hover:bg-gray-100"
@@ -175,6 +176,7 @@ export default function DashboardPage() {
             </li>
           </ul>
         </nav>
+</div>
 
 
         <div className="p-4 border-t">
@@ -182,55 +184,11 @@ export default function DashboardPage() {
             href="#"
             className="flex items-center p-2 text-[#080607] hover:bg-gray-100"
           >
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M11.49 3.17c-.38-1.16-1.47-1.16-1.85 0L9 6.17a1 1 0 00-.7.3l-2.83 2.83a1 1 0 00-.3.7l-2.83 2.83c-.38 1.16.7 2.25 1.85 1.85l2.83-.3a1 1 0 00.7-.3l2.83-2.83a1 1 0 00.3-.7l.3-2.83c.38-1.16-1.47-1.16-1.85 0z"
-                clipRule="evenodd"
-              />
-            </svg>
+<img src="./Module-Icons/settings.svg" alt="" />
             {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
           </Link>
         </div>
-        <div
-          className={`p-4 border-t flex items-center ${
-            isSidebarCollapsed ? "justify-center" : "justify-between"
-          }`}
-        >
-          <div className="flex items-center">
-            <Image
-              src="/next.svg"
-              alt="User Avatar"
-              width={32}
-              height={32}
-              className="rounded-full"
-            />{" "}
-            {/* Replace with actual user avatar */}
-            {!isSidebarCollapsed && (
-              <div className="ml-2">
-                <div className="text-sm font-semibold">John Doe</div>
-                <div className="text-xs text-gray-500">Admin</div>
-              </div>
-            )}
-          </div>
-          {!isSidebarCollapsed && (
-            <button className="text-gray-500 hover:text-gray-700">
-              <svg
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
-            </button>
-          )}
-        </div>
+        {/*  */}
       </aside>
 
       {/* Main Content Common */}
