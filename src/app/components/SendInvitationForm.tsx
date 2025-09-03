@@ -25,7 +25,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
 
   return (
     <div className="flex-grow p-4 sm:p-6 w-full">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-4">
+      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
         
         {/* Form Section */}
         <div className="w-full lg:w-3/5">
@@ -38,7 +38,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
 
           <form onSubmit={handleSubmit}>
             {/* First/Last Name */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div>
                 <label htmlFor="firstName" className="block text-gray-700 text-sm font-bold mb-2">
                   First Name
@@ -54,7 +54,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Title/Company */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               <div>
                 <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
                   Title
@@ -70,7 +70,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Email */}
-            <div className="mb-4">
+            <div className="mb-8">
               <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
                 Email
               </label>
@@ -78,7 +78,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Role/Source */}
-            <div className="grid grid-cols-1 md:grid-cols-2 items-end gap-4 mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-end gap-4 mb-8">
               <div>
                 <label htmlFor="role" className="block text-gray-700 text-sm font-bold mb-2">
                   Role
@@ -103,7 +103,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Invitation Code */}
-            <div className="mb-6">
+            <div className="mb-8">
               <label htmlFor="invitationCode" className="block text-gray-700 text-sm font-bold mb-2">
                 Invitation Code
               </label>
@@ -144,7 +144,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         </div>
 
         {/* Image & Links */}
-        <div className="w-full lg:w-2/5 flex flex-col items-center justify-center p-4">
+        <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4">
           <Image
             src="/invitation-img.png"
             alt="Dashboard Illustration"
@@ -153,13 +153,14 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             className="max-w-full h-auto"
           />
 
-          <div className="flex flex-wrap justify-end gap-4 mt-6 text-sm">
-            <a href="#" className="underline hover:text-gray-600">Terms of Use</a>
-            <a href="#" className="underline hover:text-gray-600">Privacy Policy</a>
-            <a href="#" className="underline hover:text-gray-600">Cookie Policy</a>
+          <div className="w-full mt-6 text-sm text-end flex flex-wrap justify-end gap-4">
+            <a href="#" className="underline hover:text-gray-600">Terms of Use</a>{' '}
+            <a href="#" className="underline hover:text-gray-600">Privacy Policy</a>{' '}
+            <a href="#" className="underline hover:text-gray-600">Cookie Policy</a>{' '}
             <a href="#" className="underline hover:text-gray-600">Anti Bribery Policy</a>
           </div>
         </div>
+
       </div>
     </div>
   );
