@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // --- MOCK DATA ---
 const statsData = [
@@ -36,6 +37,22 @@ interface DashboardContentProps {
   setActiveContent: (content: string) => void;
 }
 
+interface StatCardProps {
+    title: string;
+    value: string;
+    change: string;
+    changeColor: string;
+    icon: string;
+}
+
+interface QuickAction {
+    title: string;
+    subtitle: string;
+    icon: string;
+    iconBg?: string;
+    isIconText?: boolean;
+}
+
 const getStatusClass = (status: string) => {
     return status === 'Completed' 
         ? ' bg-[#FEF0F0] text-[#ED272C] ' 
@@ -45,17 +62,17 @@ const getStatusClass = (status: string) => {
 
 // --- SUB-COMPONENTS ---
 
-const StatCard = ({ title, value, change, changeColor, icon }: any) => (
+const StatCard = ({ title, value, change, changeColor, icon }: StatCardProps) => (
     <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg relative">
         <div className='flex flex-col gap-1'>
             <div className="text-sm font-medium text-[#6C757D] flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs">
-                <img className='pl-2' src="arrow-two.svg" alt="" /></span>}
+                <Image className='pl-2' src="/arrow-two.svg" alt="arrow" width={10} height={10} /></span>}
                 </div>
             <div className="text-2xl font-bold text-[#080607]">{value}</div>
             <div className={`text-xs font-regular ${changeColor}`}>{change}</div>
         </div>
         <div className={`absolute top-3 right-[18px]`}>
-            <img src={icon} alt={title} className="w-[38px] h-[38px]" />
+            <Image src={icon} alt={title} width={38} height={38} />
         </div>
     </div>
 );
@@ -159,18 +176,18 @@ const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
     <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-lg text-[#080607] font-bold mb-4">Quick Actions</h3>
         <ul className="divide-y divide-gray-200">
-            {quickActionsData.map((action: any, index) => (
+            {quickActionsData.map((action: QuickAction, index) => (
                 <li key={index}>
                     <button className="w-full flex items-center py-3 hover:bg-gray-50 transition-colors">
                         <div className={`w-10 h-10 rounded-full mr-3 flex items-center justify-center ${action.iconBg}`}>
                            {action.isIconText ? (
                                 <span className="text-white text-2xl">{action.icon}</span>
                            ) : (
-                                <img src={action.icon} alt="" className="w-[37px] h-[37px]" />
+                                <Image src={action.icon} alt={action.title} width={37} height={37} />
                            )}
                         </div>
                         <div className="text-left">
-                            <div className={`font-medium text-[#080607] ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
+                            <div className={`font-semibold text-[#080607] ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
                             {action.subtitle && <div className="text-sm text-gray-500">{action.subtitle}</div>}
                         </div>
                     </button>
