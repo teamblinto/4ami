@@ -61,7 +61,7 @@ export default function SignupSuccessfullPage() {
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             className="text-gray-500 cursor-pointer hover:text-gray-700"
           >
-            <img src="sidebar-left.svg" alt="4AMI" />
+            <Image src="/sidebar-left.svg" alt="4AMI" width={24} height={24} />
           </button>
         </div>
 

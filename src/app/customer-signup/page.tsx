@@ -1,16 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
-import ManageUsers from "../components/SupperAdminModules/ManageUsers";
-import ManageAssets from "../components/SupperAdminModules/ManageAssets";
 import SendInvitationForm from "../components/SendInvitationForm";
-import DashboardContent from "../components/SupperAdminModules/DashboardContent";
-import ManageProjects from "../components/SupperAdminModules/ManageProjects";
 
 export default function CustomerSignupPage() {
-  const [activeContent, setActiveContent] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   const [showSendInvitation, setShowSendInvitation] = useState(false);
@@ -23,20 +17,7 @@ export default function CustomerSignupPage() {
     );
   }
 
-  const renderMainContent = () => {
-    switch (activeContent) {
-      case "dashboard":
-        return <DashboardContent setActiveContent={setActiveContent} />;
-      case "manage-users":
-        return <ManageUsers />;
-      case "manage-assets":
-        return <ManageAssets />;
-      case "manage-projects":
-        return <ManageProjects />;
-      default:
-        return null;
-    }
-  };
+  // static page content for customer signup
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -54,14 +35,14 @@ export default function CustomerSignupPage() {
         >
           {!isSidebarCollapsed && (
             <div className="flex items-center">
-              <Image src="AMIlogo.svg" alt="AMI Logo" width={169} height={30} />
+              <Image src="/AMIlogo.svg" alt="AMI Logo" width={169} height={30} />
             </div>
           )}
           <button
             onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
             className="text-gray-500 cursor-pointer hover:text-gray-700"
           >
-            <img src="sidebar-left.svg" alt="4AMI" />
+            <Image src="/sidebar-left.svg" alt="4AMI" width={24} height={24} />
           </button>
         </div>
 
