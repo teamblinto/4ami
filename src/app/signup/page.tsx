@@ -43,7 +43,7 @@ export default function SignupPage() {
       {/* Sidebar */}
       <aside
         className={`bg-white shadow-md flex gap-56 flex-col transition-all duration-300 ${
-          isSidebarCollapsed ? "w-16" : "w-58"
+          isSidebarCollapsed ? "w-16" : "w-[230px]"
         }`}
       >
     <div>

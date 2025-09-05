@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import ManageUsers from "../components/SupperAdminModules/ManageUsers";
 import ManageAssets from "../components/SupperAdminModules/ManageAssets";
-import SendInvitationForm from "../components/SendInvitationForm";
 import DashboardContent from "../components/SupperAdminModules/DashboardContent";
 import ManageProjects from "../components/SupperAdminModules/ManageProjects";
 
@@ -13,15 +12,6 @@ export default function DashboardPage() {
   const [activeContent, setActiveContent] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  const [showSendInvitation, setShowSendInvitation] = useState(false);
-
-  if (showSendInvitation) {
-    return (
-      <SendInvitationForm
-        onInvitationSent={() => setShowSendInvitation(false)}
-      />
-    );
-  }
 
   const renderMainContent = () => {
     switch (activeContent) {
@@ -42,13 +32,18 @@ export default function DashboardPage() {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
-        className={`bg-white  flex gap-56 flex-col transition-all duration-300 ${
-          isSidebarCollapsed ? "w-16" : "w-[230px]"
+        className={`bg-white flex flex-col justify-between transition-all duration-300 min-h-screen dashboard-sidebar ${
+          isSidebarCollapsed ? 'collapsed' : ''
         }`}
+        style={{ 
+          width: isSidebarCollapsed ? '64px' : '230px',
+          minWidth: isSidebarCollapsed ? '64px' : '230px',
+          maxWidth: isSidebarCollapsed ? '64px' : '230px'
+        }}
       >
         <div>
           <div
-            className={` pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${
+            className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${
               isSidebarCollapsed ? "justify-center" : "justify-between"
             }`}
           >
@@ -172,7 +167,7 @@ export default function DashboardPage() {
       </aside>
 
       {/* Main Content Common */}
-      <main className="flex-grow px-8 bg-[#FAFAFA] pt-[24px] pb-[24px]  ">
+      <main className="flex-grow px-8 bg-[#FAFAFA] pt-[24px] pb-[24px] overflow-x-auto min-w-0">
         {/* Top Bar */}
         <div className="flex items-center justify-between mb-6">
           <div className="relative w-[320px] ">
