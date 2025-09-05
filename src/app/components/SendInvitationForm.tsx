@@ -24,11 +24,10 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
   };
 
   return (
-    <div className="flex-grow p-4 sm:p-6 w-full">
-      <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
+    <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-8 overflow-hidden">
         
         {/* Form Section */}
-        <div className="w-full lg:w-3/5">
+        <div className="w-full lg:w-3/5 min-w-0 flex-shrink">
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Send an Invitation</h1>
           <p className="text-gray-600 mb-6 text-sm sm:text-base">
             Use this form to invite a business colleague or client to register and use the AMI website. 
@@ -144,13 +143,13 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         </div>
 
         {/* Image & Links */}
-        <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4">
+        <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4 min-w-0">
           <Image
             src="/invitation-img.png"
             alt="Dashboard Illustration"
             width={600}
             height={800}
-            className="max-w-full max-h-[800px]"
+            className="w-full h-auto max-w-full max-h-[500px] object-contain"
           />
 
           <div className="w-full mt-6 text-sm text-end flex flex-wrap justify-end gap-4">
@@ -162,6 +161,5 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         </div>
 
       </div>
-    </div>
   );
 }

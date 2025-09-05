@@ -24,3 +24,24 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Ensure sidebar width consistency across all zoom levels and browsers */
+aside[style*="width"] {
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+/* Force exact pixel rendering for sidebar */
+.dashboard-sidebar {
+  width: 230px !important;
+  min-width: 230px !important;
+  max-width: 230px !important;
+  flex-shrink: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.dashboard-sidebar.collapsed {
+  width: 64px !important;
+  min-width: 64px !important;
+  max-width: 64px !important;
+}
