@@ -143,14 +143,16 @@ export default function LoginPage() {
                     </Link>
                   </div>
                 </div>
+
                 <div className="flex items-center justify-between">
                   <button
                     type="submit"
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-6 rounded focus:outline-none focus:shadow-outline"
                   >
                     Log In
                   </button>
                 </div>
+
               </form>
             </div>
 

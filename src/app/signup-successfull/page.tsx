@@ -42,7 +42,7 @@ export default function SignupSuccessfullPage() {
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
-        className={`bg-white shadow-md flex gap-56 flex-col transition-all duration-300 ${
+        className={`bg-gray-50 shadow-md flex gap-56 flex-col transition-all duration-300 ${
           isSidebarCollapsed ? "w-16" : "w-58"
         }`}
       >
@@ -192,93 +192,41 @@ export default function SignupSuccessfullPage() {
       </aside>
 
       {/* Main Content Common */}
-      <main className="flex-grow p-6">
-        {/* Top Bar */}
-        <div className="flex-grow p-4 sm:p-6 w-full">
-              <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
-                
-                {/* Form Section */}
-                <div className="w-full lg:w-3/5">
-                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">Create Your Account</h1>
-                  <p className="text-gray-600 mb-6 text-sm sm:text-base">
-                    Please provide your details below to set up your new account. This will allow you to access all services and manage your profile securely
-                  </p>
+      <main className="flex-grow bg-gray-50 p-6">
+        <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4">
+      <div className="bg-white shadow-md rounded-lg p-12 mr-20 w-full text-center">
+        {/* Success Icon */}
+        <div className="flex justify-center mb-6">
+          <Image
+            src="/checked.svg"
+            alt="Checked Icon"
+            width={75}
+            height={75}
+            className=""
+          />
+        </div>
 
-                  {/* Step Progress */}
-                    <div className="mb-6">
-                    <div className="flex justify-end mb-2">
-                        <p className="text-sm font-medium">
-                            <span className="text-red-500 font-medium">Step 1</span> of 3
-                        </p>
-                    </div>
-                    {/* <div className="h-3 bg-gray-200 rounded-full">
-                        <div className="h-3 bg-red-500 rounded-full w-full"></div>
-                        <div className="h-3 bg-gray-200 rounded-full w-full"></div>
-                    </div> */}
+        {/* Title */}
+        <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          Signed Up Successfully!
+        </h2>
 
-                    <div className="relative h-3 bg-gray-200 rounded-full">
-                      <div className="absolute top-0 left-0 h-3 bg-red-500 rounded-full w-1/3"></div>
-                    </div>
+        {/* Message */}
+        <p className="text-gray-600 mb-8 text-sm sm:text-base">
+          Your account has been successfully created. Register your company to
+          start using the dashboard and get started!
+        </p>
 
-                    </div>
+        {/* Button */}
+        <Link
+          href="/login"
+          className="inline-block bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md font-medium shadow transition"
+        >
+          Go to Log In
+        </Link>
+      </div>
+    </div>
         
-                  <form>
-                    
-                    {/* Password */}
-                    <div className="mb-6">
-                      <label htmlFor="text" className="block text-gray-700 text-sm font-bold mb-2">
-                        Invitation Code
-                      </label>
-                      <input type="text" id="text" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
-                      {/* <p className="text-sm mt-1">
-                        Password strength:<span className="text-red-700"> Strong</span>
-                      </p> */}
-                    </div>
-
-
-                    {/* Confirm Password */}
-                    <div className="mb-6">
-                      <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-                        Email
-                      </label>
-                      <input type="email" id="email" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
-                    </div>
-        
-
-                    {/* Buttons */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-
-                      <button
-                        type="submit"
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
-                      >
-                        Next
-                      </button>
-                      
-                    </div>
-                  </form>
-                </div>
-        
-                {/* Image & Links */}
-                <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4">
-                  <Image
-                    src="/invitation-img.png"
-                    alt="Dashboard Illustration"
-                    width={600}
-                    height={800}
-                    className="max-w-full max-h-[800px]"
-                  />
-        
-                  <div className="w-full mt-6 text-sm text-end flex flex-wrap justify-end gap-4">
-                    <a href="#" className="underline hover:text-gray-600">Terms of Use</a>{' '}
-                    <a href="#" className="underline hover:text-gray-600">Privacy Policy</a>{' '}
-                    <a href="#" className="underline hover:text-gray-600">Cookie Policy</a>{' '}
-                    <a href="#" className="underline hover:text-gray-600">Anti Bribery Policy</a>
-                  </div>
-                </div>
-        
-              </div>
-            </div>
 
       </main>
     </div>

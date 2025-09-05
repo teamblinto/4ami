@@ -38,7 +38,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
 
           <form onSubmit={handleSubmit}>
             {/* First/Last Name */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label htmlFor="firstName" className="block text-gray-700 text-sm font-bold mb-2">
                   First Name
@@ -54,7 +54,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Title/Company */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
               <div>
                 <label htmlFor="title" className="block text-gray-700 text-sm font-bold mb-2">
                   Title
@@ -70,7 +70,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Email */}
-            <div className="mb-8">
+            <div className="mb-6">
               <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
                 Email
               </label>
@@ -78,7 +78,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Role/Source */}
-            <div className="grid grid-cols-1 md:grid-cols-2 items-end gap-4 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 items-end gap-4 mb-6">
               <div>
                 <label htmlFor="role" className="block text-gray-700 text-sm font-bold mb-2">
                   Role
@@ -103,7 +103,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
             </div>
 
             {/* Invitation Code */}
-            <div className="mb-8">
+            <div className="mb-6">
               <label htmlFor="invitationCode" className="block text-gray-700 text-sm font-bold mb-2">
                 Invitation Code
               </label>
