@@ -85,19 +85,19 @@ const ProjectsTable = () => (
         </div>
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
             <div className="flex items-center gap-2 flex-wrap">
-                <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>Project ID All <span><img src="white-arrow.svg" alt="" /></span> </option>
+<select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+                    <option>Project ID All <span><Image src="/white-arrow.svg" alt="" width={10} height={10} /></span> </option>
                 </select>
                 <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>Status All <span><img src="white-arrow.svg" alt="" /></span> </option>
+                    <option>Status All <span><Image src="/white-arrow.svg" alt="" width={10} height={10} /></span> </option>
                 </select>
                 <button className="h-8  px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
-                    <span className="text-[10px]"><img src="filter.svg" alt="" /></span>
-                    Add Filter <span><img src="arrow-filter.svg" alt="" /></span>
+                    <span className="text-[10px]"><Image src="/filter.svg" alt="" width={10} height={10} /></span>
+                    Add Filter <span><Image src="/arrow-filter.svg" alt="" width={10} height={10} /></span>
                 </button>
                 <button className="h-8 px-3 border items-center border-gray-300 rounded-md text-xs bg-white text-red-600">
                  
-                    Clear Filter <span><img src="" alt="" /></span>
+                    Clear Filter <span><Image src="" alt="" width={10} height={10} /></span>
                 </button>
   
             </div>
@@ -205,7 +205,7 @@ export default function DashboardContent({ setActiveContent }: DashboardContentP
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl text-[#080607] font-bold">Dashboard</h1>
-        <p className="text-[#6C757D]">Good Morning, John! Here's a quick overview of your platform's activity</p>
+        <p className="text-[#6C757D]">Good Morning, John! Here&apos;s a quick overview of your platform&apos;s activity</p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {statsData.map(stat => <StatCard key={stat.title} {...stat} />)}

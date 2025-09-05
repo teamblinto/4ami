@@ -66,7 +66,7 @@ export default function DashboardPage() {
               onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
               className="text-gray-500 cursor-pointer hover:text-gray-700"
             >
-              <img src="sidebar-left.svg" alt="" />
+              <Image src="/sidebar-left.svg" alt="" width={24} height={24} />
             </button>
           </div>
 
@@ -82,9 +82,9 @@ export default function DashboardPage() {
                   }`}
                 >
                   {activeContent === "dashboard" ? (
-                    <img src="./Module-Icons/home.svg" alt="dashboard" />
+                    <Image src="/Module-Icons/home.svg" alt="dashboard" width={20} height={20} />
                   ) : (
-                    <img src="./Module-Icons/home-b.svg" alt="dashboard" />
+                    <Image src="/Module-Icons/home-b.svg" alt="dashboard" width={20} height={20} />
                   )}
 
                   {!isSidebarCollapsed && (
@@ -103,15 +103,9 @@ export default function DashboardPage() {
                   }`}
                 >
                   {activeContent === "manage-projects" ? (
-                    <img
-                      src="./Module-Icons/manage-p.svg"
-                      alt="manage-projects"
-                    />
+                    <Image src="/Module-Icons/manage-p.svg" alt="manage-projects" width={20} height={20} />
                   ) : (
-                    <img
-                      src="./Module-Icons/manage-projects.svg"
-                      alt="manage-projects"
-                    />
+                    <Image src="/Module-Icons/manage-projects.svg" alt="manage-projects" width={20} height={20} />
                   )}
 
                   {!isSidebarCollapsed && (
@@ -130,15 +124,9 @@ export default function DashboardPage() {
                   }`}
                 >
                   {activeContent === "manage-users" ? (
-                    <img
-                      src="./Module-Icons/manage-u.svg"
-                      alt="Active Manage Users"
-                    />
+                    <Image src="/Module-Icons/manage-u.svg" alt="Active Manage Users" width={20} height={20} />
                   ) : (
-                    <img
-                      src="./Module-Icons/manage-users.svg"
-                      alt="Manage Users"
-                    />
+                    <Image src="/Module-Icons/manage-users.svg" alt="Manage Users" width={20} height={20} />
                   )}
 
                   {!isSidebarCollapsed && (
@@ -157,15 +145,9 @@ export default function DashboardPage() {
                   }`}
                 >
                   {activeContent === "manage-assets" ? (
-                    <img
-                      src="./Module-Icons/manage-a.svg"
-                      alt="Active Manage Users"
-                    />
+                    <Image src="/Module-Icons/manage-a.svg" alt="Active Manage Users" width={20} height={20} />
                   ) : (
-                    <img
-                      src="./Module-Icons/manage-assets.svg"
-                      alt="Manage Users"
-                    />
+                    <Image src="/Module-Icons/manage-assets.svg" alt="Manage Users" width={20} height={20} />
                   )}
 
                   {!isSidebarCollapsed && (
@@ -182,7 +164,7 @@ export default function DashboardPage() {
             href="#"
             className="flex items-center p-2 text-[#080607] hover:bg-gray-100"
           >
-            <img src="./Module-Icons/settings.svg" alt="" />
+            <Image src="/Module-Icons/settings.svg" alt="" width={20} height={20} />
             {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
           </Link>
         </div>
@@ -215,12 +197,12 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center space-x-4">
             <button className="relative text-gray-600 hover:text-gray-800">
-              <img src="notification-bell.svg" alt="" />
+              <Image src="/notification-bell.svg" alt="" width={20} height={20} />
             </button>
             <button className="relative text-gray-600 hover:text-gray-800">
-       <img src="Display-Picture.svg" alt="" />
+              <Image src="/Display-Picture.svg" alt="" width={28} height={28} />
             </button>
-            <img src="arrow.svg" alt="" />
+            <Image src="/arrow.svg" alt="" width={16} height={16} />
           </div>
         </div>
 

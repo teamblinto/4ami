@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import SendInvitationForm from '../SendInvitationForm';
-import Link from 'next/link';
 
 export default function ManageUsers() {
   const [showSendInvitation, setShowSendInvitation] = useState(false);
