@@ -59,7 +59,7 @@ export default function LoginPage() {
                   <input
                     type="email"
                     id="email"
-                    className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="shadow appearance-none border rounded border-gray-300 w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -77,7 +77,7 @@ export default function LoginPage() {
                     <input
                       type={showPassword ? "text" : "password"}
                       id="password"
-                      className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 mb-0 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                      className="shadow appearance-none border rounded border-gray-300 w-full py-3 px-3 text-gray-700 mb-0 leading-tight focus:outline-none focus:shadow-outline pr-10"
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
