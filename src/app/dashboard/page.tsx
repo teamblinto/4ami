@@ -190,7 +190,7 @@ export default function DashboardPage() {
       </aside>
 
       {/* Main Content Common */}
-      <main className="flex-grow px-8 pt-[24px] pb-[24px] max-w-[1210px] ">
+      <main className="flex-grow px-8 bg-[#FAFAFA] pt-[24px] pb-[24px]  ">
         {/* Top Bar */}
         <div className="flex items-center justify-between mb-6">
           <div className="relative w-[320px] ">
