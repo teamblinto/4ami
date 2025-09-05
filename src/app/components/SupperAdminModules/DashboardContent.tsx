@@ -5,13 +5,13 @@ import Link from 'next/link';
 
 // --- MOCK DATA ---
 const statsData = [
-  { title: 'Pending Requests', value: '10', change: 'Requests awaiting approval', changeColor: 'text-red-600', icon: '📋' },
-  { title: 'Users', value: '52', change: '↑ 12.5% from last month', changeColor: 'text-green-600', icon: '👥' },
-  { title: 'Ongoing Projects', value: '20', change: 'Services currently enabled', changeColor: 'text-gray-500', icon: '🚧' },
-  { title: 'Completed Project', value: '30', change: '↓ 5% from last month', changeColor: 'text-red-500', icon: '✔️' },
+  { title: 'Pending Requests', value: '10', change: 'Requests awaiting approval', changeColor: 'text-[#FF8800]', icon: '/Dashboard-Icons/survey_2512242 1.svg' },
+  { title: 'Users', value: '52', change: '↑ 12.5% from last month', changeColor: 'text-[#01AF76]', icon: '/Dashboard-Icons/survey_2512242 1 (1).svg' },
+  { title: 'Ongoing Projects', value: '20',  change: 'Services currently enabled', changeColor: 'text-[#6F7482]', icon: '/Dashboard-Icons/survey_2512242 1 (2).svg' },
+  { title: 'Completed Project', value: '30', change: '↑ 5% from last month', changeColor: 'text-[#01AF76]', icon: '/Dashboard-Icons/survey_2512242 1 (3).svg'},
 ];
 
-const projectsData = [
+const projectsData = [ 
     { id: 'P101', name: 'Residual Analysis', time: '12 June - 25 June', status: 'Completed' },
     { id: 'P102', name: 'Comparative Analysis', time: '11 June - 22 June', status: 'Completed' },
     { id: 'P103', name: 'Transportation Quotation', time: '25 July - 12 August', status: 'In Process' },
@@ -25,9 +25,9 @@ const activityData = [
 ];
 
 const quickActionsData = [
-    { title: 'Add New User', subtitle: 'Text need to change', icon: '👤' },
-    { title: 'Generate Test', subtitle: 'Create a new service offering', icon: '🔬' },
-    { title: 'Add New asset', subtitle: '', icon: '+' },
+    { title: 'Add New User', subtitle: 'Text need to change', icon: '/Dashboard-Icons/survey_2512242 1 (1).svg', iconBg: 'bg-green-100' },
+    { title: 'Generate Test', subtitle: 'Create a new service offering', icon: '/Dashboard-Icons/survey_2512242 1 (2).svg', iconBg: 'bg-indigo-100' },
+    { title: 'Add New asset', subtitle: '', icon: '+', iconBg: 'bg-red-500', isIconText: true },
 ];
 
 
@@ -45,19 +45,23 @@ const getStatusClass = (status: string) => {
 
 // --- SUB-COMPONENTS ---
 
-const StatCard = ({ title, value, change, changeColor, icon }: typeof statsData[0]) => (
-    <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg  flex items-center justify-between">
+const StatCard = ({ title, value, change, changeColor, icon }: any) => (
+    <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg relative">
         <div className='flex flex-col gap-1'>
-            <div className="text-sm text-gray-500 flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs"><img src="arrow-two.svg" alt="" /></span>}</div>
+            <div className="text-sm font-medium text-[#6C757D] flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs">
+                <img className='pl-2' src="arrow-two.svg" alt="" /></span>}
+                </div>
             <div className="text-2xl font-bold text-[#080607]">{value}</div>
-            <div className={`text-xs font-semibold ${changeColor}`}>{change}</div>
+            <div className={`text-xs font-regular ${changeColor}`}>{change}</div>
         </div>
-        <div className="text-2xl bg-gray-100 p-2 rounded-md">{icon}</div>
+        <div className={`absolute top-3 right-[18px]`}>
+            <img src={icon} alt={title} className="w-[38px] h-[38px]" />
+        </div>
     </div>
 );
 
 const ProjectsTable = () => (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
+    <div className="bg-white p-4 rounded-lg ">
         <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold">Projects</h3>
             <Link href="#" className="text-red-500 hover:underline text-sm font-semibold">View All</Link>
@@ -122,7 +126,7 @@ const ProjectsTable = () => (
 );
 
 const RecentActivity = () => (
-    <div className="lg:col-span-2 bg-white p-4 rounded-lg shadow-sm">
+    <div className="lg:col-span-2 bg-white p-4 rounded-lg ">
         <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-bold">Recent Activity</h3>
             <Link href="#" className="text-red-500 text-sm font-semibold inline-block">View All</Link>
@@ -153,17 +157,19 @@ const RecentActivity = () => (
 const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
     <div className="bg-white p-4 rounded-lg shadow-sm">
         <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
-        <ul>
-            {quickActionsData.map((action, index) => (
-                <li key={index} className="mb-3">
-                    <button className="w-full flex items-center p-3 bg-gray-50 rounded-md hover:bg-gray-100 transition-colors">
-                        <div className={`p-2 rounded-full mr-3 text-lg flex items-center justify-center w-8 h-8 ${
-                            action.title === 'Add New asset' ? 'bg-red-500 text-white' : 'bg-gray-200'
-                        }`}>
-                           {action.icon}
+        <ul className="divide-y divide-gray-200">
+            {quickActionsData.map((action: any, index) => (
+                <li key={index}>
+                    <button className="w-full flex items-center py-3 hover:bg-gray-50 transition-colors">
+                        <div className={`w-10 h-10 rounded-full mr-3 flex items-center justify-center ${action.iconBg}`}>
+                           {action.isIconText ? (
+                                <span className="text-white text-2xl">{action.icon}</span>
+                           ) : (
+                                <img src={action.icon} alt="" className="w-5 h-5" />
+                           )}
                         </div>
                         <div className="text-left">
-                            <div className="font-semibold">{action.title}</div>
+                            <div className={`font-semibold ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
                             {action.subtitle && <div className="text-sm text-gray-500">{action.subtitle}</div>}
                         </div>
                     </button>
@@ -179,13 +185,17 @@ const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
 export default function DashboardContent({ setActiveContent }: DashboardContentProps) {
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div>
+        <h1 className="text-3xl text-[#080607] font-bold">Dashboard</h1>
+        <p className="text-[#6C757D]">Good Morning, John! Here's a quick overview of your platform's activity</p>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {statsData.map(stat => <StatCard key={stat.title} {...stat} />)}
       </div>
       
       <ProjectsTable />
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <RecentActivity />
         <QuickActions setActiveContent={setActiveContent} />
       </div>
