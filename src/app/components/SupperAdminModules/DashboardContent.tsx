@@ -46,9 +46,9 @@ const getStatusClass = (status: string) => {
 // --- SUB-COMPONENTS ---
 
 const StatCard = ({ title, value, change, changeColor, icon }: typeof statsData[0]) => (
-    <div className="bg-white p-4 rounded-lg shadow-sm flex items-center justify-between">
-        <div>
-            <div className="text-sm text-gray-500 flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs">▼</span>}</div>
+    <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg  flex items-center justify-between">
+        <div className='flex flex-col gap-1'>
+            <div className="text-sm text-gray-500 flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs"><img src="arrow-two.svg" alt="" /></span>}</div>
             <div className="text-2xl font-bold text-[#080607]">{value}</div>
             <div className={`text-xs font-semibold ${changeColor}`}>{change}</div>
         </div>
