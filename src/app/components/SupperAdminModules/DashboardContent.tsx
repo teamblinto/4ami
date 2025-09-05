@@ -25,8 +25,8 @@ const activityData = [
 ];
 
 const quickActionsData = [
-    { title: 'Add New User', subtitle: 'Text need to change', icon: '/Dashboard-Icons/survey_2512242 1 (1).svg', iconBg: 'bg-green-100' },
-    { title: 'Generate Test', subtitle: 'Create a new service offering', icon: '/Dashboard-Icons/survey_2512242 1 (2).svg', iconBg: 'bg-indigo-100' },
+    { title: 'Add New User', subtitle: 'Text need to change', icon: '/QuickAccess-Icons/Icon Container.svg' },
+    { title: 'Generate Test', subtitle: 'Create a new service offering', icon: '/QuickAccess-Icons/Icon Container (1).svg' },
     { title: 'Add New asset', subtitle: '', icon: '+', iconBg: 'bg-red-500', isIconText: true },
 ];
 
@@ -38,8 +38,8 @@ interface DashboardContentProps {
 
 const getStatusClass = (status: string) => {
     return status === 'Completed' 
-        ? 'border border-red-200 bg-red-50 text-red-600' 
-        : 'border border-gray-300 bg-white text-gray-600';
+        ? ' bg-[#FEF0F0] text-[#ED272C] ' 
+        : '  bg-[#EDEDED] text-[#4B4F58]';
 };
 
 
@@ -63,46 +63,44 @@ const StatCard = ({ title, value, change, changeColor, icon }: any) => (
 const ProjectsTable = () => (
     <div className="bg-white p-4 rounded-lg ">
         <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold">Projects</h3>
-            <Link href="#" className="text-red-500 hover:underline text-sm font-semibold">View All</Link>
+            <h3 className="text-lg text-[#080607] font-semibold">Projects</h3>
+            <Link href="#" className="text-[#ED272C]  text-sm font-medium">View All</Link>
         </div>
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
             <div className="flex items-center gap-2 flex-wrap">
                 <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>ProjectID All</option>
+                    <option>Project ID All <span><img src="white-arrow.svg" alt="" /></span> </option>
                 </select>
                 <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>Status All</option>
+                    <option>Status All <span><img src="white-arrow.svg" alt="" /></span> </option>
                 </select>
-                <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-1">
-                    <span className="text-[10px]">▼</span>
-                    Add Filter
+                <button className="h-8  px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
+                    <span className="text-[10px]"><img src="filter.svg" alt="" /></span>
+                    Add Filter <span><img src="arrow-filter.svg" alt="" /></span>
                 </button>
-                <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600">
-                    Clear Filter
+                <button className="h-8 px-3 border items-center border-gray-300 rounded-md text-xs bg-white text-red-600">
+                 
+                    Clear Filter <span><img src="" alt="" /></span>
                 </button>
-                <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-1">
-                    Edit Column
-                    <span className="text-[10px]">▼</span>
-                </button>
+  
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-600">
+            {/* <div className="flex items-center gap-2 text-sm text-gray-600">
                 <span className="text-gray-500">Rows per page:</span>
                 <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
                     <option>10</option>
                     <option>20</option>
                     <option>50</option>
                 </select>
-            </div>
+            </div> */}
         </div>
         <div className="overflow-x-auto">
-            <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-gray-200">
+            <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD] ">
                 <thead>
                     <tr className="bg-white">
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-l border-r">Project ID</th>
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Project</th>
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Time (Month to Date)</th>
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Status</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">Project ID</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">Project</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">Time (Start to End)</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -110,11 +108,11 @@ const ProjectsTable = () => (
                         const isStriped = index % 2 === 0;
                         return (
                             <tr key={project.id} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                                <td className="p-3 text-gray-800 font-medium border-b border-gray-200 border-l border-r">{project.id}</td>
-                                <td className="p-3 text-gray-800 border-b border-gray-200 border-r">{project.name}</td>
-                                <td className="p-3 text-gray-800 border-b border-gray-200 border-r">{project.time}</td>
-                                <td className="p-3 border-b border-gray-200 border-r">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusClass(project.status)}`}>{project.status}</span>
+                                <td className="px-6 py-4 text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r">{project.id}</td>
+                                <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD]  border-r">{project.name}</td>
+                                <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD] border-r">{project.time}</td>
+                                <td className="px-6 py-4 border-b border-[#D0D5DD] border-r">
+                                    <span className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(project.status)}`}>{project.status}</span>
                                 </td>
                             </tr>
                         );
@@ -126,28 +124,31 @@ const ProjectsTable = () => (
 );
 
 const RecentActivity = () => (
-    <div className="lg:col-span-2 bg-white p-4 rounded-lg ">
+    <div className="lg:col-span-2 bg-white p-4 rounded-lg">
         <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-bold">Recent Activity</h3>
-            <Link href="#" className="text-red-500 text-sm font-semibold inline-block">View All</Link>
+            <h3 className="text-lg text-[#080607] font-semibold">Recent Activity</h3>
+            <Link href="#" className="text-[#ED272C] text-sm font-medium">View All</Link>
         </div>
         <div className="overflow-x-auto">
-            <table className="min-w-full text-sm border-separate border-spacing-0 border border-gray-200 rounded-md">
+            <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD]">
                 <thead>
                     <tr className="bg-white">
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">User</th>
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200 border-r">Action</th>
-                        <th className="p-2 text-left text-xs font-medium text-gray-500 border-b border-gray-200">Date</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD] border-l border-r">User</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD] border-r">Action</th>
+                        <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD] border-r">Date</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {activityData.map((activity, index) => (
-                        <tr key={index} className={index % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                            <td className="p-3 whitespace-nowrap text-gray-800 border-b border-gray-200 border-r">{activity.user}</td>
-                            <td className="p-3 whitespace-nowrap text-gray-800 border-b border-gray-200 border-r">{activity.action}</td>
-                            <td className="p-3 whitespace-nowrap text-gray-500 border-b border-gray-200">{activity.date}</td>
-                        </tr>
-                    ))}
+                    {activityData.map((activity, index) => {
+                        const isStriped = index % 2 === 0;
+                        return (
+                            <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
+                                <td className="px-6 py-4 whitespace-nowrap text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r">{activity.user}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-gray-700 border-b border-[#D0D5DD] border-r">{activity.action}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-gray-500 border-b border-[#D0D5DD] border-r">{activity.date}</td>
+                            </tr>
+                        );
+                    })}
                 </tbody>
             </table>
         </div>
@@ -156,7 +157,7 @@ const RecentActivity = () => (
 
 const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
     <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="text-lg font-bold mb-4">Quick Actions</h3>
+        <h3 className="text-lg text-[#080607] font-bold mb-4">Quick Actions</h3>
         <ul className="divide-y divide-gray-200">
             {quickActionsData.map((action: any, index) => (
                 <li key={index}>
@@ -165,11 +166,11 @@ const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
                            {action.isIconText ? (
                                 <span className="text-white text-2xl">{action.icon}</span>
                            ) : (
-                                <img src={action.icon} alt="" className="w-5 h-5" />
+                                <img src={action.icon} alt="" className="w-[37px] h-[37px]" />
                            )}
                         </div>
                         <div className="text-left">
-                            <div className={`font-semibold ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
+                            <div className={`font-medium text-[#080607] ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
                             {action.subtitle && <div className="text-sm text-gray-500">{action.subtitle}</div>}
                         </div>
                     </button>

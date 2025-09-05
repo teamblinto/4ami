@@ -39,7 +39,7 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex min-h-screen  bg-gray-100">
+    <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
         className={`bg-white  flex gap-56 flex-col transition-all duration-300 ${
