@@ -43,7 +43,7 @@ export default function ManageProjects() {
       </div>
 
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-4 flex-wrap">
           <select className="border rounded-md p-2">
             <option>Status All</option>
             <option>Active</option>
@@ -51,7 +51,8 @@ export default function ManageProjects() {
             <option>Cancelled</option>
           </select>
           <button className="border border-gray-300 rounded-md p-2 text-sm flex items-center gap-1">
-            <span className="text-red-500">+</span> Add Filter
+            <span className="text-red-500">+</span> 
+            Add Filter
           </button>
           <button className="border border-gray-300 rounded-md p-2 text-sm">Clear Filter</button>
           <button className="border border-gray-300 rounded-md p-2 text-sm">Edit Column</button>
@@ -67,9 +68,9 @@ export default function ManageProjects() {
       </div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-full bg-white">
+        <table className="min-w-full bg-white divide-[#E9ECEF]">
           <thead>
-            <tr className="border-b">
+            <tr className="bg-white hover:bg-gray-50 divide-x divide-[#E9ECEF] border-b border-[#E9ECEF] border-r border-[#E9ECEF]">
               <th className="p-4 text-left w-10"><input type="checkbox" /></th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Service Name</th>
               <th className="p-4 text-left text-sm font-semibold text-gray-600">Description</th>
@@ -79,7 +80,9 @@ export default function ManageProjects() {
           </thead>
           <tbody>
             {projectsData.map((project, index) => (
-              <tr key={index} className="border-b hover:bg-gray-50">
+              <tr key={index} className={`${
+        index % 2 === 0 ? "bg-gray-100" : "bg-white"
+      } hover:bg-gray-50 divide-x divide-[#E9ECEF] border-b border-[#E9ECEF] border-r border-[#E9ECEF] last:border-b-0`}>
                 <td className="p-4"><input type="checkbox" /></td>
                 <td className="p-4 text-sm text-gray-800">{project.serviceName}</td>
                 <td className="p-4 text-sm text-gray-600">{project.description}</td>
@@ -98,11 +101,11 @@ export default function ManageProjects() {
       <div className="flex items-center justify-between mt-4 flex-wrap gap-2">
         <p className="text-sm text-gray-600">1-10 of 20 items</p>
         <div className="flex items-center gap-2">
-          <button className="p-2 border rounded-md text-sm"></button>
-          <button className="p-2 border rounded-md text-sm bg-gray-200">1</button>
-          <button className="p-2 border rounded-md text-sm">2</button>
-          <button className="p-2 border rounded-md text-sm"></button>
-          <select className="border rounded-md p-2">
+          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm">{'<'}</button>
+          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm bg-gray-200">1</button>
+          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm">2</button>
+          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm">{'>'}</button>
+          <select className="border rounded-md p-2 w-[138px]">
             <option>10</option>
             <option>20</option>
           </select>
