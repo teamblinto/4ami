@@ -3,22 +3,33 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import ManageUsers from "../components/SupperAdminModules/ManageUsers";
-import ManageAssets from "../components/SupperAdminModules/ManageAssets";
-import DashboardContent from "../components/SupperAdminModules/DashboardContent";
-import ManageProjects from "../components/SupperAdminModules/ManageProjects";
+import ManageUsers from "../components/SupperAdminModules/ManageUsers/ManageUsers"
+import ManageAssets from "../components/SupperAdminModules/ManageAssets/ManageAssets";
+import DashboardContent from "../components/SupperAdminModules/DashboardContent/DashboardContent";
+import ManageProjects from "../components/SupperAdminModules/ManageProjects/ManageProjects";
 
 export default function DashboardPage() {
   const [activeContent, setActiveContent] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [showInvitationForm, setShowInvitationForm] = useState(false);
 
+
+  const handleSetActiveContent = (content: string) => {
+    if (content === "manage-users-invitation") {
+      setActiveContent("manage-users");
+      setShowInvitationForm(true);
+    } else {
+      setActiveContent(content);
+      setShowInvitationForm(false);
+    }
+  };
 
   const renderMainContent = () => {
     switch (activeContent) {
       case "dashboard":
-        return <DashboardContent setActiveContent={setActiveContent} />;
+        return <DashboardContent setActiveContent={handleSetActiveContent} />;
       case "manage-users":
-        return <ManageUsers />;
+        return <ManageUsers autoShowInvitation={showInvitationForm} />;
       case "manage-assets":
         return <ManageAssets />;
       case "manage-projects":
@@ -69,7 +80,7 @@ export default function DashboardPage() {
             <ul>
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveContent("dashboard")}
+                  onClick={() => handleSetActiveContent("dashboard")}
                   className={`flex cursor-pointer items-center p-2 w-full text-left ${
                     activeContent === "dashboard"
                       ? "text-[#FFFFFF] bg-[#ED272C]"
@@ -90,7 +101,7 @@ export default function DashboardPage() {
 
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveContent("manage-projects")}
+                  onClick={() => handleSetActiveContent("manage-projects")}
                   className={`flex cursor-pointer items-center p-2 w-full text-left ${
                     activeContent === "manage-projects"
                       ? "bg-[#ED272C] text-[#FFFFFF]"
@@ -111,7 +122,7 @@ export default function DashboardPage() {
 
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveContent("manage-users")}
+                  onClick={() => handleSetActiveContent("manage-users")}
                   className={`flex cursor-pointer items-center p-2 w-full text-left ${
                     activeContent === "manage-users"
                       ? "bg-[#ED272C] text-[#FFFFFF]"
@@ -132,7 +143,7 @@ export default function DashboardPage() {
 
               <li className="mb-2">
                 <button
-                  onClick={() => setActiveContent("manage-assets")}
+                  onClick={() => handleSetActiveContent("manage-assets")}
                   className={`flex cursor-pointer items-center p-2 w-full text-left ${
                     activeContent === "manage-assets"
                       ? "bg-[#ED272C] text-[#FFFFFF]"

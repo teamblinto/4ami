@@ -1,9 +1,13 @@
 "use client";
 
 import { useState } from 'react';
+import AddAssets from './AddAssets';
+import ImportAssets from './ImportAssets';
 
 export default function ManageAssets() {
   const [searchQuery, setSearchQuery] = useState("");
+  const [showAddAssets, setShowAddAssets] = useState(false);
+  const [showImportAssets, setShowImportAssets] = useState(false);
 
   const assets = [
     { id: "AST-001", name: "Excavator ZX200", category: "Heavy Equipment", location: "Yard A", status: "Active", lastService: "2025-03-02" },
@@ -16,6 +20,14 @@ export default function ManageAssets() {
     [a.id, a.name, a.category, a.location, a.status].some(v => v.toLowerCase().includes(searchQuery.toLowerCase()))
   );
 
+  if (showAddAssets) {
+    return <AddAssets onBack={() => setShowAddAssets(false)} />;
+  }
+
+  if (showImportAssets) {
+    return <ImportAssets onBack={() => setShowImportAssets(false)} />;
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -24,8 +36,12 @@ export default function ManageAssets() {
           <p className="text-gray-500">Dashboard / Manage Assets</p>
         </div>
         <div className="flex space-x-2">
-          <button className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">+ Add Asset</button>
-          <button className="bg-white border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50">Import</button>
+          <button 
+            onClick={() => setShowAddAssets(true)}
+            className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">+ Add Asset</button>
+          <button 
+            onClick={() => setShowImportAssets(true)}
+            className="bg-white border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50">Import</button>
           <button className="bg-white border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50">Export</button>
         </div>
       </div>

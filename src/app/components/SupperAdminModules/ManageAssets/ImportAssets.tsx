@@ -1,0 +1,381 @@
+"use client";
+
+import { useState, useRef } from 'react';
+
+interface ImportAssetsProps {
+  onBack?: () => void;
+}
+
+export default function ImportAssets({ onBack }: ImportAssetsProps) {
+  const [isDragOver, setIsDragOver] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [hasError, setHasError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragOver(false);
+
+    const files = e.dataTransfer.files;
+    if (files.length > 0) {
+      const file = files[0];
+      // Check file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setHasError(true);
+        setErrorMessage('File size exceeds 5MB limit');
+        setSelectedFile(file);
+        return;
+      }
+      // Check if it's a CSV or JSON file
+      if (file.type === 'text/csv' || file.name.endsWith('.csv') || 
+          file.type === 'application/json' || file.name.endsWith('.json')) {
+        setSelectedFile(file);
+        setHasError(false);
+        setErrorMessage('');
+      } else {
+        setHasError(true);
+        setErrorMessage('The File Type is Wrong!');
+        setSelectedFile(file);
+      }
+    }
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      // Check file size (5MB limit)
+      if (file.size > 5 * 1024 * 1024) {
+        setHasError(true);
+        setErrorMessage('File size exceeds 5MB limit');
+        setSelectedFile(file);
+        return;
+      }
+      // Check if it's a CSV or JSON file
+      if (file.type === 'text/csv' || file.name.endsWith('.csv') || 
+          file.type === 'application/json' || file.name.endsWith('.json')) {
+        setSelectedFile(file);
+        setHasError(false);
+        setErrorMessage('');
+      } else {
+        setHasError(true);
+        setErrorMessage('The File Type is Wrong!');
+        setSelectedFile(file);
+      }
+    }
+  };
+
+  const handleBrowseClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleUpload = () => {
+    if (selectedFile && !hasError) {
+      setIsUploading(true);
+      setUploadProgress(0);
+      
+      // Simulate upload progress
+      const progressInterval = setInterval(() => {
+        setUploadProgress(prev => {
+          if (prev >= 100) {
+            clearInterval(progressInterval);
+            setTimeout(() => {
+              setIsUploading(false);
+              console.log('File uploaded:', selectedFile.name);
+              // After successful upload, you can redirect back or show success message
+              if (onBack) {
+                onBack();
+              }
+            }, 500);
+            return 100;
+          }
+          return prev + 10;
+        });
+      }, 200);
+    }
+  };
+
+  const handleCancel = () => {
+    setIsUploading(false);
+    setUploadProgress(0);
+    setSelectedFile(null);
+    setHasError(false);
+    setErrorMessage('');
+  };
+
+  const handleEnterManually = () => {
+    // Navigate to Add Assets form manually
+    if (onBack) {
+      onBack();
+    }
+  };
+
+  const handleDownloadTemplate = () => {
+    // Create a sample CSV template
+    const csvContent = "SubjectAssetType,Industry,Make,Model,SerialNumber(SN),YearOfManufacture\nExcavator,Construction,Volvo,A400,SN123456,2003\nForklift,Manufacturing,Toyota,8FBE20,SN789012,2020";
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'assets_template.csv';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  };
+
+  // Show uploading screen
+  if (isUploading) {
+    return (
+      <div className="bg-gray-50 min-h-screen p-6">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className="text-2xl font-semibold text-gray-900 mb-2">Add Asset</h1>
+          <p className="text-sm text-gray-500">Dashboard / Manage Assets / Add Asset Type</p>
+        </div>
+
+        {/* Uploading Content */}
+        <div className="bg-white rounded-lg p-12 text-center max-w-md mx-auto">
+          {/* File Icon */}
+          <div className="mb-6">
+            <div className="w-16 h-20 mx-auto bg-gray-100 rounded-lg flex items-center justify-center">
+              <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+              </svg>
+            </div>
+          </div>
+
+          {/* File Name */}
+          <div className="mb-4">
+            <p className="text-sm font-medium text-gray-900">{selectedFile?.name}</p>
+          </div>
+
+          {/* Progress Bar */}
+          <div className="mb-4">
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div 
+                className="bg-red-500 h-2 rounded-full transition-all duration-300 ease-out"
+                style={{ width: `${uploadProgress}%` }}
+              ></div>
+            </div>
+            <div className="flex justify-between mt-2">
+              <span className="text-xs text-gray-500">{uploadProgress}%</span>
+            </div>
+          </div>
+
+          {/* Uploading Text */}
+          <div className="mb-6">
+            <p className="text-lg font-medium text-gray-900">Uploading..</p>
+          </div>
+
+          {/* Cancel Button */}
+          <button
+            onClick={handleCancel}
+            className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-gray-50 min-h-screen p-6">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-gray-900 mb-2">Add Assets</h1>
+        <p className="text-sm text-gray-500">Dashboard / Manage Assets / Add Asset Type</p>
+      </div>
+
+      {/* Instructions Section */}
+      <div className="bg-white rounded-lg p-6 mb-6">
+        <h2 className="text-lg font-medium text-gray-900 mb-4">Instructions</h2>
+        <div className="space-y-2 text-sm text-gray-600 mb-6">
+          <p>1. Please ensure the steps of the form includes the following fields in this order: <strong>SubjectAssetType, Industry, Make, Model, SerialNumber(SN), YearOfManufacture</strong></p>
+          <p>2. Upload your completed file below</p>
+        </div>
+
+        <div className="mb-6">
+          <p className="text-sm font-medium text-gray-700 mb-2">Use this template to easily import asset data</p>
+          <button
+            onClick={handleDownloadTemplate}
+            className="flex items-center text-sm text-blue-600 hover:text-blue-800"
+          >
+            <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            Download Pre-Mapped Template
+          </button>
+        </div>
+
+        {/* Drag and Drop Area or Error State */}
+        {hasError ? (
+          <div className="text-center py-16">
+            {/* File Info Box */}
+            <div className="max-w-md mx-auto mb-6">
+              <div className="border border-red-300 rounded-lg p-4 bg-red-50">
+                <p className="text-sm font-medium text-red-600">{selectedFile?.name}</p>
+                <p className="text-xs text-gray-500">{selectedFile ? Math.round(selectedFile.size / 1024) : 0} KB</p>
+              </div>
+            </div>
+
+            {/* Error Message */}
+            <div className="mb-6">
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">{errorMessage}</h3>
+              <p className="text-sm text-gray-600 mb-2">Please upload JSON or CSV files</p>
+              <p className="text-xs text-gray-500">A file maximum size should be 5MB</p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="flex justify-center space-x-4">
+              <button
+                onClick={handleBrowseClick}
+                className="inline-flex items-center px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm font-medium"
+              >
+                <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+                </svg>
+                Import a File
+              </button>
+              <button
+                onClick={handleEnterManually}
+                className="inline-flex items-center px-6 py-2 bg-white hover:bg-gray-50 text-gray-700 rounded-md text-sm font-medium border border-gray-300"
+              >
+                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                </svg>
+                Enter Manually
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div
+            className={`border-2 border-dashed rounded-lg p-16 text-center transition-all duration-200 ${
+              isDragOver 
+                ? 'border-red-400 bg-red-50' 
+                : selectedFile 
+                  ? 'border-red-300 bg-red-50'
+                  : 'border-gray-300 bg-white'
+            }`}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+          >
+          {/* Cloud Upload Icon */}
+          <div className="mb-6">
+            <div className="relative mx-auto w-20 h-20">
+              {/* Cloud */}
+              <svg className="w-20 h-20 text-red-500 mx-auto" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M19.35 10.04A7.49 7.49 0 0012 4C9.11 4 6.6 5.64 5.35 8.04A5.994 5.994 0 000 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96z"/>
+              </svg>
+              {/* Upload Arrow */}
+              <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 4l-1.41 1.41L16.17 11H4v2h12.17l-5.58 5.59L12 20l8-8z"/>
+                </svg>
+              </div>
+              {/* Document icon on the right */}
+              <div className="absolute -right-2 top-2">
+                <div className="w-8 h-10 bg-red-500 rounded-sm relative">
+                  <div className="absolute top-0 right-0 w-2 h-2 bg-gray-50 transform rotate-45 origin-bottom-left"></div>
+                  <div className="absolute bottom-2 left-1 right-1 space-y-1">
+                    <div className="h-0.5 bg-white rounded"></div>
+                    <div className="h-0.5 bg-white rounded"></div>
+                    <div className="h-0.5 bg-white rounded"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {selectedFile ? (
+            <div className="mb-6">
+              <h3 className="text-lg font-medium text-gray-900 mb-2">File Selected!</h3>
+              <p className="text-sm text-gray-600 mb-2">{selectedFile.name}</p>
+              <p className="text-xs text-gray-500">File size: {(selectedFile.size / 1024).toFixed(2)} KB</p>
+            </div>
+          ) : (
+            <div className="mb-6">
+              <h3 className="text-xl font-medium text-gray-900 mb-2">Drag and Drop Your File Here!</h3>
+              <p className="text-sm text-gray-600 mb-2">Please upload JSON or CSV files</p>
+              <p className="text-xs text-gray-500">A file maximum size should be 5MB</p>
+            </div>
+          )}
+
+          {/* Import Button */}
+          {selectedFile ? (
+            <button
+              onClick={handleUpload}
+              disabled={isUploading}
+              className={`inline-flex items-center px-6 py-2 rounded-md text-sm font-medium ${
+                isUploading
+                  ? 'bg-gray-400 text-white cursor-not-allowed'
+                  : 'bg-red-500 hover:bg-red-600 text-white'
+              }`}
+            >
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+              </svg>
+              {isUploading ? 'Uploading...' : 'Import a File'}
+            </button>
+          ) : (
+            <button
+              onClick={handleBrowseClick}
+              className="inline-flex items-center px-6 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm font-medium"
+            >
+              <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M14,2H6A2,2 0 0,0 4,4V20A2,2 0 0,0 6,22H18A2,2 0 0,0 20,20V8L14,2M18,20H6V4H13V9H18V20Z"/>
+              </svg>
+              Import a File
+            </button>
+          )}
+
+          {/* Hidden File Input */}
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".csv,.json"
+            onChange={handleFileSelect}
+            className="hidden"
+          />
+          </div>
+        )}
+
+        {/* Cancel Button */}
+        {onBack && (
+          <div className="mt-6 text-center">
+            <button
+              onClick={onBack}
+              className="text-gray-600 hover:text-gray-800 px-6 py-2 rounded-md text-sm font-medium"
+            >
+              Cancel
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
