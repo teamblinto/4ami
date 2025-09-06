@@ -50,7 +50,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
   // Test EmailJS connection
   const testEmailJS = async () => {
     try {
-      const { serviceId, templateId, publicKey } = emailjsConfig;
+      const { publicKey } = emailjsConfig;
       emailjs.init(publicKey);
       console.log('EmailJS initialized successfully');
       return true;
@@ -72,7 +72,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       return;
     }
 
-    let templateParams: { [key: string]: any } = {}; // Declare templateParams here
+    // Remove unused templateParams declaration
 
     try {
       // Validate form data first

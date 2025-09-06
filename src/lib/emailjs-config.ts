@@ -2,9 +2,9 @@
 // Replace these with your actual EmailJS service details
 
 export const emailjsConfig = {
-  serviceId: 'service_64j8h3r', // Replace with your EmailJS service ID
-  templateId: 'template_gz2g9dk', // Updated with new template ID
-  publicKey: 'JsRlIJ_7k_x3x6Rym', // Replace with your EmailJS public key
+  serviceId: 'service_64j8h3r', 
+  templateId: 'template_gz2g9dk',
+  publicKey: 'JsRlIJ_7k_x3x6Rym', 
 };
 
 // Instructions to set up EmailJS:
