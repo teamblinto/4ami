@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 // These imports are not needed for the signup page
 // import ManageUsers from "../../components/SupperAdminModules/ManageUsers/ManageUsers";
@@ -10,7 +10,7 @@ import { useSearchParams, useRouter } from "next/navigation";
 // import DashboardContent from "../../components/SupperAdminModules/DashboardContent/DashboardContent";
 // import ManageProjects from "../../components/SupperAdminModules/ManageProjects/ManageProjects";
 
-export default function SignupPage() {
+function ClientContent() {
   // Form state for signup
   const [userInfo, setUserInfo] = useState({
     email: '',
@@ -182,5 +182,13 @@ export default function SignupPage() {
 
       </main>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div>Loading signup form...</div>}>
+      <ClientContent />
+    </Suspense>
   );
 }

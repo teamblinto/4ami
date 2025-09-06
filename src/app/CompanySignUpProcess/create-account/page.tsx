@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
-export default function CreateAccountPage() {
+function ClientContent() {
   const [email, setEmail] = useState('');
   const [invitationCode, setInvitationCode] = useState('');
   const [formData, setFormData] = useState({
@@ -276,5 +276,13 @@ export default function CreateAccountPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function CreateAccountPage() {
+  return (
+    <Suspense fallback={<div>Loading account creation form...</div>}>
+      <ClientContent />
+    </Suspense>
   );
 }

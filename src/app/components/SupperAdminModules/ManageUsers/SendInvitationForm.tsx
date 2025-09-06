@@ -17,6 +17,12 @@ interface FormData {
   source: string;
 }
 
+interface MinimalEmailParams {
+  to_name: string;
+  confirmationUrl: string;
+  passcode: string;
+}
+
 export default function SendInvitationForm({ onInvitationSent }: SendInvitationFormProps) {
   const [invitationCode, setInvitationCode] = useState('A7K3D');
   const [isLoading, setIsLoading] = useState(false);
@@ -72,7 +78,11 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       return;
     }
 
-    // Remove unused templateParams declaration
+    let minimalParams: MinimalEmailParams = { // Declare minimalParams here with specific type
+      to_name: '',
+      confirmationUrl: '',
+      passcode: ''
+    };
 
     try {
       // Validate form data first
@@ -124,7 +134,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       emailjs.init(publicKey);
 
       // Try sending with minimal parameters first
-      const minimalParams = {
+      minimalParams = { // Assign to the already declared minimalParams
         to_name: `${formData.firstName} ${formData.lastName}`,
         confirmationUrl: signupUrl,
         passcode: invitationCode
