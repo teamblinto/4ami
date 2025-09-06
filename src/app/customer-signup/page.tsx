@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 // import SendInvitationForm from "../../components/SupperAdminModules/ManageUsers/SendInvitationForm";
 
-export default function CustomerSignupPage() {
+function ClientContent() {
   const [email, setEmail] = useState('');
   const [invitationCode, setInvitationCode] = useState('');
   
@@ -137,5 +137,13 @@ export default function CustomerSignupPage() {
 
       </main>
     </div>
+  );
+}
+
+export default function CustomerSignupPage() {
+  return (
+    <Suspense fallback={<div>Loading customer signup form...</div>}>
+      <ClientContent />
+    </Suspense>
   );
 }
