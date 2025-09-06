@@ -163,7 +163,7 @@ export default function SignupPage() {
                 <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4">
                   <Image
                     src="/invitation-img.png"
-                    alt="Dashboard Illustration"
+                    alt="Dashboard "
                     width={600}
                     height={800}
                     className="max-w-full max-h-[800px]"
