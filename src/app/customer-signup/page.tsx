@@ -1,179 +1,32 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
-import SendInvitationForm from "../components/SendInvitationForm";
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+// import SendInvitationForm from "../../components/SupperAdminModules/ManageUsers/SendInvitationForm";
 
 export default function CustomerSignupPage() {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [email, setEmail] = useState('');
+  const [invitationCode, setInvitationCode] = useState('');
+  
+  const searchParams = useSearchParams();
+  const router = useRouter();
 
-  const [showSendInvitation, setShowSendInvitation] = useState(false);
-
-  if (showSendInvitation) {
-    return (
-      <SendInvitationForm
-        onInvitationSent={() => setShowSendInvitation(false)}
-      />
-    );
-  }
+  useEffect(() => {
+    // Get email and code from URL parameters
+    const emailParam = searchParams.get('email');
+    const codeParam = searchParams.get('code');
+    
+    if (emailParam) setEmail(emailParam);
+    if (codeParam) setInvitationCode(codeParam);
+  }, [searchParams]);
 
   // static page content for customer signup
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <aside
-        className={`bg-white shadow-md flex gap-56 flex-col transition-all duration-300 ${
-          isSidebarCollapsed ? "w-16" : "w-[230px]"
-        }`}
-      >
-    <div>
-          <div
-          className={`p-4 flex gap-3 items-center ${
-            isSidebarCollapsed ? "justify-center" : "justify-between"
-          }`}
-        >
-          {!isSidebarCollapsed && (
-            <div className="flex items-center">
-              <Image src="/AMIlogo.svg" alt="AMI Logo" width={169} height={30} />
-            </div>
-          )}
-          <button
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="text-gray-500 cursor-pointer hover:text-gray-700"
-          >
-            <Image src="/sidebar-left.svg" alt="4AMI" width={24} height={24} />
-          </button>
-        </div>
-
-
-        {/* <nav className="flex-grow p-4">
-          <ul>
-
-            
-            <li className="mb-2">
-              <button
-                onClick={() => setActiveContent("dashboard")}
-                className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                  activeContent === "dashboard"
-                    ? "text-[#FFFFFF] bg-[#ED272C]"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-
-                {activeContent === "dashboard" ? (
-                  <img
-                    src="./Module-Icons/home.svg"
-                    alt="dashboard"
-                  />
-                ) : (
-                  <img src="./Module-Icons/home-b.svg" alt="dashboard" />
-                )}
-
-
-
-                {!isSidebarCollapsed && <span className="ml-3">Dashboard</span>}
-              </button>
-            </li>
-
-
-            <li className="mb-2">
-              <button
-                onClick={() => setActiveContent("manage-projects")}
-                className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                  activeContent === "manage-projects"
-                    ? "bg-[#ED272C] text-[#FFFFFF]"
-                    : "text-[#080607] hover:bg-gray-100"
-                }`}
-              >
-                {activeContent === "manage-projects" ? (
-                  <img
-                    src="./Module-Icons/manage-p.svg"
-                    alt="manage-projects"
-                  />
-                ) : (
-                  <img src="./Module-Icons/manage-projects.svg" alt="manage-projects" />
-                )}
-
-
-
-                {!isSidebarCollapsed && (
-                  <span className="ml-3">Manage Projects</span>
-                )}
-              </button>
-            </li>
-
-
-            <li className="mb-2">
-              <button
-                onClick={() => setActiveContent("manage-users")}
-                className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                  activeContent === "manage-users"
-                    ? "bg-[#ED272C] text-[#FFFFFF]"
-                    : "text-[#080607] hover:bg-gray-100"
-                }`}
-              >
-                {activeContent === "manage-users" ? (
-                  <img
-                    src="./Module-Icons/manage-u.svg"
-                    alt="Active Manage Users"
-                  />
-                ) : (
-                  <img
-                    src="./Module-Icons/manage-users.svg"
-                    alt="Manage Users"
-                  />
-                )}
-
-                {!isSidebarCollapsed && (
-                  <span className="ml-3">Manage Users</span>
-                )}
-              </button>
-            </li>
-
-
-            <li className="mb-2">
-              <button
-                onClick={() => setActiveContent("manage-assets")}
-                className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                  activeContent === "manage-assets"
-                    ? "bg-[#ED272C] text-[#FFFFFF]"
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-              >
-                {activeContent === "manage-assets" ? (
-                  <img
-                    src="./Module-Icons/manage-a.svg"
-                    alt="Active Manage Users"
-                  />
-                ) : (
-                  <img src="./Module-Icons/manage-assets.svg" alt="Manage Users" />
-                )}
-
-                {!isSidebarCollapsed && (
-                  <span className="ml-3">Manage Assets</span>
-                )}
-              </button>
-            </li>
-          </ul>
-        </nav> */}
-</div>
-
-
-        {/* <div className="p-4 border-t">
-          <Link
-            href="#"
-            className="flex items-center p-2 text-[#080607] hover:bg-gray-100"
-          >
-            <img src="./Module-Icons/settings.svg" alt="" />
-            {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
-          </Link>
-        </div> */}
- 
-      </aside>
-
-      {/* Main Content Common */}
-      <main className="flex-grow p-6">
+    <div className="min-h-screen bg-gray-100">
+      {/* Main Content */}
+      <main className="p-6">
         {/* Top Bar */}
         <div className="flex-grow p-4 sm:p-6 w-full">
               <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
@@ -203,26 +56,47 @@ export default function CustomerSignupPage() {
 
                     </div>
         
-                  <form>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    // Validate that both fields are filled
+                    if (!invitationCode.trim() || !email.trim()) {
+                      alert('Please fill in both invitation code and email address');
+                      return;
+                    }
+                    // Redirect to create account page with parameters
+                    router.push(`/CompanySignUpProcess/create-account?email=${encodeURIComponent(email)}&code=${encodeURIComponent(invitationCode)}`);
+                  }}>
                     
-                    {/* Password */}
+                    {/* Invitation Code */}
                     <div className="mb-6">
-                      <label htmlFor="text" className="block text-gray-700 text-sm font-bold mb-2">
+                      <label htmlFor="invitationCode" className="block text-gray-700 text-sm font-bold mb-2">
                         Invitation Code
                       </label>
-                      <input type="text" id="text" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
-                      {/* <p className="text-sm mt-1">
-                        Password strength:<span className="text-red-700"> Strong</span>
-                      </p> */}
+                      <input 
+                        type="text" 
+                        id="invitationCode" 
+                        name="invitationCode"
+                        value={invitationCode}
+                        onChange={(e) => setInvitationCode(e.target.value)}
+                        className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+                        placeholder="Enter your invitation code"
+                      />
                     </div>
 
-
-                    {/* Confirm Password */}
+                    {/* Email */}
                     <div className="mb-6">
                       <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
                         Email
                       </label>
-                      <input type="email" id="email" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
+                      <input 
+                        type="email" 
+                        id="email" 
+                        name="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" 
+                        placeholder="Enter your email address"
+                      />
                     </div>
         
 

@@ -1,42 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
-import ManageUsers from "../components/SupperAdminModules/ManageUsers";
-import ManageAssets from "../components/SupperAdminModules/ManageAssets";
-import SendInvitationForm from "../components/SendInvitationForm";
-import DashboardContent from "../components/SupperAdminModules/DashboardContent";
-import ManageProjects from "../components/SupperAdminModules/ManageProjects";
 
 export default function SignupSuccessfullPage() {
-  const [activeContent, setActiveContent] = useState("dashboard");
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-
-  const [showSendInvitation, setShowSendInvitation] = useState(false);
-
-  if (showSendInvitation) {
-    return (
-      <SendInvitationForm
-        onInvitationSent={() => setShowSendInvitation(false)}
-      />
-    );
-  }
-
-  const renderMainContent = () => {
-    switch (activeContent) {
-      case "dashboard":
-        return <DashboardContent setActiveContent={setActiveContent} />;
-      case "manage-users":
-        return <ManageUsers />;
-      case "manage-assets":
-        return <ManageAssets />;
-      case "manage-projects":
-        return <ManageProjects />;
-      default:
-        return null;
-    }
-  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -54,7 +22,7 @@ export default function SignupSuccessfullPage() {
         >
           {!isSidebarCollapsed && (
             <div className="flex items-center">
-              <Image src="AMIlogo.svg" alt="AMI Logo" width={169} height={30} />
+              <Image src="/AMILogo.svg" alt="AMI Logo" width={169} height={30} />
             </div>
           )}
           <button
@@ -197,66 +165,30 @@ export default function SignupSuccessfullPage() {
         <div className="flex-grow p-4 sm:p-6 w-full">
               <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
                 
-                {/* Form Section */}
+                {/* Success Section */}
                 <div className="w-full lg:w-3/5">
-                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">Create Your Account</h1>
-                  <p className="text-gray-600 mb-6 text-sm sm:text-base">
-                    Please provide your details below to set up your new account. This will allow you to access all services and manage your profile securely
-                  </p>
-
-                  {/* Step Progress */}
-                    <div className="mb-6">
-                    <div className="flex justify-end mb-2">
-                        <p className="text-sm font-medium">
-                            <span className="text-red-500 font-medium">Step 1</span> of 3
-                        </p>
-                    </div>
-                    {/* <div className="h-3 bg-gray-200 rounded-full">
-                        <div className="h-3 bg-red-500 rounded-full w-full"></div>
-                        <div className="h-3 bg-gray-200 rounded-full w-full"></div>
-                    </div> */}
-
-                    <div className="relative h-3 bg-gray-200 rounded-full">
-                      <div className="absolute top-0 left-0 h-3 bg-red-500 rounded-full w-1/3"></div>
+                  <div className="text-center">
+                    {/* Success Icon - Red circle with white checkmark */}
+                    <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-500 mb-6">
+                      <svg className="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M5 13l4 4L19 7"></path>
+                      </svg>
                     </div>
 
-                    </div>
-        
-                  <form>
-                    
-                    {/* Password */}
-                    <div className="mb-6">
-                      <label htmlFor="text" className="block text-gray-700 text-sm font-bold mb-2">
-                        Invitation Code
-                      </label>
-                      <input type="text" id="text" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
-                      {/* <p className="text-sm mt-1">
-                        Password strength:<span className="text-red-700"> Strong</span>
-                      </p> */}
-                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-black">Signed Up Successfully!</h1>
+                    <p className="text-gray-600 mb-8 text-sm sm:text-base">
+                      Your account has been successfully created. Register your company to start using the dashboard and get started!
+                    </p>
 
-
-                    {/* Confirm Password */}
-                    <div className="mb-6">
-                      <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-                        Email
-                      </label>
-                      <input type="email" id="email" className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline" />
-                    </div>
-        
-
-                    {/* Buttons */}
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-
-                      <button
-                        type="submit"
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
-                      >
-                        Next
-                      </button>
-                      
-                    </div>
-                  </form>
+                    {/* Go to Log In Button */}
+                    <button
+                      type="button"
+                      onClick={() => window.location.href = '/login'}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 rounded focus:outline-none focus:shadow-outline"
+                    >
+                      Go to Log In
+                    </button>
+                  </div>
                 </div>
         
                 {/* Image & Links */}

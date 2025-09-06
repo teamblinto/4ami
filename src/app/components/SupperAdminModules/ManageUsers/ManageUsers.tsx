@@ -1,10 +1,14 @@
 "use client";
 
 import { useState } from 'react';
-import SendInvitationForm from '../SendInvitationForm';
+import SendInvitationForm from './SendInvitationForm';
 
-export default function ManageUsers() {
-  const [showSendInvitation, setShowSendInvitation] = useState(false);
+interface ManageUsersProps {
+  autoShowInvitation?: boolean;
+}
+
+export default function ManageUsers({ autoShowInvitation = false }: ManageUsersProps) {
+  const [showSendInvitation, setShowSendInvitation] = useState(autoShowInvitation);
 
   if (showSendInvitation) {
     return (

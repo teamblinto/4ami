@@ -172,30 +172,44 @@ const RecentActivity = () => (
     </div>
 );
 
-const QuickActions = ({ setActiveContent }: DashboardContentProps) => (
-    <div className="bg-white p-4 rounded-lg shadow-sm">
-        <h3 className="text-lg text-[#080607] font-bold mb-4">Quick Actions</h3>
-        <ul className="divide-y divide-gray-200">
-            {quickActionsData.map((action: QuickAction, index) => (
-                <li key={index}>
-                    <button className="w-full flex items-center py-3 hover:bg-gray-50 transition-colors">
-                        <div className={`w-10 h-10 rounded-full mr-3 flex items-center justify-center ${action.iconBg}`}>
-                           {action.isIconText ? (
-                                <span className="text-white text-2xl">{action.icon}</span>
-                           ) : (
-                                <Image src={action.icon} alt={action.title} width={37} height={37} />
-                           )}
-                        </div>
-                        <div className="text-left">
-                            <div className={`font-semibold text-[#080607] ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
-                            {action.subtitle && <div className="text-sm text-gray-500">{action.subtitle}</div>}
-                        </div>
-                    </button>
-                </li>
-            ))}
-        </ul>
-    </div>
-);
+const QuickActions = ({ setActiveContent }: DashboardContentProps) => {
+    const handleActionClick = (actionTitle: string) => {
+        if (actionTitle === 'Add New User') {
+            setActiveContent('manage-users-invitation');
+        } else if (actionTitle === 'Add New asset') {
+            setActiveContent('manage-assets');
+        }
+        // Add more actions as needed
+    };
+
+    return (
+        <div className="bg-white p-4 rounded-lg shadow-sm">
+            <h3 className="text-lg text-[#080607] font-bold mb-4">Quick Actions</h3>
+            <ul className="divide-y divide-gray-200">
+                {quickActionsData.map((action: QuickAction, index) => (
+                    <li key={index}>
+                        <button 
+                            onClick={() => handleActionClick(action.title)}
+                            className="w-full flex items-center py-3 hover:bg-gray-50 transition-colors"
+                        >
+                            <div className={`w-10 h-10 rounded-full mr-3 flex items-center justify-center ${action.iconBg}`}>
+                               {action.isIconText ? (
+                                    <span className="text-white text-2xl">{action.icon}</span>
+                               ) : (
+                                    <Image src={action.icon} alt={action.title} width={37} height={37} />
+                               )}
+                            </div>
+                            <div className="text-left">
+                                <div className={`font-semibold text-[#080607] ${action.title === 'Add New asset' ? 'text-red-500' : ''}`}>{action.title}</div>
+                                {action.subtitle && <div className="text-sm text-gray-500">{action.subtitle}</div>}
+                            </div>
+                        </button>
+                    </li>
+                ))}
+            </ul>
+        </div>
+    );
+};
 
 
 // --- MAIN COMPONENT ---
