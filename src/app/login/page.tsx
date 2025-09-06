@@ -44,7 +44,7 @@ export default function LoginPage() {
               <h2 className="text-2xl font-bold mb-2">Log In</h2>
               <p className="text-gray-600 mb-6">
                 <span className="font-semibold text-red-500">Welcome back!</span>{" "}
-                Log in to access AMI's full suite of services designed to support
+                Log in to access AMI&apos;s full suite of services designed to support
                 your physical asset management needs.
               </p>
 
