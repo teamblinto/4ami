@@ -3,6 +3,7 @@
 import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 // --- MOCK DATA ---
 const statsData = [
@@ -33,9 +34,6 @@ const quickActionsData = [
 
 
 // --- HELPER FUNCTIONS & PROPS ---
-interface DashboardContentProps {
-  setActiveContent: (content: string) => void;
-}
 
 interface StatCardProps {
     title: string;
@@ -172,12 +170,14 @@ const RecentActivity = () => (
     </div>
 );
 
-const QuickActions = ({ setActiveContent }: DashboardContentProps) => {
+const QuickActions = () => {
+    const router = useRouter();
+    
     const handleActionClick = (actionTitle: string) => {
         if (actionTitle === 'Add New User') {
-            setActiveContent('manage-users-invitation');
+            router.push('/dashboard/manage-users/send-invitation');
         } else if (actionTitle === 'Add New asset') {
-            setActiveContent('manage-assets');
+            router.push('/dashboard/manage-assets/add-asset');
         }
         // Add more actions as needed
     };
@@ -214,7 +214,7 @@ const QuickActions = ({ setActiveContent }: DashboardContentProps) => {
 
 // --- MAIN COMPONENT ---
 
-export default function DashboardContent({ setActiveContent }: DashboardContentProps) {
+export default function DashboardContent() {
   return (
     <div className="space-y-6">
       <div>
@@ -229,7 +229,7 @@ export default function DashboardContent({ setActiveContent }: DashboardContentP
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <RecentActivity />
-        <QuickActions setActiveContent={setActiveContent} />
+        <QuickActions />
       </div>
     </div>
   );
