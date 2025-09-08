@@ -162,11 +162,11 @@ export default function SignupSuccessfullPage() {
       {/* Main Content Common */}
       <main className="flex-grow p-6">
         {/* Top Bar */}
-        <div className="flex-grow p-4 sm:p-6 w-full">
+        <div className="flex-grow p-4 sm:p-6 w-full mt-20">
               <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
                 
                 {/* Success Section */}
-                <div className="w-full lg:w-3/5">
+                <div className="w-full">
                   <div className="text-center">
                     {/* Success Icon - Red circle with white checkmark */}
                     <div className="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-red-500 mb-6">
@@ -184,7 +184,7 @@ export default function SignupSuccessfullPage() {
                     <button
                       type="button"
                       onClick={() => window.location.href = '/login'}
-                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 rounded focus:outline-none focus:shadow-outline"
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg focus:outline-none focus:shadow-outline mb-4"
                     >
                       Go to Log In
                     </button>
@@ -192,7 +192,7 @@ export default function SignupSuccessfullPage() {
                 </div>
         
                 {/* Image & Links */}
-                <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4">
+                {/* <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4">
                   <Image
                     src="/invitation-img.png"
                     alt="Dashboard Illustration"
@@ -207,7 +207,7 @@ export default function SignupSuccessfullPage() {
                     <a href="#" className="underline hover:text-gray-600">Cookie Policy</a>{' '}
                     <a href="#" className="underline hover:text-gray-600">Anti Bribery Policy</a>
                   </div>
-                </div>
+                </div> */}
         
               </div>
             </div>

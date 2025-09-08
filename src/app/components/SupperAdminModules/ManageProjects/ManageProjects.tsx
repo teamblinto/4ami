@@ -38,7 +38,7 @@ export default function ManageProjects() {
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
       <div className="mb-4">
-        <h1 className="text-2xl bg-[#000000] font-bold">Manage Projects</h1>
+        <h1 className="text-2xl text-[#080607] font-bold">Manage Projects</h1>
         <p className="text-sm text-gray-500">Dashboard / Manage Projects</p>
       </div>
 
