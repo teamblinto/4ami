@@ -69,8 +69,16 @@ export default function ManageAssets() {
           </select>
           <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px] cursor-pointer">
             <span className="text-[10px]">
-              <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+              <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <g clip-path="url(#clip0_3122_5489)">
+              <path d="M3.95396 4.9359C4.11109 5.16328 4.06412 4.97381 4.06412 9.50615C4.06412 9.91174 4.52686 10.1439 4.85299 9.90127C6.2466 8.85055 6.52504 8.75955 6.52504 8.26809C6.52504 4.96527 6.48654 5.15102 6.63519 4.9359L8.89826 1.85547H1.69092L3.95396 4.9359Z" fill="#ED272C"/>
+              <path d="M9.7533 0.251172C9.67244 0.0962891 9.51385 0 9.33926 0H1.25027C0.873223 0 0.651367 0.425332 0.867656 0.734375C0.869434 0.737344 0.843105 0.701309 1.26063 1.26953H9.32889C9.68469 0.785293 9.92252 0.576074 9.7533 0.251172Z" fill="#ED272C"/>
+              </g>
+              <defs>
+              <clipPath id="clip0_3122_5489">
+              <rect width="10" height="10" fill="white" transform="translate(0.295898)"/>
+              </clipPath>
+              </defs>
               </svg>
             </span>
             Add Filter
@@ -88,32 +96,40 @@ export default function ManageAssets() {
       <div className="bg-white overflow-x-auto">
         <table className="min-w-full border-collapse">
           <thead className="bg-white">
-            <tr className=''>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
-                Select
+            <tr>
+              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+                <input type="checkbox" className="rounded border-gray-300" />
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between">
-                  <span>Asset</span>
-                  <img src="/Sort.svg" alt="" />
+              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+                <div className="flex items-center gap-1">
+                  Asset
+                  <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between">
-                  <span>Industry</span>
-                  <img src="/Sort.svg" alt="" />
+              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+                <div className="flex items-center gap-1">
+                  Industry
+                  <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between">
-                  <span>Make</span>
-                  <img src="/Sort.svg" alt="" />
+              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+                <div className="flex items-center gap-1">
+                  Make
+                  <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between">
-                  <span>Model</span>
-                  <img src="/Sort.svg" alt="" />
+              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+                <div className="flex items-center gap-1">
+                  Model
+                  <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
                 </div>
               </th>
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
@@ -122,9 +138,9 @@ export default function ManageAssets() {
           <tbody>
             {filteredAssets.map((asset, index) => {
               return (
-                <tr key={index} className="bg-white">
-                  <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
-                    <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
+                <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
+                  <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
+                    <input type="checkbox" className="rounded border-gray-300" />
                   </td>
                   <td className="px-6 pt-3 pb-3 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{asset.asset}</td>
                   <td className="px-6 pt-3 pb-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.industry}</td>
@@ -146,7 +162,7 @@ export default function ManageAssets() {
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <div className="text-sm text-[#343A40]">1-10 of 20 items</div>
+        <div className="text-sm text-gray-700">1-10 of 20 items</div>
         <div className="flex items-center space-x-2">
           <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -169,7 +185,9 @@ export default function ManageAssets() {
           />
           <div className="text-sm text-[#343A40] ml-2">/Page</div>
         </div>
-      </div>
+      </div> */}
+
+
     </div>
   );
 }
