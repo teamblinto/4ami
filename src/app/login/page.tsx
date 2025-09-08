@@ -41,7 +41,7 @@ export default function LoginPage() {
           <div className="bg-white shadow-md rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
             {/* Left Section - Login Form */}
             <div className="w-full md:w-2/5 p-6">
-              <h2 className="text-2xl font-bold mb-2">Log In</h2>
+              <h2 className="text-2xl text-[#080607] font-bold mb-2">Log In</h2>
               <p className="text-gray-600 mb-6">
                 <span className="font-semibold text-red-500">Welcome back!</span>{" "}
                 Log in to access AMI&apos;s full suite of services designed to support

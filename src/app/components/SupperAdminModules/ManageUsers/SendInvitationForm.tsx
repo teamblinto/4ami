@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
-import emailjs from '@emailjs/browser';
+// import emailjs from '@emailjs/browser';
 import { emailjsConfig } from '../../../../lib/emailjs-config';
 
 interface SendInvitationFormProps {

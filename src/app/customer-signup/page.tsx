@@ -33,7 +33,7 @@ function ClientContent() {
                 
                 {/* Form Section */}
                 <div className="w-full lg:w-3/5">
-                  <h1 className="text-2xl sm:text-3xl font-bold mb-2">Create Your Account</h1>
+                  <h1 className="text-2xl text-[#080607] sm:text-3xl font-bold mb-2">Create Your Account</h1>
                   <p className="text-gray-600 mb-6 text-sm sm:text-base">
                     Please provide your details below to set up your new account. This will allow you to access all services and manage your profile securely
                   </p>
@@ -41,7 +41,7 @@ function ClientContent() {
                   {/* Step Progress */}
                     <div className="mb-6">
                     <div className="flex justify-end mb-2">
-                        <p className="text-sm font-medium">
+                        <p className="text-sm text-[#6C757D] font-medium">
                             <span className="text-red-500 font-medium">Step 1</span> of 3
                         </p>
                     </div>
@@ -105,7 +105,7 @@ function ClientContent() {
 
                       <button
                         type="submit"
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 border rounded focus:outline-none focus:shadow-outline w-full sm:w-auto"
+                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 border rounded-lg focus:outline-none focus:shadow-outline w-full sm:w-auto"
                       >
                         Next
                       </button>
