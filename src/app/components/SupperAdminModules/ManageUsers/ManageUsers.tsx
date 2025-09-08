@@ -31,19 +31,19 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
           <h1 className="text-3xl font-bold text-gray-900">Manage Users</h1>
           <p className="text-gray-500">Dashboard / Manage User</p>
         </div>
-        <div className="flex space-x-2">
-          <button onClick={() => router.push('/dashboard/manage-users/send-invitation')} className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600">
+        <div className="flex gap-3 space-x-2">
+          <button onClick={() => router.push('/dashboard/manage-users/send-invitation')} className="bg-red-500 text-white px-8 py-2 rounded-[8px] hover:bg-red-600 cursor-pointer">
             + Add New User
           </button>
           <button 
             onClick={() => router.push('/dashboard/manage-users/import')}
-            className="bg-white border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 flex items-center gap-2 text-gray-700">
+            className="bg-white px-8 py-2 rounded-[8px] border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 flex items-center gap-2 text-gray-700 cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
             Import User Data
           </button>
-          <button className="bg-white border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 flex items-center gap-2 text-gray-700">
+          <button className="bg-white px-8 py-2 rounded-[8px] border border-gray-300 px-4 py-2 rounded-md hover:bg-gray-50 flex items-center gap-2 text-gray-700 cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 12l3-3m0 0l3 3m-3-3v12" />
             </svg>
@@ -55,10 +55,10 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
       {/* Filters and Search */}
       <div className="flex justify-between items-center mb-4">
         <div className="flex space-x-2">
-          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 cursor-pointer">
             <option>Role All</option>
           </select>
-          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
+          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px] cursor-pointer">
             <span className="text-[10px]">
               <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
@@ -71,12 +71,12 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
               </svg>
             </span>
           </button>
-          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600">Clear Filter</button>
-          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600">Edit Column</button>
+          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">Clear Filter</button>
+          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">Edit Column</button>
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           Rows per page:
-          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2">
+          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2 cursor-pointer">
             <option>10</option>
           </select>
         </div>
@@ -87,22 +87,20 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
         <table className="min-w-full border-collapse">
           <thead className="bg-white">
             <tr>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
-                <input type="checkbox" className="rounded border-gray-300" />
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
-                <div className="flex items-center gap-1">
-                  Username
-                  <svg className="w-3 h-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                  </svg>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between">
+                  <span>Username</span>
+                  <img src="/Sort.svg" alt="" />
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">First Name</th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">Last Name</th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">Role</th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">E-Mail</th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">Action</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">First Name</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Last Name</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Role</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">E-Mail</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -121,25 +119,21 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
             ].map((user, index) => {
               const isStriped = index % 2 === 0;
               return (
-                <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
-                    <input type="checkbox" className="rounded border-gray-300" />
+                <tr key={index} className="bg-white">
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{user.username}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{user.firstName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{user.lastName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{user.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
-                    <button className="text-indigo-600 hover:text-indigo-900 mr-4">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{user.username}</td>
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.firstName}</td>
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.lastName}</td>
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.role}</td>
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
+                    <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                      <img src="/pencil.svg" alt="" />
                     </button>
-                    <button className="text-red-600 hover:text-red-900">
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
+                    <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                      <img src="/bin.svg" alt="" />
                     </button>
                   </td>
                 </tr>
@@ -151,23 +145,30 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
 
       {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
-        <div className="text-sm text-gray-700">1-10 of 120 items</div>
+        <div className="text-sm text-[#343A40]">1-10 of 120 items</div>
         <div className="flex items-center space-x-2">
-          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700">
+          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <button className="border border-gray-300 rounded-md p-2 bg-red-500 text-white hover:bg-red-600">1</button>
-          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700">2</button>
-          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700">3</button>
-          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700">4</button>
-          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700">
+          <button className="border border-gray-300 rounded-md px-4 py-2 bg-red-500 text-white hover:bg-red-600 cursor-pointer">1</button>
+          <button className="border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-50 text-gray-700 cursor-pointer">2</button>
+          <button className="border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-50 text-gray-700 cursor-pointer">3</button>
+          <button className="border border-gray-300 rounded-md px-4 py-2 hover:bg-gray-50 text-gray-700 cursor-pointer">4</button>
+          <button className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>
           </button>
-          <div className="text-sm text-gray-700 ml-2">10 / Page</div>
+          <input 
+            type="number" 
+            placeholder="10" 
+            className="w-16 px-2 text-black py-2 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
+            min="1"
+            max="10"
+          />
+          <div className="text-sm text-[#343A40] ml-2">/Page</div>
         </div>
       </div>
     </div>
