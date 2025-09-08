@@ -134,14 +134,14 @@ export default function ManageProjects() {
       <div className="flex justify-between items-center mt-4">
         <div className="text-sm text-gray-700">1-10 of 20 items</div>
         <div className="flex items-center space-x-2">
-          <button className="border border-gray-300 rounded-md pt-3 pb-3 pl-4 pr-4 hover:bg-gray-50 text-gray-700">
+          <button className="border border-gray-300 rounded-md pt-3 pb-3 pl-3 pr-3 hover:bg-gray-50 text-gray-700">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
           <button className="border border-gray-300 rounded-md pt-2 pb-2 pl-4 pr-4 bg-red-500 text-white hover:bg-red-600">1</button>
           <button className="border border-gray-300 rounded-md pt-2 pb-2 pl-4 pr-4 hover:bg-gray-50 text-gray-700">2</button>
-          <button className="border border-gray-300 rounded-md pt-3 pb-3 pl-4 pr-4 hover:bg-gray-50 text-gray-700">
+          <button className="border border-gray-300 rounded-md pt-3 pb-3 pl-3 pr-3 hover:bg-gray-50 text-gray-700">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>

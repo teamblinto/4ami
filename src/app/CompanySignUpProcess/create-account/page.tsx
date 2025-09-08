@@ -261,7 +261,7 @@ function ClientContent() {
                 alt="Dashboard Illustration"
                 width={600}
                 height={800}
-                className="w-full h-auto max-w-full max-h-[500px] object-contain"
+                className="w-full h-auto max-w-full max-h-[800px] object-contain"
               />
     
               <div className="w-full mt-6 text-sm text-end flex flex-wrap justify-end gap-4">
