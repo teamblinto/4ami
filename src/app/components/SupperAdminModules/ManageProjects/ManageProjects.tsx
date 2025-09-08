@@ -86,10 +86,10 @@ export default function ManageProjects() {
           <thead className="bg-white">
             <tr>
               <th className="px-6 py-2 text-center text-xs font-medium text-gray-600 border border-[#D0D5DD]">
-                <input type="checkbox" className="rounded border-gray-300" />
+                Select
               </th>
               <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center justify-between gap-1">
                   Service Name
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" stroke-width="1.5" stroke-linecap="round"/>
@@ -98,7 +98,7 @@ export default function ManageProjects() {
               </th>
               <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">Description</th>
               <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
-                <div className="flex items-center gap-1">
+                <div className="flex items-center justify-between gap-1">
                   Status
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" stroke-width="1.5" stroke-linecap="round"/>
