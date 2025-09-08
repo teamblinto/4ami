@@ -405,9 +405,9 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
           <Image
             src="/invitation-img.png"
             alt="Dashboard Illustration"
-            width={600}
+            width={400}
             height={800}
-            className="w-full h-auto max-w-full max-h-[500px] object-contain"
+            className="w-full h-auto max-w-full max-h-[1000px] object-contain"
           />
 
           <div className="w-full mt-6 text-sm text-end flex flex-wrap justify-end gap-4">
