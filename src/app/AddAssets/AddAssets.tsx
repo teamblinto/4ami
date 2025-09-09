@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 interface AddAssetsProps {
   onBack?: () => void;
@@ -31,12 +32,20 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log('Form submitted:', formData);
-    // Handle form submission logic here
     
-    // After successful submission, go back to the list
-    if (onBack) {
-      onBack();
-    }
+    // Show loading toast
+    const loadingToast = toast.loading('Creating asset...');
+    
+    // Simulate API call
+    setTimeout(() => {
+      toast.dismiss(loadingToast);
+      toast.success('Asset created successfully!');
+      
+      // After successful submission, go back to the list
+      if (onBack) {
+        onBack();
+      }
+    }, 2000);
   };
 
   const handleDiscardChanges = () => {
@@ -52,6 +61,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
       specialTransportationConsideration: '',
       yearOfManufacture: '2003'
     });
+    toast.success('Changes discarded successfully!');
   };
 
   return (
