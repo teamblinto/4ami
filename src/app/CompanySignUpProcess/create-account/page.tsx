@@ -70,16 +70,16 @@ function ClientContent() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
+    <div className="min-h-screen  bg-[#FBFBFB] flex flex-col">
       <header className="px-12 py-4">
-        <Image src="/AMILogo.svg" alt="AMI Logo" width={150} height={50} />
+        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
-      <main className="flex-grow flex items-center justify-center">
+      <main className="flex-grow flex items-center  mt-4 justify-center">
         <div
           className="rounded-lg "
           style={{ width: "1210px", maxWidth: "1210px" }}
         >
-          <div className="flex gap-[64px] p-6 bg-white min-h-[600px]">
+          <div className="flex gap-[64px] p-6 bg-white text-black min-h-[600px]">
             {/* Form Section */}
             <div className="flex-1  flex flex-col ">
               <h1 className="text-3xl font-bold text-black mb-2">

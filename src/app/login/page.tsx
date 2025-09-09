@@ -23,18 +23,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div className="w-full max-w-[1146px] mx-auto">
-        {/* Header */}
-        <header className="flex items-center justify-between p-4 bg-gray-100">
-          <div className="flex items-center cursor-pointer">
-            <Image
-              src="/logo.svg"
-              alt="AMI Logo"
-              width={230}
-              height={35}
-              style={{ width: "230px", height: "auto" }}
-            />
-          </div>
-        </header>
+      <header className="px-12 py-4">
+        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+      </header>
 
         {/* Main Content */}
         <main className="flex-grow flex items-center justify-center bg-gray-100 pt-20 pb-20">
