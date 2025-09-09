@@ -64,13 +64,13 @@ const StatCard = ({ title, value, change, changeColor, icon }: StatCardProps) =>
     <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg relative">
         <div className='flex flex-col gap-1'>
             <div className="text-sm font-medium text-[#6C757D] flex items-center">{title} {title === 'Pending Requests' && <span className="ml-1 text-xs">
-                <Image className='pl-2' src="/arrow-two.svg" alt="arrow" width={10} height={10} /></span>}
+                <Image className='pl-2' src="/arrow-two.svg" alt="arrow" width={10} height={10} style={{ width: "auto", height: "auto" }} /></span>}
                 </div>
             <div className="text-2xl font-bold text-[#080607]">{value}</div>
             <div className={`text-xs font-regular ${changeColor}`}>{change}</div>
         </div>
         <div className={`absolute top-3 right-[18px]`}>
-            <Image src={icon} alt={title} width={38} height={38} />
+            <Image src={icon} alt={title} width={38} height={38} style={{ width: "auto", height: "auto" }} />
         </div>
     </div>
 );
@@ -84,14 +84,14 @@ const ProjectsTable = () => (
         <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
             <div className="flex items-center gap-2 flex-wrap">
 <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>Project ID All <span><Image src="/white-arrow.svg" alt="" width={10} height={10} /></span> </option>
+                    <option value="all">Project ID All</option>
                 </select>
                 <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>Status All <span><Image src="/white-arrow.svg" alt="" width={10} height={10} /></span> </option>
+                    <option value="all">Status All</option>
                 </select>
                 <button className="h-8  px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
-                    <span className="text-[10px]"><Image src="/filter.svg" alt="" width={10} height={10} /></span>
-                    Add Filter <span><Image src="/arrow-filter.svg" alt="" width={10} height={10} /></span>
+                    <span className="text-[10px]"><Image src="/filter.svg" alt="" width={10} height={10} style={{ width: "auto", height: "auto" }} /></span>
+                    Add Filter <span><Image src="/arrow-filter.svg" alt="" width={10} height={10} style={{ width: "auto", height: "auto" }} /></span>
                 </button>
                 <button className="h-8 px-3 border items-center border-gray-300 rounded-md text-xs bg-white text-red-600">
                  
@@ -196,7 +196,7 @@ const QuickActions = () => {
                                {action.isIconText ? (
                                     <span className="text-white text-2xl">{action.icon}</span>
                                ) : (
-                                    <Image src={action.icon} alt={action.title} width={37} height={37} />
+                                    <Image src={action.icon} alt={action.title} width={37} height={37} style={{ width: "auto", height: "auto" }} />
                                )}
                             </div>
                             <div className="text-left">

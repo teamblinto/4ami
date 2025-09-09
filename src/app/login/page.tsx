@@ -4,19 +4,51 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { ClientPageRoot } from "next/dist/client/components/client-page";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === "4ami@gmail.com" && password === "4ami") {
-      router.push("/dashboard");
-    } else {
-      alert("Invalid credentials");
+    setIsLoading(true);
+
+    try {
+      const response = await fetch("/api/auth/signin", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      console.log(data)
+      if (response.ok) {
+        // Store token in localStorage
+        if (data.token) {
+          localStorage.setItem("authToken", data.token);
+        }
+        
+        toast.success("Login successful!");
+        router.push("/dashboard");
+      } else {
+        toast.error(data.message || "Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("Network error. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -137,9 +169,14 @@ export default function LoginPage() {
                 <div className="flex items-center justify-between">
                   <button
                     type="submit"
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    disabled={isLoading}
+                    className={`${
+                      isLoading 
+                        ? "bg-gray-400 cursor-not-allowed" 
+                        : "bg-red-500 hover:bg-red-700"
+                    } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors`}
                   >
-                    Log In
+                    {isLoading ? "Signing In..." : "Log In"}
                   </button>
                 </div>
               </form>

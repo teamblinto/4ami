@@ -17,7 +17,7 @@ function ClientContent() {
   
   const searchParams = useSearchParams();
   const router = useRouter();
-
+  
   useEffect(() => {
     // Get user info from URL parameters
     const email = searchParams.get('email') || '';
@@ -32,6 +32,7 @@ function ClientContent() {
       lastName
     });
   }, [searchParams]);
+  console.log(userInfo)
 
 
   return (
