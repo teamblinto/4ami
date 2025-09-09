@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import emailjs from '@emailjs/browser';
 import { emailjsConfig } from '../../../../lib/emailjs-config';
 
@@ -73,7 +74,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     // Test EmailJS first
     const isEmailJSReady = await testEmailJS();
     if (!isEmailJSReady) {
-      alert('EmailJS is not properly configured. Please check the console for details.');
+      toast.error('EmailJS is not properly configured. Please check the console for details.');
       setIsLoading(false);
       return;
     }
@@ -161,7 +162,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       );
       console.log('EmailJS Success:', result);
       
-      alert('Invitation sent successfully!');
+      toast.success('Invitation sent successfully!');
       onInvitationSent(); // back to dashboard
     } catch (error: unknown) {
       console.error('Error sending email:', error);
@@ -199,7 +200,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         errorMessage += 'Please check your internet connection and try again.';
       }
       
-      alert(errorMessage);
+      toast.error(errorMessage);
       console.log('EmailJS Config:', { serviceId: emailjsConfig.serviceId, templateId: emailjsConfig.templateId, publicKey: emailjsConfig.publicKey });
       console.log('Sent Parameters:', {
         ...minimalParams,

@@ -16,12 +16,12 @@ export default function AddAssetPage() {
         </div>
         <div className="text-center py-8">
           <p className="text-green-600 mb-4">Asset added successfully!</p>
-          <Link 
+          {/* <Link 
             href="/dashboard/manage-assets" 
             className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
           >
             Back to Manage Assets
-          </Link>
+          </Link> */}
         </div>
       </div>
     );
