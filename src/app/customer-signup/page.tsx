@@ -23,7 +23,7 @@ function ClientContent() {
   return (
     <div className="min-h-screen bg-[#FBFBFB]">
       {/* Header with Logo */}
-      <header className="p-6">
+      <header className="px-12 py-4">
         <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
 
@@ -111,7 +111,7 @@ function ClientContent() {
                 {/* Next Button */}
                 <button
                   type="submit"
-                  className=" bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                  className=" bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 transition-colors"
                 >
                   Next
                 </button>
