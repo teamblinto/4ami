@@ -1,11 +1,25 @@
 "use client";
+import Image from "next/image";
 
 export default function SignupSuccessfullPage() {
 
   return (
+
     <div className="min-h-screen bg-gray-100">
+
+      <div className="pt-[32px] bg-transparent">
+      <Image
+        src="/logo.png" // ✅ image should be inside /public/logo.png
+        alt="Logo"
+        width={200}
+        height={35}
+        className="pl-[32px] pt-[32px] bg-transparent"
+        priority
+      />
+    </div>
+      
       {/* Main Content */}
-      <main className="p-6">
+      <main className="p-6 ml-10 mr-10 mt-28">
         {/* Top Bar */}
         <div className="flex-grow p-4 sm:p-6 w-full">
               <div className="bg-white p-6 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row w-full gap-20">
@@ -59,5 +73,6 @@ export default function SignupSuccessfullPage() {
 
       </main>
     </div>
+  
   );
 }
