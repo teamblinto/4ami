@@ -84,8 +84,8 @@ export default function ManageProjects() {
       <div className="bg-white overflow-x-auto">
         <table className="min-w-full border-collapse">
           <thead className="bg-white">
-            <tr>
-              <th className="px-6 py-2 text-center text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+            <tr className=''>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
                 Select
               </th>
               <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
@@ -113,8 +113,8 @@ export default function ManageProjects() {
               const isStriped = index % 2 === 0;
               return (
                 <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="text-center px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
-                    <input type="checkbox" className="rounded border-gray-300" />
+                  <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{project.serviceName}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description}</td>
@@ -146,29 +146,16 @@ export default function ManageProjects() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>
           </button>
-          <select className="border rounded-md p-2 w-[138px] text-gray-700">
-            <option>10</option>
-            <option>20</option>
-          </select>
+          <input 
+            type="number" 
+            placeholder="10" 
+            className="w-16 px-2 text-black py-2 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
+            min="1"
+            max="10"
+          />
           <span className="text-sm text-gray-600">/Page</span>
         </div>
       </div>
-
-      {/* <div className="flex items-center justify-between mt-4 flex-wrap gap-2">
-        <p className="text-sm text-gray-600">1-10 of 20 items</p>
-        <div className="flex items-center gap-2">
-          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm">{'<'}</button>
-          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm bg-gray-200">1</button>
-          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm">2</button>
-          <button className="pt-2 pb-2 pl-4 pr-4 border rounded-md text-sm">{'>'}</button>
-          <select className="border rounded-md p-2 w-[138px]">
-            <option>10</option>
-            <option>20</option>
-          </select>
-          <span className="text-sm text-gray-600">/Page</span>
-        </div>
-      </div> */}
-
 
     </div>
   );
