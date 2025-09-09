@@ -195,12 +195,12 @@ export default function DashboardLayout({
           </div>
           <div className="flex items-center space-x-4">
             <button className="relative text-gray-600 hover:text-gray-800">
-              <Image src="/notification-bell.svg" alt="" width={20} height={20} />
+              <Image src="/notification-bell.svg" alt="" width={20} height={20} style={{ width: "auto", height: "auto" }} />
             </button>
             <button className="relative text-gray-600 hover:text-gray-800">
-              <Image src="/Display-Picture.svg" alt="" width={28} height={28} />
+              <Image src="/Display-Picture.svg" alt="" width={28} height={28} style={{ width: "auto", height: "auto" }} />
             </button>
-            <Image src="/arrow.svg" alt="" width={16} height={16} />
+            <Image src="/arrow.svg" alt="" width={16} height={16} style={{ width: "auto", height: "auto" }} />
           </div>
         </div>
 
