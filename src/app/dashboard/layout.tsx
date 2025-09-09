@@ -2,15 +2,15 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useSidebar } from "../contexts/SidebarContext";
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { isSidebarCollapsed, toggleSidebar } = useSidebar();
   const pathname = usePathname();
 
   const isActive = (path: string) => {
@@ -42,7 +42,7 @@ export default function DashboardLayout({
             {!isSidebarCollapsed && (
               <div className="flex items-center">
                 <Image
-                  src="AMIlogo.svg"
+                  src="/AMILogo.svg"
                   alt="AMI Logo"
                   width={169}
                   height={30}
@@ -51,10 +51,7 @@ export default function DashboardLayout({
             )}
             <div className="relative group">
               <button
-                onClick={() => {
-                  console.log('Button clicked, current state:', isSidebarCollapsed);
-                  setIsSidebarCollapsed(!isSidebarCollapsed);
-                }}
+                onClick={toggleSidebar}
                 className="text-gray-500 cursor-pointer hover:text-[#E9E9E9]"
               >
                 {isSidebarCollapsed ? (
