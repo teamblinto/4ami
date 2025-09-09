@@ -190,7 +190,7 @@ const QuickActions = () => {
                     <li key={index}>
                         <button 
                             onClick={() => handleActionClick(action.title)}
-                            className="w-full flex items-center py-3 hover:bg-gray-50 transition-colors"
+                            className="w-full flex cursor-pointer items-center py-3 hover:bg-gray-50 transition-colors"
                         >
                             <div className={`w-10 h-10 rounded-full mr-3 flex items-center justify-center ${action.iconBg}`}>
                                {action.isIconText ? (

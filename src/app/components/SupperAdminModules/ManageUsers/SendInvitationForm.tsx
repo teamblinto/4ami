@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
-// import emailjs from '@emailjs/browser';
+import emailjs from '@emailjs/browser';
 import { emailjsConfig } from '../../../../lib/emailjs-config';
 
 interface SendInvitationFormProps {
@@ -216,12 +216,6 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         
         {/* Form Section */}
         <div className="w-full lg:w-3/5 min-w-0 flex-shrink">
-          <h1 className="text-2xl text-[#080607] sm:text-3xl font-bold mb-2">Send an Invitation</h1>
-          <p className="text-gray-600 mb-6 text-sm sm:text-base">
-            Use this form to invite a business colleague or client to register and use the AMI website. 
-            Upon completion, a unique Invitation Code will be sent to your invitee. After they register, 
-            you will receive a notification email.
-          </p>
 
           <form onSubmit={handleSubmit}>
             {/* First/Last Name */}
