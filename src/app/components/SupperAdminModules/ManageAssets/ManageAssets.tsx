@@ -335,8 +335,9 @@ export default function ManageAssets() {
           </thead>
           <tbody>
             {filteredAssets.map((asset, index) => {
+              const isStriped = index % 2 === 0;
               return (
-                <tr key={index} className="bg-white">
+                <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
                   <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                     <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
                   </td>
