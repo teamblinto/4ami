@@ -64,7 +64,7 @@ function ClientContent() {
                     return;
                   }
                   router.push(
-                    `/CompanySignUpProcess/create-account?email=${encodeURIComponent(
+                    `/create-account?email=${encodeURIComponent(
                       email
                     )}&code=${encodeURIComponent(invitationCode)}`
                   );

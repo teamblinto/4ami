@@ -93,7 +93,7 @@ function ClientContent() {
                     });
                     
                     // Redirect to success page
-                    router.push('/CompanySignUpProcess/signup-successfull');
+                    router.push('/signup-completed');
                   }}>
                     
 

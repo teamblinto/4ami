@@ -55,7 +55,7 @@ function ClientContent() {
       invitationCode,
     });
     router.push(
-      `/CompanySignUpProcess/signup?email=${encodeURIComponent(
+      `/signup?email=${encodeURIComponent(
         email
       )}&code=${encodeURIComponent(
         invitationCode
