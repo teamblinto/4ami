@@ -97,7 +97,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none  placeholder:text-[#343A40]"
                 >
-                  <option value="Construction">Construction</option>
+                  <option value="Construction">Constructions</option>
                   <option value="Manufacturing">Manufacturing</option>
                   <option value="Agriculture">Agriculture</option>
                   <option value="Transportation">Transportation</option>
