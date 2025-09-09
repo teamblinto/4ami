@@ -297,9 +297,9 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
               { username: 'Me.boyle', firstName: 'Matthew', lastName: 'Boyle', role: 'Customer User', email: 'Me.boyle@gmail.com' },
               { username: 'Kailee.thomas', firstName: 'Kailee', lastName: 'Thomas', role: 'Customer User', email: 'kailee.thomas@gmail.com' },
             ].map((user, index) => {
-              const isEven = index % 2 === 0;
+              const isStriped = index % 2 === 0;
               return (
-                <tr key={index} className={isEven ? 'bg-gray-50' : 'bg-gray-100'}>
+                <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
                   <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                     <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
                   </td>

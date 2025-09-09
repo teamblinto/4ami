@@ -95,7 +95,7 @@ const ProjectsTable = () => (
                 </button>
                 <button className="h-8 px-3 border items-center border-gray-300 rounded-md text-xs bg-white text-red-600">
                  
-                    Clear Filter <span><Image src="" alt="" width={10} height={10} /></span>
+                    Clear Filter
                 </button>
   
             </div>

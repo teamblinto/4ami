@@ -1,10 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useSidebar } from "../../contexts/SidebarContext";
 
 export default function SignupSuccessfullPage() {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const { isSidebarCollapsed, toggleSidebar } = useSidebar();
 
   return (
     <div className="flex min-h-screen bg-gray-100">
@@ -20,17 +20,38 @@ export default function SignupSuccessfullPage() {
             isSidebarCollapsed ? "justify-center" : "justify-between"
           }`}
         >
-          {!isSidebarCollapsed && (
-            <div className="flex items-center">
-              <Image src="/AMILogo.svg" alt="AMI Logo" width={169} height={30} />
+          <div className="flex items-center">
+            {isSidebarCollapsed ? (
+              <div className="text-center">
+                <div className="text-2xl font-bold">
+                  <span className="text-black">A</span>
+                  <span className="text-red-500">M</span>
+                  <span className="text-red-500">I</span>
+                </div>
+              </div>
+            ) : (
+              <Image src="AMILogo.svg" alt="AMI Logo" width={169} height={30} />
+            )}
+          </div>
+          <div className="relative group">
+            <button
+              onClick={toggleSidebar}
+              className="text-gray-500 cursor-pointer hover:text-gray-700"
+            >
+              {isSidebarCollapsed ? (
+                <Image src="/closeSidebar.svg" alt="Close sidebar" width={24} height={24} />
+
+              ) : (
+                <Image src="/sidebar-left.svg" alt="Open sidebar" width={24} height={24} />
+
+              )}
+            </button>
+            
+            {/* Hover tooltip */}
+            <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+              {isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
             </div>
-          )}
-          <button
-            onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-            className="text-gray-500 cursor-pointer hover:text-gray-700"
-          >
-            <Image src="/sidebar-left.svg" alt="4AMI" width={24} height={24} />
-          </button>
+          </div>
         </div>
 
 

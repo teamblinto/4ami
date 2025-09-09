@@ -24,7 +24,7 @@ export default function DashboardLayout({
     <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
-        className={`bg-white flex flex-col justify-between transition-all duration-300 min-h-screen dashboard-sidebar ${
+        className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
           isSidebarCollapsed ? 'collapsed' : ''
         }`}
         style={{ 
@@ -49,12 +49,27 @@ export default function DashboardLayout({
                 />
               </div>
             )}
-            <button
-              onClick={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              className="text-gray-500 cursor-pointer hover:text-gray-700"
-            >
-              <Image src="/sidebar-left.svg" alt="" width={24} height={24} />
-            </button>
+            <div className="relative group">
+              <button
+                onClick={() => {
+                  console.log('Button clicked, current state:', isSidebarCollapsed);
+                  setIsSidebarCollapsed(!isSidebarCollapsed);
+                }}
+                className="text-gray-500 cursor-pointer hover:text-[#E9E9E9]"
+              >
+                {isSidebarCollapsed ? (
+                  <Image src="/closeSidebar.svg" alt="Close sidebar" width={24} height={24} />
+                ) : (
+                  <Image src="/sidebar-left.svg" alt="Open sidebar" width={24} height={24} />
+                )}
+              </button>
+              
+              {/* Hover tooltip */}
+              <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+                {isSidebarCollapsed ? "Close sidebar" : "Open sidebar"}
+              </div>
+            </div>
+            
           </div>
 
           <nav className="flex-grow p-3 ">
