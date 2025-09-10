@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('Fetching verification data for token:', token);
-    const externalUrl = `https://4ami-backend-production.up.railway.app/api/v1/auth/verify-email/${token}`;
+    const externalUrl = `https://870556b6f0ea.ngrok-free.app/api/v1/auth/verify-email/${token}`;
     console.log('External API URL:', externalUrl);
 
     // Forward the request to the external API
