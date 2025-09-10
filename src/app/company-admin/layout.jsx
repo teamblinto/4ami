@@ -2,14 +2,17 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
+import ProtectedRoute from "../components/ProtectedRoute";
+import toast from "react-hot-toast";
 
 export default function CompanyAdminLayout({
   children,
 }) {
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
   const pathname = usePathname();
+  const router = useRouter();
 
   const isActive = (path) => {
     if (path === "/company-admin") {
@@ -18,8 +21,16 @@ export default function CompanyAdminLayout({
     return pathname.startsWith(path);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userData');
+    toast.success('Logged out successfully');
+    router.push('/login');
+  };
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <ProtectedRoute requiredRole="CUSTOMER_ADMIN">
+      <div className="flex min-h-screen bg-gray-100">
       {/* Sidebar */}
       <aside
         className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
@@ -195,15 +206,20 @@ export default function CompanyAdminLayout({
             <button className="relative text-gray-600 hover:text-gray-800">
               <Image src="/notification-bell.svg" alt="" width={20} height={20} style={{ width: "auto", height: "auto" }} />
             </button>
-            <button className="relative text-gray-600 hover:text-gray-800">
+            <button 
+              onClick={handleLogout}
+              className="relative text-gray-600 hover:text-gray-800 flex items-center gap-2"
+              title="Logout"
+            >
               <Image src="/Display-Picture.svg" alt="" width={28} height={28} style={{ width: "auto", height: "auto" }} />
+              <Image src="/arrow.svg" alt="" width={16} height={16} style={{ width: "auto", height: "auto" }} />
             </button>
-            <Image src="/arrow.svg" alt="" width={16} height={16} style={{ width: "auto", height: "auto" }} />
           </div>
         </div>
 
         {children}
       </main>
     </div>
+    </ProtectedRoute>
   );
 }

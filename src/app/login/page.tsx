@@ -49,8 +49,10 @@ export default function LoginPage() {
         // Check user role and redirect accordingly
         if (data.user && data.user.role === "ADMIN") {
           router.push("/dashboard");
+        } else if (data.user && data.user.role === "CUSTOMER_ADMIN") {
+          router.push("/company-admin");
         } else {
-          toast.error("Access denied. Admin role required.");
+          toast.error("Access denied. Valid role required.");
         }
       } else {
         toast.error(data.message || "Invalid credentials");
