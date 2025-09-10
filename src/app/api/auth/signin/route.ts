@@ -4,7 +4,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const response = await fetch('https://b885d1e12784.ngrok-free.app/api/v1/auth/signin', {
+    const response = await fetch('https://870556b6f0ea.ngrok-free.app/api/v1/auth/signin', {
 
       method: 'POST',
       headers: {

@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     console.log('Forwarding invitation request with headers:', headers);
     
     // Forward the request to the external API
-    const response = await fetch('https://b885d1e12784.ngrok-free.app/api/v1/users/invite', {
+    const response = await fetch('https://870556b6f0ea.ngrok-free.app/api/v1/users/invite', {
       method: 'POST',
       headers,
       body: JSON.stringify(body),
