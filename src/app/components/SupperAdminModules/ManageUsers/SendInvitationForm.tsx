@@ -1,8 +1,6 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import emailjs from '@emailjs/browser';
-import { emailjsConfig } from '../../../../lib/emailjs-config';
 
 interface SendInvitationFormProps {
   onInvitationSent: () => void;
@@ -18,11 +16,6 @@ interface FormData {
   source: string;
 }
 
-interface MinimalEmailParams {
-  to_name: string;
-  confirmationUrl: string;
-  passcode: string;
-}
 
 export default function SendInvitationForm({ onInvitationSent }: SendInvitationFormProps) {
   const [invitationCode, setInvitationCode] = useState('A7K3D');
@@ -54,36 +47,10 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     }));
   };
 
-  // Test EmailJS connection
-  const testEmailJS = async () => {
-    try {
-      const { publicKey } = emailjsConfig;
-      emailjs.init(publicKey);
-      console.log('EmailJS initialized successfully');
-      return true;
-    } catch (error: unknown) {
-      console.error('EmailJS initialization failed:', error);
-      return false;
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-
-    // Test EmailJS first
-    const isEmailJSReady = await testEmailJS();
-    if (!isEmailJSReady) {
-      toast.error('EmailJS is not properly configured. Please check the console for details.');
-      setIsLoading(false);
-      return;
-    }
-
-    let minimalParams: MinimalEmailParams = { // Declare minimalParams here with specific type
-      to_name: '',
-      confirmationUrl: '',
-      passcode: ''
-    };
 
     try {
       // Validate form data first
@@ -114,99 +81,73 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         throw new Error('Source is required');
       }
 
-      // EmailJS configuration
-      const { serviceId, templateId, publicKey } = emailjsConfig;
-      
-      // Validate configuration
-      if (!serviceId || serviceId === 'YOUR_SERVICE_ID') {
-        throw new Error('EmailJS Service ID is not configured. Please check src/lib/emailjs-config.ts');
-      }
-      if (!templateId || templateId === 'YOUR_TEMPLATE_ID') {
-        throw new Error('EmailJS Template ID is not configured. Please check src/lib/emailjs-config.ts');
-      }
-      if (!publicKey || publicKey === 'YOUR_PUBLIC_KEY') {
-        throw new Error('EmailJS Public Key is not configured. Please check src/lib/emailjs-config.ts');
-      }
-
-      // Create the signup URL with pre-filled email and invitation code
-      const signupUrl = `${window.location.origin}/customer-signup?email=${encodeURIComponent(formData.email)}&code=${encodeURIComponent(invitationCode)}`;
-
-      // Initialize EmailJS
-      emailjs.init(publicKey);
-
-      // Try sending with minimal parameters first
-      minimalParams = { // Assign to the already declared minimalParams
-        to_name: `${formData.firstName} ${formData.lastName}`,
-        confirmationUrl: signupUrl,
-        passcode: invitationCode
+      // Map role values to API expected values
+      const roleMapping: Record<string, string> = {
+        'Admin': 'ADMIN',
+        'Company Admin': 'CUSTOMER_ADMIN',
+        'Company User': 'CUSTOMER_USER',
+        'Appraiser': 'CUSTOMER_USER' // Map Appraiser to CUSTOMER_USER for now
       };
 
-      // Debug: Log what we're sending
-      console.log('=== EmailJS Debug Info ===');
-      console.log('Service ID:', serviceId);
-      console.log('Template ID:', templateId);
-      console.log('Public Key:', publicKey);
-      console.log('Recipient Email:', formData.email);
-      console.log('Template Params:', minimalParams);
-      console.log('========================');
+      // Prepare invitation data for API (matching API requirements)
+      const invitationData = {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        // phone: '', // Empty phone field as required by API
+        company: formData.company.trim(),
+        role: roleMapping[formData.role] || 'CUSTOMER_USER',
+        source: formData.source.trim(),
+        invitationCode: invitationCode
+        // Removed 'title' field as API says it should not exist
+      };
 
-      // Send email with the new template
-      const result = await emailjs.send(
-        serviceId, 
-        templateId, 
-        {
-          ...minimalParams,
-          to_email: formData.email,  // Standard EmailJS parameter
-          user_email: formData.email // Alternative parameter name
-        }
-      );
-      console.log('EmailJS Success:', result);
+      console.log('Sending invitation data:', invitationData);
+
+      // Get the auth token from localStorage
+      const authToken = localStorage.getItem('authToken');
       
+      // Prepare headers
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+      
+      // Add authorization header if token exists
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+        console.log('Using auth token for invitation request');
+      } else {
+        console.warn('No auth token found in localStorage');
+      }
+
+      // Call the API endpoint
+      const response = await fetch('/api/users/invite', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(invitationData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || `HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Invitation API Success:', result);
       toast.success('Invitation sent successfully!');
       onInvitationSent(); // back to dashboard
     } catch (error: unknown) {
-      console.error('Error sending email:', error);
-      console.log('Full EmailJS Error Object:', error);
+      console.error('Error sending invitation:', error);
       
-      // More detailed error handling
       let errorMessage = 'Failed to send invitation. ';
       
       if (error instanceof Error) {
-        console.log('Error message:', error.message);
-        errorMessage += `Error: ${error.message}`;
-      } else if (typeof error === 'object' && error !== null && 'status' in error) {
-        const emailJsError = error as { status?: number; text?: string };
-        console.log('EmailJS Error Status:', emailJsError.status);
-        console.log('EmailJS Error Text:', emailJsError.text);
-        
-        if (emailJsError.status === 422) {
-          if (emailJsError.text?.includes('recipients')) {
-            errorMessage += 'EMAIL ISSUE: Check your EmailJS template "To Email" setting.';
-          } else if (emailJsError.text?.includes('template')) {
-            errorMessage += 'TEMPLATE ISSUE: Missing variables in template.';
-          } else {
-            errorMessage += `DETAILED ERROR: ${emailJsError.text || 'Unknown 422 error'}`;
-          }
-        } else if (emailJsError.status === 400) {
-          errorMessage += 'Invalid template or service configuration.';
-        } else if (emailJsError.status === 401) {
-          errorMessage += 'Invalid public key or unauthorized access.';
-        } else if (emailJsError.status === 404) {
-          errorMessage += 'Service or template not found.';
-        } else if (emailJsError.text) {
-          errorMessage += `Error: ${emailJsError.text}`;
-        }
+        errorMessage += error.message;
       } else {
         errorMessage += 'Please check your internet connection and try again.';
       }
       
       toast.error(errorMessage);
-      console.log('EmailJS Config:', { serviceId: emailjsConfig.serviceId, templateId: emailjsConfig.templateId, publicKey: emailjsConfig.publicKey });
-      console.log('Sent Parameters:', {
-        ...minimalParams,
-        to_email: formData.email,
-        user_email: formData.email
-      });
     } finally {
       setIsLoading(false);
     }
@@ -299,6 +240,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
               />
             </div>
 
+
             {/* Role/Source */}
             <div className="grid grid-cols-1 md:grid-cols-2 items-end gap-4 mb-8">
               <div>
@@ -326,7 +268,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                   Source
                 </label>
                 <p className="text-sm text-gray-500 mb-1">Where or how did we meet this person</p>
-                <input 
+                <input  
                   type="text" 
                   id="source" 
                   name="source"
