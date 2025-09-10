@@ -7,7 +7,7 @@ export async function POST(request: NextRequest) {
     console.log('Customer admin signup request:', body);
 
     // Forward the request to the external API
-    const response = await fetch('https://4ami-backend-production.up.railway.app/api/v1/auth/customer-admin-signup', {
+    const response = await fetch('https://870556b6f0ea.ngrok-free.app/api/v1/auth/customer-admin-signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
