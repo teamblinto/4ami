@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function ClientContent() {
   // Form state for signup
@@ -10,10 +11,16 @@ function ClientContent() {
     email: '',
     invitationCode: '',
     firstName: '',
-    lastName: ''
+    lastName: '',
+    title: '',
+    company: '',
+    phone: '',
+    source: '',
+    role: ''
   });
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -24,12 +31,22 @@ function ClientContent() {
     const code = searchParams.get('code') || '';
     const firstName = searchParams.get('firstName') || '';
     const lastName = searchParams.get('lastName') || '';
+    const title = searchParams.get('title') || '';
+    const company = searchParams.get('company') || '';
+    const phone = searchParams.get('phone') || '';
+    const source = searchParams.get('source') || '';
+    const role = searchParams.get('role') || '';
     
     setUserInfo({
       email,
       invitationCode: code,
       firstName,
-      lastName
+      lastName,
+      title,
+      company,
+      phone,
+      source,
+      role
     });
   }, [searchParams]);
   console.log(userInfo)
@@ -70,30 +87,87 @@ function ClientContent() {
                 </div>
               </div>
         
-                  <form onSubmit={(e) => {
+                  <form onSubmit={async (e) => {
                     e.preventDefault();
-                    // Validate passwords
-                    if (!password || !confirmPassword) {
-                      alert('Please fill in both password fields');
-                      return;
-                    }
-                    if (password !== confirmPassword) {
-                      alert('Passwords do not match');
-                      return;
-                    }
-                    if (password.length < 6) {
-                      alert('Password must be at least 6 characters long');
-                      return;
-                    }
+                    setIsLoading(true);
                     
-                    // Here you would typically send the complete user data to your backend
-                    console.log('Complete signup data:', {
-                      ...userInfo,
-                      password
-                    });
-                    
-                    // Redirect to success page
-                    router.push('/signup-completed');
+                    try {
+                      // Validate passwords
+                      if (!password || !confirmPassword) {
+                        toast.error('Please fill in both password fields');
+                        return;
+                      }
+                      if (password !== confirmPassword) {
+                        toast.error('Passwords do not match');
+                        return;
+                      }
+                      if (password.length < 6) {
+                        toast.error('Password must be at least 6 characters long');
+                        return;
+                      }
+                      
+                      // Map role values to API expected values
+                      const roleMapping: Record<string, string> = {
+                        'Admin': 'ADMIN',
+                        'Customer Admin': 'CUSTOMER_ADMIN',
+                        'Company User': 'CUSTOMER_USER',
+                        'Appraiser': 'APPRAISER'
+                      };
+
+                      // Prepare signup data with all required fields
+                      const signupData = {
+                        email: userInfo.email,
+                        password: password,
+                        confirmPassword: confirmPassword,
+                        invitationCode: userInfo.invitationCode,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        title: userInfo.title,
+                        company: userInfo.company,
+                        phone: userInfo.phone,
+                        source: userInfo.source,
+                        role: roleMapping[userInfo.role] || userInfo.role,
+                        agreeToTerms: 'true' // API expects string
+                      };
+                      
+                      console.log('Sending signup data:', signupData);
+                      
+                      // Call the customer admin signup API
+                      const response = await fetch('/api/auth/customer-admin-signup', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(signupData),
+                      });
+                      
+                      const result = await response.json();
+                      
+                      if (!response.ok) {
+                        throw new Error(result.message || `HTTP error! status: ${response.status}`);
+                      }
+                      
+                      console.log('Signup API Success:', result);
+                      toast.success('Account created successfully!');
+                      
+                      // Redirect to success page
+                      router.push('/signup-completed');
+                      
+                    } catch (error: unknown) {
+                      console.error('Error during signup:', error);
+                      
+                      let errorMessage = 'Failed to create account. ';
+                      
+                      if (error instanceof Error) {
+                        errorMessage += error.message;
+                      } else {
+                        errorMessage += 'Please check your internet connection and try again.';
+                      }
+                      
+                      toast.error(errorMessage);
+                    } finally {
+                      setIsLoading(false);
+                    }
                   }}>
                     
 
@@ -148,9 +222,24 @@ function ClientContent() {
 
                       <button
                         type="submit"
-                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 border rounded-lg focus:outline-none focus:shadow-outline w-full sm:w-auto"
+                        disabled={isLoading}
+                        className={`font-bold py-3 px-8 border rounded-lg focus:outline-none focus:shadow-outline w-full sm:w-auto flex items-center justify-center ${
+                          isLoading 
+                            ? 'bg-gray-400 cursor-not-allowed text-white' 
+                            : 'bg-red-500 hover:bg-red-700 text-white'
+                        }`}
                       >
-                        Sign Up
+                        {isLoading ? (
+                          <>
+                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            Creating Account...
+                          </>
+                        ) : (
+                          'Sign Up'
+                        )}
                       </button>
                       
                     </div>

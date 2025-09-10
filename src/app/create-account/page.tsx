@@ -3,10 +3,13 @@
 import Image from "next/image";
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 function ClientContent() {
   const [email, setEmail] = useState("");
   const [invitationCode, setInvitationCode] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isAutoPopulated, setIsAutoPopulated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -18,18 +21,116 @@ function ClientContent() {
     agreeTerms: false,
   });
 
-  
-
   const searchParams = useSearchParams();
   const router = useRouter();
 
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
+    const token = searchParams.get("token");
 
     if (emailParam) setEmail(emailParam);
     if (codeParam) setInvitationCode(codeParam);
+
+    // If token is present, fetch verification data
+    if (token) {
+      fetchVerificationData(token);
+    }
   }, [searchParams]);
+
+  // Function to map API role values to form option values
+  const mapApiRoleToFormRole = (apiRole: string): string => {
+    const roleMapping: Record<string, string> = {
+      'ADMIN': 'Admin',
+      'CUSTOMER_ADMIN': 'Customer Admin',
+      'CUSTOMER_USER': 'Company User',
+      'APPRAISER': 'Appraiser'
+    };
+    return roleMapping[apiRole] || '';
+  };
+
+  const fetchVerificationData = async (token: string) => {
+    setIsVerifying(true);
+    try {
+      console.log('Fetching verification data for token:', token);
+      const response = await fetch(`/api/auth/verify-email?token=${token}`);
+      
+      console.log(response)
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        const textResponse = await response.text();
+        console.log('Non-JSON response:', textResponse);
+        toast.error('Invalid response from verification service');
+        return;
+      }
+
+      const data = await response.json();
+      console.log('Response data:', data);
+
+      if (response.ok) {
+        // Auto-populate fields based on the response data
+        if (data.user) {
+          console.log('Auto-populating fields with user data:', data.user);
+          
+          // Map email from user object
+          if (data.user.email) {
+            setEmail(data.user.email);
+            console.log('Set email:', data.user.email);
+          }
+          
+          // Map invitation code from emailVerificationToken
+          if (data.user.emailVerificationToken) {
+            setInvitationCode(data.user.emailVerificationToken);
+            console.log('Set invitation code:', data.user.emailVerificationToken);
+          }
+
+          // Map role from API to form option value
+          const mappedRole = mapApiRoleToFormRole(data.user.role);
+          console.log('API role:', data.user.role, 'Mapped to form role:', mappedRole);
+
+          // Auto-populate form fields from user data
+          const newFormData = {
+            firstName: data.user.firstName || "",
+            lastName: data.user.lastName || "",
+            company: data.user.company || "",
+            source: data.user.source || "",
+            role: mappedRole,
+            title: data.user.title || "",
+            phone: data.user.phone || "",
+            agreeTerms: false,
+          };
+          
+          console.log('Setting form data:', newFormData);
+          setFormData(newFormData);
+        }
+
+        setIsAutoPopulated(true);
+        toast.success('Email verification data loaded successfully!');
+      } else {
+        // Handle different error cases
+        if (response.status === 400) {
+          toast.error(data.message || 'Invalid verification token');
+        } else if (response.status === 404) {
+          toast.error('Verification token not found');
+        } else {
+          toast.error(data.message || `Failed to verify email (Status: ${response.status})`);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching verification data:', error);
+      if (error instanceof SyntaxError) {
+        toast.error('Invalid response format from server');
+      } else {
+        toast.error('Failed to load verification data. Please check your connection.');
+      }
+    } finally {
+      setIsVerifying(false);
+    }
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -63,7 +164,11 @@ function ClientContent() {
         invitationCode
       )}&firstName=${encodeURIComponent(
         formData.firstName
-      )}&lastName=${encodeURIComponent(formData.lastName)}`
+      )}&lastName=${encodeURIComponent(formData.lastName)}&title=${encodeURIComponent(
+        formData.title
+      )}&company=${encodeURIComponent(formData.company)}&phone=${encodeURIComponent(
+        formData.phone
+      )}&source=${encodeURIComponent(formData.source)}&role=${encodeURIComponent(formData.role)}`
     );
   };
 
@@ -92,6 +197,16 @@ function ClientContent() {
                 This will allow you to access all services and manage your
                 profile securely.
               </p>
+
+              {/* Loading indicator for verification */}
+              {isVerifying && (
+                <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                    <span className="text-blue-700 text-sm">Loading verification data...</span>
+                  </div>
+                </div>
+              )}
 
               {/* Step Progress */}
               <div className="mb-8">
@@ -123,6 +238,9 @@ function ClientContent() {
                       required
                       className="w-full p-2 border border-gray-300 rounded-md bg-white"
                     />
+                    {/* {isAutoPopulated && (
+                      <p className="text-xs text-gray-500 mt-1">Pre-filled from verification (editable)</p>
+                    )} */}
                   </div>
                   <div>
                     <label
@@ -140,6 +258,9 @@ function ClientContent() {
                       required
                       className="w-full p-2 border border-gray-300 rounded-md bg-white"
                     />
+                    {/* {isAutoPopulated && (
+                      <p className="text-xs text-gray-500 mt-1">Pre-filled from verification (editable)</p>
+                    )} */}
                   </div>
                   <div>
                     <label
@@ -157,6 +278,9 @@ function ClientContent() {
                       required
                       className="w-full p-2 border border-gray-300 rounded-md bg-white"
                     />
+                    {/* {isAutoPopulated && (
+                      <p className="text-xs text-gray-500 mt-1">Pre-filled from verification (editable)</p>
+                    )} */}
                   </div>
                   <div>
                     <label
@@ -174,6 +298,9 @@ function ClientContent() {
                       required
                       className="w-full p-2 border border-gray-300 rounded-md bg-white"
                     />
+                    {/* {isAutoPopulated && (
+                      <p className="text-xs text-gray-500 mt-1">Pre-filled from verification (editable)</p>
+                    )} */}
                   </div>
                   <div className="">
                     <label
@@ -230,6 +357,9 @@ function ClientContent() {
                       placeholder="Where or how did you hear about us"
                       className="w-full p-2 border border-gray-300 rounded-md bg-white"
                     />
+                    {/* {isAutoPopulated && (
+                      <p className="text-xs text-gray-500 mt-1">Pre-filled from verification (editable)</p>
+                    )} */}
                   </div>
 
                   <div className="flex-1">
@@ -246,11 +376,14 @@ function ClientContent() {
                         value={formData.role}
                         onChange={handleInputChange}
                         required
-                        className="w-full appearance-none bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded-md"
+                        disabled={isAutoPopulated}
+                        className={`w-full appearance-none border border-gray-300 text-gray-700 py-2 px-3 rounded-md ${
+                          isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                        }`}
                       >
                         <option value="">Select One</option>
                         <option value="Admin">Admin</option>
-                        <option value="Company Admin">Company Admin</option>
+                        <option value="Customer Admin">Customer Admin</option>
                         <option value="Company User">Company User</option>
                         <option value="Appraiser">Appraiser</option>
                       </select>
@@ -264,6 +397,9 @@ function ClientContent() {
                         </svg>
                       </div>
                     </div>
+                    {isAutoPopulated && (
+                      <p className="text-xs text-gray-500 mt-1">Auto-populated from verification</p>
+                    )}
                   </div>
                 </div>
 
@@ -308,9 +444,14 @@ function ClientContent() {
                   </button>
                   <button
                     type="submit"
-                    className="bg-red-500 text-white font-semibold py-2 px-6 rounded-md"
+                    disabled={isVerifying}
+                    className={`font-semibold py-2 px-6 rounded-md ${
+                      isVerifying 
+                        ? 'bg-gray-400 cursor-not-allowed text-white' 
+                        : 'bg-red-500 text-white'
+                    }`}
                   >
-                    Next
+                    {isVerifying ? 'Loading...' : 'Next'}
                   </button>
                 </div>
               </form>
