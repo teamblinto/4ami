@@ -34,13 +34,24 @@ export default function LoginPage() {
 
       console.log(data)
       if (response.ok) {
-        // Store token in localStorage
+        // Store token and user data in localStorage
         if (data.token) {
           localStorage.setItem("authToken", data.token);
         }
         
+        // Store user data including role
+        if (data.user) {
+          localStorage.setItem("userData", JSON.stringify(data.user));
+        }
+        
         toast.success("Login successful!");
-        router.push("/dashboard");
+        
+        // Check user role and redirect accordingly
+        if (data.user && data.user.role === "ADMIN") {
+          router.push("/dashboard");
+        } else {
+          toast.error("Access denied. Admin role required.");
+        }
       } else {
         toast.error(data.message || "Invalid credentials");
       }
