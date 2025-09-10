@@ -141,11 +141,22 @@ function ClientContent() {
                     );
                     return;
                   }
-                  router.push(
-                    `/create-account?email=${encodeURIComponent(
-                      email
-                    )}&code=${encodeURIComponent(invitationCode)}`
-                  );
+                  
+                  // Get token from URL to pass to next page
+                  const token = searchParams.get("token");
+                  
+                  // Build URL with all parameters
+                  const params = new URLSearchParams({
+                    email: email,
+                    code: invitationCode
+                  });
+                  
+                  // Add token if it exists
+                  if (token) {
+                    params.append('token', token);
+                  }
+                  
+                  router.push(`/create-account?${params.toString()}`);
                 }}
               >
                 {/* Invitation Code */}

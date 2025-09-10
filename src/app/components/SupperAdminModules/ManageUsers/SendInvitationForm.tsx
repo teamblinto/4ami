@@ -83,10 +83,10 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
 
       // Map role values to API expected values
       const roleMapping: Record<string, string> = {
-        'Admin': 'ADMIN',
+        // 'Admin': 'ADMIN',
         'Customer Admin': 'CUSTOMER_ADMIN',
-        'Company User': 'CUSTOMER_USER',
-        'Appraiser': 'CUSTOMER_USER' // Map Appraiser to CUSTOMER_USER for now
+        // 'Company User': 'CUSTOMER_USER',
+        // 'Appraiser': 'APPRAISER'
       };
 
       // Prepare invitation data for API (matching API requirements)
@@ -96,7 +96,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         email: formData.email.trim(),
         // phone: '', // Empty phone field as required by API
         company: formData.company.trim(),
-        role: roleMapping[formData.role] || 'CUSTOMER_USER',
+        role: roleMapping[formData.role] ,
         source: formData.source.trim(),
         invitationCode: invitationCode
         // Removed 'title' field as API says it should not exist
@@ -258,7 +258,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                 >
                   <option value="">Select One</option>
                   {/* <option value="Admin">Admin</option> */}
-                  <option value="Company Admin">Customer Admin</option>
+                  <option value="Customer Admin">Customer Admin</option>
                   {/* <option value="Company User">Company User</option> */}
                   {/* <option value="Appraiser">Appraiser</option> */}
                 </select>
