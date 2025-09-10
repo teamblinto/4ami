@@ -18,6 +18,8 @@ function ClientContent() {
     agreeTerms: false,
   });
 
+  
+
   const searchParams = useSearchParams();
   const router = useRouter();
 
