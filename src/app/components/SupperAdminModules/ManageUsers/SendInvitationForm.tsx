@@ -84,7 +84,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       // Map role values to API expected values
       const roleMapping: Record<string, string> = {
         'Admin': 'ADMIN',
-        'Company Admin': 'CUSTOMER_ADMIN',
+        'Customer Admin': 'CUSTOMER_ADMIN',
         'Company User': 'CUSTOMER_USER',
         'Appraiser': 'CUSTOMER_USER' // Map Appraiser to CUSTOMER_USER for now
       };
@@ -257,10 +257,10 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
                   className="block w-full bg-white border border-gray-300 text-gray-700 py-2 px-3 rounded focus:outline-none focus:border-gray-500"
                 >
                   <option value="">Select One</option>
-                  <option value="Admin">Admin</option>
-                  <option value="Company Admin">Company Admin</option>
-                  <option value="Company User">Company User</option>
-                  <option value="Appraiser">Appraiser</option>
+                  {/* <option value="Admin">Admin</option> */}
+                  <option value="Company Admin">Customer Admin</option>
+                  {/* <option value="Company User">Company User</option> */}
+                  {/* <option value="Appraiser">Appraiser</option> */}
                 </select>
               </div>
               <div>
