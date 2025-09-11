@@ -51,6 +51,8 @@ export default function LoginPage() {
           router.push("/dashboard");
         } else if (data.user && data.user.role === "CUSTOMER_ADMIN") {
           router.push("/company-admin");
+        } else if (data.user && data.user.role === "USER") {
+          router.push("/user-dashboard");
         } else {
           toast.error("Access denied. Valid role required.");
         }
