@@ -98,7 +98,8 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         company: formData.company.trim(),
         role: roleMapping[formData.role] ,
         source: formData.source.trim(),
-        invitationCode: invitationCode
+        invitationCode: invitationCode,
+        // title: formData.title.trim(),
         // Removed 'title' field as API says it should not exist
       };
 
@@ -107,7 +108,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       // Get the auth token from localStorage
       const authToken = localStorage.getItem('authToken');
       
-      // Prepare headers
+      // Prepare headers  
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
       };
