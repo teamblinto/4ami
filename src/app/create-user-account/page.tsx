@@ -137,7 +137,9 @@ export default function CreateUserAccountPage() {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast.success('User account created successfully!');
-      router.push('/company-admin/manage-users');
+      
+      // Redirect to thank you page with email parameter
+      router.push(`/thank-you?email=${encodeURIComponent(formData.email)}`);
     } catch (error: unknown) {
       console.error('Error creating account:', error);
       
