@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,12 +8,9 @@ export async function POST(request: NextRequest) {
     console.log('Customer admin signup request:', body);
 
     // Forward the request to the external API
-    const response = await fetch('https://870556b6f0ea.ngrok-free.app/api/v1/auth/customer-admin-signup', {
+    const response = await fetch(getApiUrl('/api/v1/auth/customer-admin-signup'), {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true',
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(body),
     });
 

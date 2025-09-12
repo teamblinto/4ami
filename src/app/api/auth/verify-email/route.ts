@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 // Fix Next.js export configuration
 export const dynamic = 'force-dynamic';
@@ -16,16 +17,13 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('Fetching verification data for token:', token);
-    const externalUrl = `https://870556b6f0ea.ngrok-free.app/api/v1/auth/verify-email/${token}`;
+    const externalUrl = `${getApiUrl('/api/v1/auth/verify-email')}/${token}`;
     console.log('External API URL:', externalUrl);
 
     // Forward the request to the external API
     const response = await fetch(externalUrl, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        'ngrok-skip-browser-warning': 'true', // Add this header for ngrok
-      },
+      headers: getAuthHeaders(),
     });
 
     // console.log('External API response status:', response);
