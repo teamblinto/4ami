@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export async function POST(request: NextRequest) {
   try {
@@ -7,22 +8,12 @@ export async function POST(request: NextRequest) {
     // Get the authorization header from the incoming request
     const authHeader = request.headers.get('authorization');
     
-    // Prepare headers for the external API
-    const headers: Record<string, string> = {
-      'Content-Type': 'application/json',
-    };
-    
-    // Add authorization header if present
-    if (authHeader) {
-      headers['Authorization'] = authHeader;
-    }
-    
-    console.log('Forwarding invitation request with headers:', headers);
+    console.log('Forwarding invitation request with auth header:', authHeader ? 'Present' : 'Not present');
     
     // Forward the request to the external API
-    const response = await fetch('https://870556b6f0ea.ngrok-free.app/api/v1/users/invite', {
+    const response = await fetch(getApiUrl('/api/v1/users/invite'), {
       method: 'POST',
-      headers,
+      headers: getAuthHeaders(authHeader || undefined),
       body: JSON.stringify(body),
     });
 
