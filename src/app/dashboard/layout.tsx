@@ -67,7 +67,7 @@ export default function DashboardLayout({
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
+          className={`bg-white  flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
             isSidebarCollapsed ? 'collapsed' : ''
           }`}
           style={{ 
