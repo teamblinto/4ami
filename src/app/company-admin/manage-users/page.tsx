@@ -12,8 +12,7 @@ export default function CompanyAdminManageUsersPage() {
   };
 
   const handleImportUsers = () => {
-    toast.success('Import Users functionality will be implemented');
-    // router.push('/company-admin/manage-users/import');
+    router.push('/company-admin/manage-users/import');
   };
 
   const handleExportUsers = () => {
