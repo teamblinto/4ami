@@ -1,163 +1,3 @@
-// "use client";
-
-// import React from "react";
-// import Image from "next/image";
-
-// export default function CompanyAdminContent() {
-//   const statsData = [
-//     { title: "Total Projects", value: "0", icon: "/sv1.svg" },
-//     { title: "On Going Projects", value: "0", icon: "/sv2.svg" },
-//     { title: "Total Users", value: "0", icon: "/sv3.svg", hasDropdown: true },
-//     { title: "Token Left", value: "10", icon: "/sv4.svg" },
-//   ];
-
-//   return (
-//     <div className="space-y-6">
-//       {/* Welcome Section */}
-//       <div>
-//         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-//         <p className="text-gray-600 mt-2">
-//       👋 Welcome to your dashboard Michael, let's get started
-//         </p>
-//       </div>
-
-//       {/* Create New Project Button */}
-//       <div className="flex justify-end">
-//         <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center space-x-2">
-//           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-//             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-//           </svg>
-//           <span>Create New Project</span>
-//         </button>
-//       </div>
-
-//       {/* Stats Cards */}
-//       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-//         {statsData.map((stat, index) => (
-//           <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-//             <div className="flex items-center justify-between">
-//               <div>
-//                 <div className="flex items-center space-x-1">
-//                   <p className="text-sm font-medium text-[#6C757D]">
-//                     {stat.title}
-//                   </p>
-//                   {stat.hasDropdown && (
-//                     <Image src="/arrow.svg" alt="dropdown" width={12} height={12} style={{ width: "auto", height: "auto" }} />
-//                   )}
-//                 </div>
-//                 <p className="text-2xl font-bold text-gray-900 mt-1">
-//                   {stat.value}
-//                 </p>
-//               </div>
-//               <div>
-//                 <Image
-//                   src={stat.icon}
-//                   alt={stat.title}
-//                   width={24}
-//                   height={24}
-//                   style={{ width: "auto", height: "auto" }}
-//                 />
-//               </div>
-//             </div>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* Projects Section */}
-//       <div className="bg-white rounded-lg shadow-sm p-6">
-//         <h2 className="text-xl font-semibold text-gray-900 mb-6">Projects</h2>
-//         <div className="flex flex-col items-center justify-center py-12">
-//           <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
-//             <svg
-//               className="w-8 h-8 text-red-500"
-//               fill="none"
-//               stroke="currentColor"
-//               viewBox="0 0 24 24"
-//             >
-//               <path
-//                 strokeLinecap="round"
-//                 strokeLinejoin="round"
-//                 strokeWidth={2}
-//                 d="M12 4v16m8-8H4"
-//               />
-//             </svg>
-//           </div>
-//           <p className="text-gray-600 text-lg">
-//             Start by creating your first project
-//           </p>
-//         </div>
-//       </div>
-
-//       {/* Bottom Sections */}
-//       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-//         {/* Coming Soon */}
-//         <div className="bg-white rounded-lg shadow-sm p-6">
-//           <h2 className="text-xl font-semibold text-gray-900 mb-6">
-//             Coming Soon
-//           </h2>
-//           <div className="flex flex-col items-center justify-center py-8">
-//             <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-//               <svg
-//                 className="w-8 h-8 text-gray-400"
-//                 fill="none"
-//                 stroke="currentColor"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth={2}
-//                   d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-//                 />
-//               </svg>
-//             </div>
-//             <div className="space-y-2">
-//               <div className="h-2 bg-gray-200 rounded w-24"></div>
-//               <div className="h-2 bg-gray-200 rounded w-20"></div>
-//               <div className="h-2 bg-gray-200 rounded w-16"></div>
-//             </div>
-//           </div>
-//         </div>
-
-//         {/* Popular Services by Category */}
-//         <div className="bg-white rounded-lg shadow-sm p-6">
-//           <h2 className="text-xl font-semibold text-gray-900 mb-6">
-//             Popular Services by Category
-//           </h2>
-//           <div className="flex flex-col items-center justify-center py-8">
-//             <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-//               <svg
-//                 className="w-8 h-8 text-gray-400"
-//                 fill="none"
-//                 stroke="currentColor"
-//                 viewBox="0 0 24 24"
-//               >
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth={2}
-//                   d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-//                 />
-//                 <path
-//                   strokeLinecap="round"
-//                   strokeLinejoin="round"
-//                   strokeWidth={2}
-//                   d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-//                 />
-//               </svg>
-//             </div>
-//             <p className="text-gray-600 text-center text-sm">
-//               Popular services by category distribution pie chart/bar graph will
-//               appear here
-//             </p>
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
-
 "use client";
 
 import React from "react";
@@ -202,7 +42,7 @@ export default function CompanyAdminContent() {
                     {stat.title}
                   </p>
                   {stat.hasDropdown && (
-                    <Image className="ml-3" src="/arrow.svg" alt="dropdown" width={12} height={12} style={{ width: "auto", height: "auto", }} />
+                    <Image src="/arrow.svg" alt="dropdown" width={12} height={12} style={{ width: "auto", height: "auto" }} />
                   )}
                 </div>
                 <p className="text-2xl font-bold text-gray-900 mt-1">
@@ -225,7 +65,7 @@ export default function CompanyAdminContent() {
 
       {/* Projects Section */}
       <h2 className="text-xl font-semibold text-gray-900 mt-10 mb-4">Projects</h2>
-      <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+      {/* <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
         <div className="flex flex-col items-center justify-center py-16">
           <div className="w-16 h-16 flex items-center justify-center mb-2">
             <svg
@@ -246,8 +86,7 @@ export default function CompanyAdminContent() {
             Start by creating your first project
           </p>
         </div>
-      </div>
-      
+      </div> */}
       <AfterSubmitProjectTable />
 
       {/* Bottom Sections */}
@@ -258,7 +97,7 @@ export default function CompanyAdminContent() {
             Coming Soon
           </h2>
           <div className="flex flex-col items-center justify-center pt-18 pb-8">
-            <div className="w-26 h-26 flex items-center justify-center mb-4">
+            <div className="w-16 h-16 flex items-center justify-center mb-4">
               <svg width="122" height="148" viewBox="0 0 122 148" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M108.487 96.1641H12.8792C11.236 96.1641 9.90381 97.4962 9.90381 99.1394C9.90381 100.783 11.236 102.115 12.8792 102.115H108.487C110.131 102.115 111.463 100.783 111.463 99.1394C111.463 97.4962 110.131 96.1641 108.487 96.1641Z" fill="#CED4DA"/>
               <path d="M19.0286 46.5742C17.3854 46.5742 16.0532 47.9064 16.0532 49.5496V85.2539C16.0532 86.8971 17.3854 88.2293 19.0286 88.2293C20.6718 88.2293 22.0039 86.8971 22.0039 85.2539V49.5496C22.0039 47.9064 20.6718 46.5742 19.0286 46.5742Z" fill="#CED4DA"/>
@@ -285,7 +124,7 @@ export default function CompanyAdminContent() {
             Popular Services by Category
           </h2>
           <div className="flex flex-col items-center justify-center pt-18 pb-8">
-            <div className="w-26 h-26 flex items-center justify-center mb-4">
+            <div className="w-16 h-16 flex items-center justify-center mb-4">
               <svg width="103" height="103" viewBox="0 0 103 103" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g clip-path="url(#clip0_1630_5224)">
               <path d="M86.9177 54.9104H50.9663C49.4927 54.9104 48.2978 53.7155 48.2978 52.2419V15.883C48.2978 14.2336 46.9671 12.8817 45.3177 12.8809C20.5159 12.8691 0.329363 33.0082 0.264317 57.7922C0.199072 82.6422 20.4459 102.944 45.2959 102.944C70.1278 102.944 90.3273 82.7443 90.3273 57.9125V57.8568C90.3243 56.0568 88.6504 54.6466 86.9177 54.9104Z" fill="#CED4DA"/>
@@ -299,7 +138,7 @@ export default function CompanyAdminContent() {
               </svg>
 
             </div>
-            <p className="text-[#ADB5BD] text-center text-sm pt-4">
+            <p className="text-[#ADB5BD] text-center text-sm">
               Popular services by category distribution pie chart/bar graph <br/>
               will appear here
             </p>
