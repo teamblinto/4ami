@@ -126,7 +126,7 @@ export default function RegisterCompany() {
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -148,7 +148,7 @@ export default function RegisterCompany() {
                       name="userName"
                       value={formData.userName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -173,7 +173,7 @@ export default function RegisterCompany() {
                     name="companyEmail"
                     value={formData.companyEmail}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+                    className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                     style={{ 
                       fontFamily: 'Inter, sans-serif',
                       border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -197,7 +197,7 @@ export default function RegisterCompany() {
                     name="regionBranch"
                     value={formData.regionBranch}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                    className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-md focus:border-transparent"
                     style={{ 
                       fontFamily: 'Inter, sans-serif',
                       border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -217,7 +217,7 @@ export default function RegisterCompany() {
                       Phone
                     </label>
                     <div className="flex">
-                      <div className="flex items-center px-2 py-2 border-r-0 rounded-l-md bg-gray-50" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
+                      <div className="flex items-center px-2 py-2 border-r-0 rounded-l-[8px] bg-[#FBFBFB]" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
                         <span className="text-sm text-[#343A40]">🇺🇸</span>
                         <select className="ml-2 bg-transparent border-none outline-none text-sm text-[#343A40]">
                           <option value="+1">+1</option>
@@ -229,7 +229,7 @@ export default function RegisterCompany() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="flex-1 px-3 py-2 rounded-r-md focus:outline-none focus:ring-2  focus:border-transparent"
+                        className="flex-1 px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-r-[8px] focus:border-transparent"
                         style={{ 
                           fontFamily: 'Inter, sans-serif',
                           border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -252,7 +252,7 @@ export default function RegisterCompany() {
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -278,7 +278,7 @@ export default function RegisterCompany() {
                       name="address1"
                       value={formData.address1}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -300,7 +300,7 @@ export default function RegisterCompany() {
                       name="address2"
                       value={formData.address2}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -326,7 +326,7 @@ export default function RegisterCompany() {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -348,7 +348,7 @@ export default function RegisterCompany() {
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -374,7 +374,7 @@ export default function RegisterCompany() {
                       name="zip"
                       value={formData.zip}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
@@ -396,7 +396,7 @@ export default function RegisterCompany() {
                       name="country"
                       value={formData.country}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
