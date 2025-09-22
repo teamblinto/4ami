@@ -217,7 +217,7 @@ export default function RegisterCompany() {
                       Phone
                     </label>
                     <div className="flex">
-                      <div className="flex items-center px-3 py-2 border-r-0 rounded-l-md bg-gray-50" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
+                      <div className="flex items-center px-2 py-2 border-r-0 rounded-l-md bg-gray-50" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
                         <span className="text-sm text-[#343A40]">🇺🇸</span>
                         <select className="ml-2 bg-transparent border-none outline-none text-sm text-[#343A40]">
                           <option value="+1">+1</option>
