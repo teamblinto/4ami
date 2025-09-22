@@ -179,7 +179,7 @@ export default function CompanyAdminContent() {
       <div>
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         <p className="text-gray-600 mt-2">
-      👋 Welcome to your dashboard <span className="italic">Michael, let's get started</span>
+      👋 Welcome to your dashboard <span className="italic">Michael, let&apos;s get started</span>
         </p>
       </div>
 

@@ -39,7 +39,7 @@ export default function UserDashboardPage() {
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
           <p className="text-gray-600 mt-2">
-            Good Morning, Michael. Here's your overview.
+            Good Morning, Michael. Here&apos;s your overview.
           </p>
         </div>
         <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center space-x-2">

@@ -83,7 +83,7 @@ export default function RegisterCompany() {
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ background: 'var(--Background, #FBFBFB)' }}>
       {/* Header */}
       <header className="px-12 py-4">
         <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
@@ -93,10 +93,10 @@ export default function RegisterCompany() {
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="max-w-2xl w-full">
           {/* Main Content Card */}
-          <div className="bg-white rounded-lg p-8  ">
+          <div className=" ">
             {/* Header */}
-            <div className="text-center mb-8">
-              <h1 className="text-2xl font-semibold text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+            <div className="text-start mb-8">
+              <h1 className="text-2xl font-semibold  text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
                 Register Your Company
               </h1>
               <p className="text-[#6C757D] text-sm" style={{ fontFamily: 'Inter, sans-serif' }}>
@@ -105,17 +105,19 @@ export default function RegisterCompany() {
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg p-8">
               {/* Company Details Section */}
               <div className="space-y-4">
-                <h3 className="text-lg font-medium text-[#343A40] mb-4" style={{ fontFamily: 'Inter, sans-serif' }}>
-                  Company Details
-                </h3>
                 
                 {/* Row 1: Company Name & User Name */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="companyName" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="companyName" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       Company Name
                     </label>
                     <input
@@ -124,12 +126,20 @@ export default function RegisterCompany() {
                       name="companyName"
                       value={formData.companyName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                   <div>
-                    <label htmlFor="userName" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="userName" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       User Name
                     </label>
                     <input
@@ -138,15 +148,23 @@ export default function RegisterCompany() {
                       name="userName"
                       value={formData.userName}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                 </div>
 
                 {/* Row 2: Company Email */}
                 <div>
-                  <label htmlFor="companyEmail" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  <label htmlFor="companyEmail" className="block text-[#343A40] mb-2" style={{ 
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: '14px',
+                    fontStyle: 'normal',
+                    fontWeight: '500'
+                  }}>
                     Company Email
                   </label>
                   <input
@@ -155,14 +173,22 @@ export default function RegisterCompany() {
                     name="companyEmail"
                     value={formData.companyEmail}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    style={{ fontFamily: 'Inter, sans-serif' }}
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2 focus:border-transparent"
+                    style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      border: '1px solid var(--Neutral-400, #CED4DA)'
+                    }}
                   />
                 </div>
 
                 {/* Row 3: Region/Branch (Optional) */}
                 <div>
-                  <label htmlFor="regionBranch" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                  <label htmlFor="regionBranch" className="block text-[#343A40] mb-2" style={{ 
+                    fontFamily: 'Inter, sans-serif',
+                    fontSize: '14px',
+                    fontStyle: 'normal',
+                    fontWeight: '500'
+                  }}>
                     Region/Branch (Optional)
                   </label>
                   <input
@@ -171,19 +197,27 @@ export default function RegisterCompany() {
                     name="regionBranch"
                     value={formData.regionBranch}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    style={{ fontFamily: 'Inter, sans-serif' }}
+                    className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                    style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      border: '1px solid var(--Neutral-400, #CED4DA)'
+                    }}
                   />
                 </div>
 
                 {/* Row 4: Phone & Mobile */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="phone" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       Phone
                     </label>
                     <div className="flex">
-                      <div className="flex items-center px-3 py-2 border border-[#CED4DA] border-r-0 rounded-l-md bg-gray-50">
+                      <div className="flex items-center px-3 py-2 border-r-0 rounded-l-md bg-gray-50" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
                         <span className="text-sm text-[#343A40]">🇺🇸</span>
                         <select className="ml-2 bg-transparent border-none outline-none text-sm text-[#343A40]">
                           <option value="+1">+1</option>
@@ -195,13 +229,21 @@ export default function RegisterCompany() {
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
-                        className="flex-1 px-3 py-2 border border-[#CED4DA] rounded-r-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        style={{ fontFamily: 'Inter, sans-serif' }}
+                        className="flex-1 px-3 py-2 rounded-r-md focus:outline-none focus:ring-2  focus:border-transparent"
+                        style={{ 
+                          fontFamily: 'Inter, sans-serif',
+                          border: '1px solid var(--Neutral-400, #CED4DA)'
+                        }}
                       />
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="mobile" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       Mobile
                     </label>
                     <input
@@ -210,8 +252,11 @@ export default function RegisterCompany() {
                       name="mobile"
                       value={formData.mobile}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                 </div>
@@ -219,7 +264,12 @@ export default function RegisterCompany() {
                 {/* Row 5: Address 1 & Address 2 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="address1" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="address1" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       Address 1
                     </label>
                     <input
@@ -228,12 +278,20 @@ export default function RegisterCompany() {
                       name="address1"
                       value={formData.address1}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                   <div>
-                    <label htmlFor="address2" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="address2" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       Address 2
                     </label>
                     <input
@@ -242,8 +300,11 @@ export default function RegisterCompany() {
                       name="address2"
                       value={formData.address2}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                 </div>
@@ -251,7 +312,12 @@ export default function RegisterCompany() {
                 {/* Row 6: City & State */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="city" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="city" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       City
                     </label>
                     <input
@@ -260,12 +326,20 @@ export default function RegisterCompany() {
                       name="city"
                       value={formData.city}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                   <div>
-                    <label htmlFor="state" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="state" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       State
                     </label>
                     <input
@@ -274,8 +348,11 @@ export default function RegisterCompany() {
                       name="state"
                       value={formData.state}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                 </div>
@@ -283,7 +360,12 @@ export default function RegisterCompany() {
                 {/* Row 7: ZIP & Country */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="zip" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="zip" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       ZIP
                     </label>
                     <input
@@ -292,12 +374,20 @@ export default function RegisterCompany() {
                       name="zip"
                       value={formData.zip}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                   <div>
-                    <label htmlFor="country" className="block text-sm font-medium text-[#343A40] mb-2" style={{ fontFamily: 'Inter, sans-serif' }}>
+                    <label htmlFor="country" className="block text-[#343A40] mb-2" style={{ 
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
                       Country
                     </label>
                     <input
@@ -306,28 +396,37 @@ export default function RegisterCompany() {
                       name="country"
                       value={formData.country}
                       onChange={handleInputChange}
-                      className="w-full px-3 py-2 border border-[#CED4DA] rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      style={{ fontFamily: 'Inter, sans-serif' }}
+                      className="w-full px-3 py-2 rounded-md focus:outline-none focus:ring-2  focus:border-transparent"
+                      style={{ 
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
                     />
                   </div>
                 </div>
               </div>
 
               {/* System Administration Section */}
-              <div className="space-y-4 pt-6 border-t border-gray-200">
+              <div className="space-y-4">
                 <h3 className="text-lg font-medium text-[#343A40] mb-4" style={{ fontFamily: 'Inter, sans-serif' }}>
                   System Administration
                 </h3>
 
                 {/* Administrators Table */}
-                <div className="bg-white border border-[#CED4DA] rounded-md overflow-hidden">
-                  <table className="min-w-full">
+                <div className="bg-white rounded-md overflow-hidden" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
+                  <table className="min-w-full border-collapse">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA]" style={{ fontFamily: 'Inter, sans-serif' }}>
+                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA] border-r border-[#CED4DA]" style={{ 
+                          fontFamily: 'Inter, sans-serif',
+                          width: '70%'
+                        }}>
                           Email
                         </th>
-                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA]" style={{ fontFamily: 'Inter, sans-serif' }}>
+                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA]" style={{ 
+                          fontFamily: 'Inter, sans-serif',
+                          width: '30%'
+                        }}>
                           Action
                         </th>
                       </tr>
@@ -335,32 +434,34 @@ export default function RegisterCompany() {
                     <tbody>
                       {administrators.map((admin, index) => (
                         <tr key={admin.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                          <td className="py-3 px-4 border-b border-[#CED4DA]">
-                            <div className="px-3 py-2 border border-[#CED4DA] rounded-md bg-white">
+                          <td className="py-3 px-4 border-b border-[#CED4DA] border-r border-[#CED4DA]" style={{ width: '70%' }}>
+                            <div className="px-3 py-2 rounded-md bg-white border border-[#CED4DA]">
                               <span className="text-[#343A40]" style={{ fontFamily: 'Inter, sans-serif' }}>
                                 {admin.email}
                               </span>
                             </div>
                           </td>
-                          <td className="py-3 px-4 border-b border-[#CED4DA]">
+                          <td className="py-3 px-4 border-b border-[#CED4DA]" style={{ width: '30%' }}>
                             {admin.email === 'michael@gmail.com' ? (
                               <button
                                 type="button"
                                 onClick={addAdministrator}
-                                className="flex items-center gap-1 px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700 transition-colors"
+                                className="flex items-center gap-1 px-2 py-1 text-[#343A40] text-sm font-medium transition-colors"
                                 style={{ fontFamily: 'Inter, sans-serif' }}
                               >
-                                <span className="text-xs">+</span>
+                                <span className="text-lg">+</span>
                                 Add Administrator
                               </button>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => removeAdministrator(admin.id)}
-                                className="flex items-center gap-1 px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors"
+                                className="flex items-center gap-1 px-2 py-1 rounded text-sm text-[#343A40] font-medium transition-colors"
                                 style={{ fontFamily: 'Inter, sans-serif' }}
                               >
-                                <span className="text-xs">🗑️</span>
+                                <span>
+                                  <img src="/bin.svg" alt="Delete" width={12} height={12} />
+                                </span>
                                 Delete
                               </button>
                             )}
@@ -377,7 +478,7 @@ export default function RegisterCompany() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="flex-1 bg-red-600 text-white py-3 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className=" bg-red-600 text-white px-8 py-[10px] rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   {isLoading ? 'Registering...' : 'Register Company'}
@@ -385,7 +486,7 @@ export default function RegisterCompany() {
                 <button
                   type="button"
                   onClick={handleCancelClick}
-                  className="flex-1 bg-white text-[#343A40] py-3 px-4 rounded-md border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  className="bg-white text-[#343A40] py-[10px] px-8 rounded-[8px] border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   Cancel
