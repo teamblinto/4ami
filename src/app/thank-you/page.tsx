@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
+import Image from "next/image";
 
-export default function ThankYouPage() {
+function ThankYouContent() {
   const [userEmail, setUserEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,9 +41,20 @@ export default function ThankYouPage() {
 
   return (
     <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
-      <header className="px-12 py-4">
+      {/* <header className="px-12 py-4">
         <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
-      </header>
+        
+      </header> */}
+
+         <header className="px-12 py-4">
+      <Image 
+        src="/AMILogo.svg" 
+        alt="AMI Logo" 
+        width={230} 
+        height={35} 
+        priority  // optional: improves LCP for above-the-fold images
+      />
+    </header>
       <main className="flex-grow flex items-center justify-center p-4">
         <div className="max-w-md w-full">
           {/* Main Content Card */}
@@ -60,9 +72,9 @@ export default function ThankYouPage() {
             {/* Body Text */}
             <div className="text-gray-600 mb-6 text-left">
               <p className="mb-4">
-                We've sent an email to <span className="text-red-500 font-semibold">[{userEmail}]</span>.
+                We&apos;ve sent an email to <span className="text-red-500 font-semibold">[{userEmail}]</span>.
                 Please click the link in that email to activate your account.
-                If you don't see it, please check your <span className="font-bold">spam</span> or <span className="font-bold">junk folder</span>.
+                If you don&apos;t see it, please check your <span className="font-bold">spam</span> or <span className="font-bold">junk folder</span>.
               </p>
             </div>
             
@@ -90,5 +102,13 @@ export default function ThankYouPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function ThankYouPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <ThankYouContent />
+    </Suspense>
   );
 }

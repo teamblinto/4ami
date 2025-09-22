@@ -15,7 +15,13 @@ export default function ImportUsers({ onBack }: ImportUsersProps) {
   const [hasError, setHasError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showPreview, setShowPreview] = useState(false);
-  const [previewData, setPreviewData] = useState<any[]>([]);
+  const [previewData, setPreviewData] = useState<Array<{
+    username: string;
+    fullName: string;
+    role: string;
+    email: string;
+    phoneNumber: string;
+  }>>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toastShownRef = useRef(false);
 

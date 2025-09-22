@@ -6,12 +6,12 @@ export default function FilterProjectStatus() {
   const [filterType, setFilterType] = useState("startToEnd");
   const [order, setOrder] = useState("asc");
 
-  const containerRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   // Close when clicking outside
   useEffect(() => {
-    function handleDocumentClick(e) {
-      if (containerRef.current && !containerRef.current.contains(e.target)) {
+    function handleDocumentClick(e: MouseEvent) {
+      if (containerRef.current && e.target && !containerRef.current.contains(e.target as Node)) {
         setIsOpen(false);
       }
     }
@@ -22,7 +22,7 @@ export default function FilterProjectStatus() {
   // Close with Escape key
   useEffect(() => {
     if (!isOpen) return;
-    const onKey = (e) => {
+    const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") setIsOpen(false);
     };
     document.addEventListener("keydown", onKey);

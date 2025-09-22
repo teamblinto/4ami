@@ -1,11 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 
-export default function CreateUserAccountPage() {
+function CreateUserAccountContent() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -348,5 +348,13 @@ export default function CreateUserAccountPage() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function CreateUserAccountPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <CreateUserAccountContent />
+    </Suspense>
   );
 }

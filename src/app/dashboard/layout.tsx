@@ -17,7 +17,11 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [userData, setUserData] = useState<any>(null);
+    const [userData, setUserData] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+  } | null>(null);
 
   const isActive = (path: string) => {
     if (path === "/dashboard") {
@@ -206,7 +210,7 @@ export default function DashboardLayout({
             href="#"
             className="flex items-center p-2 text-[#080607] hover:bg-gray-100"
           >
-            <Image src="/Module-Icons/settings.svg" alt="" width={20} height={20} />
+            <Image src="/Module-Icons/settings.svg" alt="Settings" width={20} height={20} />
             {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
           </Link>
         </div>
@@ -238,22 +242,22 @@ export default function DashboardLayout({
           </div>
           <div className="flex items-center space-x-4">
             <button className="relative text-gray-600 hover:text-gray-800">
-              <Image src="/notification-bell.svg" alt="" width={20} height={20} style={{ width: "auto", height: "auto" }} />
+              <Image src="/notification-bell.svg" alt="Notifications" width={20} height={20} style={{ width: "auto", height: "auto" }} />
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">1</span>
             </button>
             
             {/* User Profile Dropdown */}
             <div className="relative dropdown-container flex items-center gap-2">
-              <Image src="/Display-Picture.svg" alt="" width={28} height={28} style={{ width: "auto", height: "auto" }} />
+              <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
               <button 
                 onClick={toggleDropdown}
                 className="relative cursor-pointer text-gray-600 hover:text-gray-800"
                 title="User Menu"
               >
                 {isDropdownOpen ? (
-                  <Image src="/arrow-up.svg"  alt="" width={16} height={16} style={{ width: "auto", height: "auto" }} />
+                  <Image src="/arrow-up.svg"  alt="Close dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
                 ) : (
-                  <Image src="/arrow.svg"  alt="" width={16} height={16} style={{ width: "auto", height: "auto" }} />
+                  <Image src="/arrow.svg"  alt="Open dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
                 )}
               </button>
 
@@ -263,7 +267,7 @@ export default function DashboardLayout({
                   {/* User Info Section */}
                   <div className="p-4 border-b border-gray-100">
                     <div className="flex items-center gap-3">
-                      <Image src="/Display-Picture.svg" alt="" width={40} height={40} style={{ width: "auto", height: "auto" }} />
+                      <Image src="/Display-Picture.svg" alt="User Profile" width={40} height={40} style={{ width: "auto", height: "auto" }} />
                       <div>
                         <h3 className="font-semibold text-gray-900">
                           {userData?.firstName && userData?.lastName 
