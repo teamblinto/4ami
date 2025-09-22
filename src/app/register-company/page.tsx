@@ -91,7 +91,7 @@ export default function RegisterCompany() {
 
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-4">
-        <div className="max-w-2xl w-full">
+        <div className="max-w-[803px] w-full">
           {/* Main Content Card */}
           <div className=" ">
             {/* Header */}
@@ -500,24 +500,24 @@ export default function RegisterCompany() {
       {/* Cancel Confirmation Modal */}
       {showCancelModal && (
         <div className="fixed inset-0 bg-opacity-30 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl border border-gray-200">
+          <div className="bg-[#E9ECEF] rounded-[8px] px-[70px] py-[40px] text-center max-w-[656px] w-full mx-4 shadow-xl border border-gray-200">
             <h3 className="text-lg font-semibold text-[#343A40] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
               Are you sure you want to cancel?
             </h3>
             <p className="text-[#6C757D] text-sm mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>
               You have unsaved changes. If you cancel now, your progress will be lost. Do you want to proceed?
             </p>
-            <div className="flex gap-3">
+            <div className="flex gap-[24px] text-center justify-center">
               <button
                 onClick={handleStayOnPage}
-                className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                className=" bg-red-600 cursor-pointer text-white py-[10px] px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 No, Stay
               </button>
               <button
                 onClick={handleConfirmCancel}
-                className="flex-1 bg-white text-[#343A40] py-2 px-4 rounded-md border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className=" bg-white text-[#343A40] cursor-pointer  py-[10px] px-4 rounded-md border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Yes, Cancel
