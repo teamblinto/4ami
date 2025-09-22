@@ -29,6 +29,7 @@ export default function RegisterCompany() {
   const [newAdminEmail, setNewAdminEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -63,7 +64,12 @@ export default function RegisterCompany() {
 
   const handleConfirmCancel = () => {
     setShowCancelModal(false);
-    router.push('/login');
+    setShowRegisterModal(true);
+  };
+
+  const handleRegisterCompany = () => {
+    setShowRegisterModal(false);
+    // Stay on the same page (register-company)
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -521,6 +527,38 @@ export default function RegisterCompany() {
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Yes, Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Register Company Modal */}
+      {showRegisterModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
+          <div className="bg-[#E9ECEF] rounded-[8px] px-[70px] py-[40px] text-center max-w-[656px] w-full mx-4 shadow-xl border border-gray-200">
+            {/* Warning Icon */}
+            <div className="flex justify-center mb-4">
+              <div className="">
+                <img src="worn.svg" alt="" />
+             
+              </div>
+            </div>
+            
+            <h3 className="text-lg font-semibold text-[#343A40] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Register Your Company
+            </h3>
+            <p className="text-[#6C757D] text-sm mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>
+              Register your company before start a project
+            </p>
+            
+            <div className="flex justify-center">
+              <button
+                onClick={handleRegisterCompany}
+                className="bg-red-600 text-white py-[10px] px-6 rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors cursor-pointer"
+                style={{ fontFamily: 'Inter, sans-serif' }}
+              >
+                Register Company
               </button>
             </div>
           </div>
