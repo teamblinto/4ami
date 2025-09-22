@@ -219,7 +219,7 @@ export default function RegisterCompany() {
                     <div className="flex">
                       <div className="flex items-center px-2 py-2 border-r-0 rounded-l-[8px] bg-[#FBFBFB]" style={{ border: '1px solid var(--Neutral-400, #CED4DA)' }}>
                         <span className="text-sm text-[#343A40]">🇺🇸</span>
-                        <select className="ml-2 bg-transparent border-none outline-none text-sm text-[#343A40]">
+                        <select className="ml-2 cursor-pointer bg-transparent border-none outline-none text-sm text-[#343A40]">
                           <option value="+1">+1</option>
                         </select>
                       </div>
@@ -446,7 +446,7 @@ export default function RegisterCompany() {
                               <button
                                 type="button"
                                 onClick={addAdministrator}
-                                className="flex items-center gap-1 px-2 py-1 text-[#343A40] text-sm font-medium transition-colors"
+                                className="flex cursor-pointer items-center gap-1 px-2 py-1 text-[#343A40] text-sm font-medium transition-colors"
                                 style={{ fontFamily: 'Inter, sans-serif' }}
                               >
                                 <span className="text-lg">+</span>
@@ -456,7 +456,7 @@ export default function RegisterCompany() {
                               <button
                                 type="button"
                                 onClick={() => removeAdministrator(admin.id)}
-                                className="flex items-center gap-1 px-2 py-1 rounded text-sm text-[#343A40] font-medium transition-colors"
+                                className="flex cursor-pointer items-center gap-1 px-2 py-1 rounded text-sm text-[#343A40] font-medium transition-colors"
                                 style={{ fontFamily: 'Inter, sans-serif' }}
                               >
                                 <span>
@@ -478,7 +478,7 @@ export default function RegisterCompany() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className=" bg-red-600 text-white px-8 py-[10px] rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className=" cursor-pointer bg-red-600 text-white px-8 py-[10px] rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   {isLoading ? 'Registering...' : 'Register Company'}
@@ -486,7 +486,7 @@ export default function RegisterCompany() {
                 <button
                   type="button"
                   onClick={handleCancelClick}
-                  className="bg-white text-[#343A40] py-[10px] px-8 rounded-[8px] border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  className=" cursor-pointer bg-white text-[#343A40] py-[10px] px-8 rounded-[8px] border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   Cancel
