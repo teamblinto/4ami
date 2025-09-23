@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 export default function CompanyAdminManageProfilePage() {
   const [activeTab, setActiveTab] = useState('company-info');
   const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+  const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     // Company Information
     companyName: 'Evergreen Equipment Leasing',
@@ -19,7 +20,7 @@ export default function CompanyAdminManageProfilePage() {
     addressLine2: '',
     country: 'us',
     city: 'Birmingham',
-    stateProvince: '',
+    stateProvince: 'al',
   });
 
   const countries = [
@@ -218,6 +219,59 @@ export default function CompanyAdminManageProfilePage() {
     { value: 'zw', label: 'Zimbabwe' }
   ];
 
+  const states = [
+    { value: 'al', label: 'Alabama' },
+    { value: 'ak', label: 'Alaska' },
+    { value: 'az', label: 'Arizona' },
+    { value: 'ar', label: 'Arkansas' },
+    { value: 'ca', label: 'California' },
+    { value: 'co', label: 'Colorado' },
+    { value: 'ct', label: 'Connecticut' },
+    { value: 'de', label: 'Delaware' },
+    { value: 'fl', label: 'Florida' },
+    { value: 'ga', label: 'Georgia' },
+    { value: 'hi', label: 'Hawaii' },
+    { value: 'id', label: 'Idaho' },
+    { value: 'il', label: 'Illinois' },
+    { value: 'in', label: 'Indiana' },
+    { value: 'ia', label: 'Iowa' },
+    { value: 'ks', label: 'Kansas' },
+    { value: 'ky', label: 'Kentucky' },
+    { value: 'la', label: 'Louisiana' },
+    { value: 'me', label: 'Maine' },
+    { value: 'md', label: 'Maryland' },
+    { value: 'ma', label: 'Massachusetts' },
+    { value: 'mi', label: 'Michigan' },
+    { value: 'mn', label: 'Minnesota' },
+    { value: 'ms', label: 'Mississippi' },
+    { value: 'mo', label: 'Missouri' },
+    { value: 'mt', label: 'Montana' },
+    { value: 'ne', label: 'Nebraska' },
+    { value: 'nv', label: 'Nevada' },
+    { value: 'nh', label: 'New Hampshire' },
+    { value: 'nj', label: 'New Jersey' },
+    { value: 'nm', label: 'New Mexico' },
+    { value: 'ny', label: 'New York' },
+    { value: 'nc', label: 'North Carolina' },
+    { value: 'nd', label: 'North Dakota' },
+    { value: 'oh', label: 'Ohio' },
+    { value: 'ok', label: 'Oklahoma' },
+    { value: 'or', label: 'Oregon' },
+    { value: 'pa', label: 'Pennsylvania' },
+    { value: 'ri', label: 'Rhode Island' },
+    { value: 'sc', label: 'South Carolina' },
+    { value: 'sd', label: 'South Dakota' },
+    { value: 'tn', label: 'Tennessee' },
+    { value: 'tx', label: 'Texas' },
+    { value: 'ut', label: 'Utah' },
+    { value: 'vt', label: 'Vermont' },
+    { value: 'va', label: 'Virginia' },
+    { value: 'wa', label: 'Washington' },
+    { value: 'wv', label: 'West Virginia' },
+    { value: 'wi', label: 'Wisconsin' },
+    { value: 'wy', label: 'Wyoming' }
+  ];
+
   const [contacts, setContacts] = useState([
     {
       id: 1,
@@ -280,6 +334,19 @@ export default function CompanyAdminManageProfilePage() {
   const getSelectedCountryLabel = () => {
     const selectedCountry = countries.find(country => country.value === formData.country);
     return selectedCountry ? selectedCountry.label : 'Select One';
+  };
+
+  const handleStateSelect = (stateValue: string) => {
+    setFormData(prev => ({
+      ...prev,
+      stateProvince: stateValue
+    }));
+    setIsStateDropdownOpen(false);
+  };
+
+  const getSelectedStateLabel = () => {
+    const selectedState = states.find(state => state.value === formData.stateProvince);
+    return selectedState ? selectedState.label : 'Select One';
   };
 
   return (
@@ -520,21 +587,54 @@ export default function CompanyAdminManageProfilePage() {
                   />
               </div>
 
-              <div>
+              <div className="relative">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   State/Province
                 </label>
-                  <select
-                    value={formData.stateProvince}
-                    onChange={(e) => handleInputChange('stateProvince', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between"
                   >
-                  <option value="">Select One</option>
-                  <option value="ca">California</option>
-                  <option value="ny">New York</option>
-                  <option value="tx">Texas</option>
-                  <option value="fl">Florida</option>
-                </select>
+                    <span>{getSelectedStateLabel()}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${isStateDropdownOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {isStateDropdownOpen && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      {states.map((state) => (
+                        <div
+                          key={state.value}
+                          onClick={() => handleStateSelect(state.value)}
+                          className={`px-3 py-2 cursor-pointer flex items-center hover:bg-gray-50 ${
+                            formData.stateProvince === state.value ? 'bg-gray-100' : ''
+                          }`}
+                        >
+                          <div className={`w-4 h-4 border-2 rounded mr-3 flex items-center justify-center ${
+                            formData.stateProvince === state.value 
+                              ? 'border-red-500 bg-red-500' 
+                              : 'border-gray-300'
+                          }`}>
+                            {formData.stateProvince === state.value && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-gray-900">{state.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
