@@ -50,6 +50,47 @@ export default function ProjectReportPage() {
     { year: 2024, residualHigh: 2.2, residualLow: 1.8, valueHigh: 7.2, valueLow: 6.9 },
   ];
 
+  // Depreciation methods comparison (Year 0 - Year 10)
+  const depreciationData = [
+    { year: 'Year 0', sl: 500000, ddb: 500000, syd: 500000, macrs: 500000 },
+    { year: 'Year 1', sl: 450000, ddb: 300000, syd: 380000, macrs: 280000 },
+    { year: 'Year 2', sl: 400000, ddb: 240000, syd: 320000, macrs: 200000 },
+    { year: 'Year 3', sl: 350000, ddb: 192000, syd: 270000, macrs: 140000 },
+    { year: 'Year 4', sl: 300000, ddb: 153600, syd: 230000, macrs: 120000 },
+    { year: 'Year 5', sl: 250000, ddb: 122880, syd: 195000, macrs: 100000 },
+    { year: 'Year 6', sl: 200000, ddb: 98304, syd: 165000, macrs: 90000 },
+    { year: 'Year 7', sl: 150000, ddb: 78643, syd: 140000, macrs: 85000 },
+    { year: 'Year 8', sl: 100000, ddb: 62915, syd: 120000, macrs: 82000 },
+    { year: 'Year 9', sl: 50000, ddb: 50332, syd: 105000, macrs: 80000 },
+    { year: 'Year 10', sl: 0, ddb: 40265, syd: 90000, macrs: 78000 },
+  ];
+
+  // Utilization chart data (Hours/Year vs Residual % and Effective Age)
+  const utilizationData = [
+    { hoursYear: 700, residual: 45, effectiveAge: 11.5 },
+    { hoursYear: 750, residual: 40, effectiveAge: 11.3 },
+    { hoursYear: 800, residual: 35, effectiveAge: 11.1 },
+    { hoursYear: 850, residual: 30, effectiveAge: 11.0 },
+    { hoursYear: 900, residual: 25, effectiveAge: 11.2 },
+    { hoursYear: 950, residual: 20, effectiveAge: 12.8 },
+    { hoursYear: 1000, residual: 18, effectiveAge: 13.9 },
+    { hoursYear: 1050, residual: 17, effectiveAge: 13.6 },
+    { hoursYear: 1100, residual: 16, effectiveAge: 13.5 },
+  ];
+
+  const utilizationTable = [
+    { source: 1, makeModel: '80% / 2010', year: 2010, age: 15, totalHours: '10,232', hoursYear: 721, currentPrice: 182000, residual: 43, effectiveAge: 15 },
+    { source: 2, makeModel: '70% / 2021', year: 2021, age: 4, totalHours: '10,232', hoursYear: 543, currentPrice: 334000, residual: 46, effectiveAge: 14 },
+    { source: 3, makeModel: '68% / 2023', year: 2023, age: 2, totalHours: '10,232', hoursYear: 198, currentPrice: 252000, residual: 32, effectiveAge: 10 },
+    { source: 4, makeModel: '60% / 2004', year: 2004, age: 21, totalHours: '10,232', hoursYear: 134, currentPrice: 189000, residual: 29, effectiveAge: 9 },
+    { source: 5, makeModel: '80% / 2003', year: 2003, age: 22, totalHours: '10,232', hoursYear: 455, currentPrice: 172000, residual: 24, effectiveAge: 11 },
+    { source: 6, makeModel: '65% / 2015', year: 2015, age: 10, totalHours: '10,232', hoursYear: 643, currentPrice: 169000, residual: 33, effectiveAge: 13 },
+    { source: 7, makeModel: '45% / 2019', year: 2019, age: 6, totalHours: '10,232', hoursYear: 328, currentPrice: 156000, residual: 29, effectiveAge: 12 },
+    { source: 8, makeModel: '35% / 2016', year: 2016, age: 9, totalHours: '10,232', hoursYear: 546, currentPrice: 142000, residual: 40, effectiveAge: 9 },
+    { source: 9, makeModel: '70% / 2014', year: 2014, age: 11, totalHours: '10,232', hoursYear: 365, currentPrice: 157500, residual: 53, effectiveAge: 7 },
+    { source: 10, makeModel: '30% / 2023', year: 2023, age: 2, totalHours: '10,232', hoursYear: 594, currentPrice: 176000, residual: 68, effectiveAge: 4 },
+  ];
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -161,6 +202,91 @@ export default function ProjectReportPage() {
                 {/* Residual value lines (right axis) */}
                 <Line yAxisId="right" type="monotone" dataKey="valueHigh" name="Residual Value (High)" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
                 <Line yAxisId="right" type="monotone" dataKey="valueLow" name="Residual Value (Low)" stroke="#111827" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        )}
+
+        {/* Utilization Tab Content */}
+        {activeTab === 'utilization' && (
+        <>
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 text-center mb-6">Equipment Utilization vs Residual Values</h2>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={utilizationData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                  <XAxis dataKey="hoursYear" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ value: 'Hours per Year', position: 'insideBottom', offset: -2, fill: '#6b7280', fontSize: 12 }} />
+                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'insideLeft', offset: -5, fill: '#6b7280' }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[10, 14]}
+                         label={{ value: 'Effective Age', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} />
+                  <Tooltip formatter={(val: any, name: any) => name === 'Residual %' ? [`${val}%`, name] : [val, name]} labelFormatter={(l)=>`Hours/Year: ${l}`} />
+                  <Legend verticalAlign="bottom" height={36} />
+
+                  <Line yAxisId="left" type="monotone" dataKey="residual" name="Residual %" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="right" type="monotone" dataKey="effectiveAge" name="Effective Age" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* Residual Analysis Data Details table */}
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">Residual Analysis Data Details</h2>
+            <div className="overflow-x-auto">
+              <table className="min-w-full">
+                <thead>
+                  <tr className="border-b border-gray-200">
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Source</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Make/Model</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Year</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Age</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Total Hours</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Hours/Year</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Current Price</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Residual %</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-700">Effective Age</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {utilizationTable.map((row) => (
+                    <tr key={row.source} className="border-b border-gray-100">
+                      <td className="py-3 px-4 text-gray-900">{row.source}</td>
+                      <td className="py-3 px-4 text-gray-900">{row.makeModel}</td>
+                      <td className="py-3 px-4 text-gray-900">{row.year}</td>
+                      <td className="py-3 px-4 text-gray-900">{row.age}</td>
+                      <td className="py-3 px-4 text-gray-900">{row.totalHours}</td>
+                      <td className="py-3 px-4 text-gray-900">{row.hoursYear}</td>
+                      <td className="py-3 px-4 text-gray-900">{`$${row.currentPrice.toLocaleString()}`}</td>
+                      <td className="py-3 px-4 text-gray-900">{`${row.residual}%`}</td>
+                      <td className="py-3 px-4 text-gray-900">{row.effectiveAge}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </>
+        )}
+
+        {/* Depreciation Tab Content */}
+        {activeTab === 'depreciation' && (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-gray-900 text-center mb-6">Depreciation Methods Comparison</h2>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={depreciationData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} />
+                <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(v)=>`$${v.toLocaleString()}`} domain={[0, 500000]} />
+                <Tooltip formatter={(val: any) => `$${Number(val).toLocaleString()}`} />
+                <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value === 'sl' ? 'Straight-Line Methods' : value === 'ddb' ? 'Double Declining Balance' : value === 'syd' ? 'Sum-of-Years-Digits' : 'MACRS'}</span>} />
+
+                <Line type="monotone" dataKey="sl" name="Straight-Line Methods" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
+                <Line type="monotone" dataKey="ddb" name="Double Declining Balance" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
+                <Line type="monotone" dataKey="syd" name="Sum-of-Years-Digits" stroke="#6b7280" strokeWidth={2} dot={{ r: 2 }} />
+                <Line type="monotone" dataKey="macrs" name="MACRS" stroke="#000000" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
