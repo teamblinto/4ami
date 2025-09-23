@@ -91,6 +91,20 @@ export default function ProjectReportPage() {
     { source: 10, makeModel: '30% / 2023', year: 2023, age: 2, totalHours: '10,232', hoursYear: 594, currentPrice: 176000, residual: 68, effectiveAge: 4 },
   ];
 
+  // Market data comparables table
+  const marketDataRows = [
+    { description: '2010 VOLVO A30G Off-Highway Trucks', year: 2009, hours: '10,232', serialNo: '119501', dealer: 'Alta Equipment Co.', location: 'Princeton, West Virginia 24740', phone: '+1 407-234-6529', price: 73000, listing: '#' },
+    { description: '2021 VOLVO A30G Off-Highway Trucks', year: 2021, hours: '2,300', serialNo: '118071', dealer: 'White Grading Inc.', location: 'Mocksville, North Carolina 27028', phone: '+1 813-716-7600', price: 722, listing: '#'},
+    { description: '2002 VOLVO A30C Off-Highway Trucks', year: 2005, hours: '16,610', serialNo: 'N/A', dealer: 'Ritchie Equip Inc', location: 'Saint Louis, Missouri 63139', phone: '+1 913-676-7600', price: 145000, listing: '#'},
+    { description: '2024 VOLVO A30G Off-Highway Trucks', year: 2024, hours: '1,733', serialNo: '173341', dealer: 'Goodwin Brothers Construction Co.', location: 'N/A', phone: '+362 1337-0769', price: 111, listing: '#'},
+    { description: '2010 A40E Off-Highway Trucks', year: 2023, hours: '23,686', serialNo: '118071', dealer: 'White Grading Inc', location: 'Saint Louis, Missouri 63139', phone: '+1 234-770-6814', price: 920, listing: '#'},
+    { description: '2011 VOLVO A30F Off-Highway Trucks', year: 2015, hours: '10,232', serialNo: 'VCM923456 678976569', dealer: 'Goodwin Brothers Construction Co.', location: 'Mocksville, North Carolina 27028', phone: '+1 478-272-1553', price: 81400, listing: '#'},
+    { description: '2010 A40E Off-Highway Trucks', year: 2010, hours: '10,232', serialNo: '119501', dealer: 'Alta Equipment', location: 'Mocksville, North Carolina 27028', phone: '+1 234-789-4314', price: 57000, listing: '#'},
+    { description: '2019 VOLVO A30G Off-Highway Trucks', year: 2019, hours: '10,232', serialNo: 'VCM923456 689765296', dealer: 'White Grading Inc.', location: 'Princeton, West Virginia 24740', phone: 'N/A', price: 256700, listing: '#'},
+    { description: '2020 VOLVO A30G Off-Highway Trucks', year: 2024, hours: '10,232', serialNo: 'VCM923456 689765296', dealer: 'White Grading Inc.', location: 'Mocksville, NC', phone: '+1 813-716-7600', price: 71000, listing: '#'},
+    { description: '2022 VOLVO A30G Off-Highway Trucks', year: 2022, hours: '18,420', serialNo: 'VCM923456 689765296', dealer: 'White Grading Inc.', location: 'N/A', phone: 'N/A', price: 82100, listing: '#'},
+  ];
+
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
@@ -204,6 +218,150 @@ export default function ProjectReportPage() {
                 <Line yAxisId="right" type="monotone" dataKey="valueLow" name="Residual Value (Low)" stroke="#111827" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
               </LineChart>
             </ResponsiveContainer>
+          </div>
+        </div>
+        )}
+
+        {/* Overview Tab Content */}
+        {activeTab === 'overview' && (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Equipment Analysis Overview</h2>
+
+          {/* Project Details */}
+          <div className="mb-8">
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">Project Details</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm">
+              <div>
+                <div className="text-gray-500">Project ID</div>
+                <div className="text-gray-900">P101</div>
+              </div>
+              <div>
+                <div className="text-gray-500">Initiator Name</div>
+                <div className="text-gray-900">2023 VOLVO A25G Off-Highway Trucks</div>
+              </div>
+              <div>
+                <div className="text-gray-500">Project Name</div>
+                <div className="text-gray-900">2023 VOLVO A25G Off-Highway Trucks</div>
+              </div>
+              <div>
+                <div className="text-gray-500">Equipment Make</div>
+                <div className="text-gray-900">VOLVO</div>
+              </div>
+              <div>
+                <div className="text-gray-500">Equipment Model</div>
+                <div className="text-gray-900">A25G</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Status + Processing Details */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* Data Quality Status */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Data Quality Status</h3>
+              <ul className="space-y-3 text-sm">
+                {[
+                  'Inflation Data',
+                  'Utilization Data',
+                  'Depreciation Data',
+                  'Oee Residual Data',
+                  'Market Comps Data',
+                  'Executive Summary',
+                ].map((label) => (
+                  <li key={label} className="flex items-center justify-between pr-4">
+                    <span className="text-gray-700">{label}</span>
+                    <span className="flex items-center text-red-500">
+                      <svg className="w-4 h-4 mr-1" viewBox="0 0 20 20" fill="currentColor"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd"/></svg>
+                      Available
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* Processing Details */}
+            <div>
+              <h3 className="text-sm font-semibold text-gray-800 mb-3">Processing Details</h3>
+              <div className="grid grid-cols-2 gap-x-6 gap-y-3 text-sm">
+                <div className="text-gray-700">Project Start</div>
+                <div className="text-gray-900 text-right">20 May, 2025 &nbsp; 11:16:51 AM</div>
+
+                <div className="text-gray-700">Project Submitted</div>
+                <div className="text-gray-900 text-right">20 May, 2025 &nbsp; 12:14:44 AM</div>
+
+                <div className="text-gray-700">Project Reviewed</div>
+                <div className="text-gray-900 text-right">20 May, 2025 &nbsp; 4:53 PM</div>
+
+                <div className="text-gray-700">Total Data Source</div>
+                <div className="text-gray-900 text-right">6</div>
+
+                <div className="text-gray-700">Analysis Status</div>
+                <div className="text-green-600 text-right font-medium">Completed</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Actions */}
+          <div className="flex items-center justify-between mt-10">
+            <button className="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">Read JSON Response</button>
+
+            <div className="flex items-center space-x-3">
+              <div className="relative">
+                <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm">Download Report ▾</button>
+                {/* Static dropdown preview matching design */}
+                <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-sm p-2">
+                  <label className="flex items-center space-x-2 text-sm text-gray-700 py-1">
+                    <input type="checkbox" defaultChecked className="w-4 h-4" />
+                    <span>Pdf Report</span>
+                  </label>
+                  <label className="flex items-center space-x-2 text-sm text-gray-700 py-1">
+                    <input type="checkbox" className="w-4 h-4" />
+                    <span>Excel Data</span>
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
+
+        {/* Market Data Tab Content */}
+        {activeTab === 'market-data' && (
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <h2 className="text-xl font-semibold text-gray-900 mb-6">Equipment Market Comparable Analysis</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full">
+              <thead>
+                <tr className="border-b border-gray-200">
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Description</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Year</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Hours</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Serial No.</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Dealer</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Location</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Phone</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Price</th>
+                  <th className="text-left py-3 px-4 font-medium text-gray-700">Listing</th>
+                </tr>
+              </thead>
+              <tbody>
+                {marketDataRows.map((row, idx) => (
+                  <tr key={idx} className="border-b border-gray-100">
+                    <td className="py-3 px-4 text-gray-900">{row.description}</td>
+                    <td className="py-3 px-4 text-gray-900">{row.year}</td>
+                    <td className="py-3 px-4 text-gray-900">{row.hours}</td>
+                    <td className="py-3 px-4 text-gray-900">{row.serialNo}</td>
+                    <td className="py-3 px-4 text-gray-900">{row.dealer}</td>
+                    <td className="py-3 px-4 text-gray-900">{row.location}</td>
+                    <td className="py-3 px-4 text-gray-900">{row.phone}</td>
+                    <td className="py-3 px-4 text-gray-900">{`$${row.price.toLocaleString()}`}</td>
+                    <td className="py-3 px-4 text-red-600 underline cursor-pointer">
+                      <a href={row.listing} target="_blank" rel="noreferrer">View Listing</a>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
         )}
