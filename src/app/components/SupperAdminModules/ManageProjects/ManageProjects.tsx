@@ -1,5 +1,6 @@
 "use client";
 import React from 'react';
+import { useRouter } from 'next/navigation';
 
 const projectsData = [
   { serviceName: 'Residual Analysis', description: 'Asset residual value', status: 'Active' },
@@ -35,6 +36,7 @@ const getActionClass = (status: string) => {
 };
 
 export default function ManageProjects() {
+  const router = useRouter();
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -120,7 +122,14 @@ export default function ManageProjects() {
                   <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description}</td>
                   <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>{project.status}</td>
                   <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
-                    <button className={`px-4 py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}>
+                    <button
+                      onClick={() => {
+                        if (project.status === 'Approved' || project.status === 'Cancelled') {
+                          router.push('/dashboard/manage-projects/project-report');
+                        }
+                      }}
+                      className={`px-4 py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                    >
                       {project.status === 'Approved' || project.status === 'Cancelled' ? 'View Report' : 'Review'}
                     </button>
                   </td>
