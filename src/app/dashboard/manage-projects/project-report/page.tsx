@@ -15,6 +15,14 @@ import {
 export default function ProjectReportPage() {
   const [activeTab, setActiveTab] = useState('summary');
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
+  const tabsOrder = ['summary','inflation','depreciation','utilization','market-data','overview'] as const;
+
+  const goNext = () => {
+    const idx = tabsOrder.indexOf(activeTab as typeof tabsOrder[number]);
+    if (idx > -1 && idx < tabsOrder.length - 1) {
+      setActiveTab(tabsOrder[idx + 1]);
+    }
+  };
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -128,7 +136,7 @@ export default function ProjectReportPage() {
           <nav className="flex space-x-8 px-6">
             <button
               onClick={() => setActiveTab('summary')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === 'summary'
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -138,7 +146,7 @@ export default function ProjectReportPage() {
             </button>
             <button
               onClick={() => setActiveTab('inflation')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === 'inflation'
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -148,7 +156,7 @@ export default function ProjectReportPage() {
             </button>
             <button
               onClick={() => setActiveTab('depreciation')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === 'depreciation'
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -158,7 +166,7 @@ export default function ProjectReportPage() {
             </button>
             <button
               onClick={() => setActiveTab('utilization')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === 'utilization'
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -168,7 +176,7 @@ export default function ProjectReportPage() {
             </button>
             <button
               onClick={() => setActiveTab('market-data')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === 'market-data'
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -178,7 +186,7 @@ export default function ProjectReportPage() {
             </button>
             <button
               onClick={() => setActiveTab('overview')}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === 'overview'
                   ? 'border-black text-black'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -531,7 +539,7 @@ export default function ProjectReportPage() {
             <div key={section} className="bg-white rounded-lg shadow-sm">
               <button
                 onClick={() => toggleSection(section)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors"
+                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 transition-colors cursor-pointer"
               >
                 <span className="font-medium text-gray-900">{section}</span>
                 <svg
@@ -562,7 +570,7 @@ export default function ProjectReportPage() {
 
       {/* Next Button */}
       <div className="flex justify-end mt-8">
-        <button className="bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 transition-colors">
+        <button onClick={goNext} disabled={activeTab === 'overview'} className={`px-6 py-2 rounded-md transition-colors ${activeTab === 'overview' ? 'bg-gray-300 text-white cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600 cursor-pointer'}`}>
           Next
         </button>
       </div>
