@@ -5,21 +5,218 @@ import toast from 'react-hot-toast';
 
 export default function CompanyAdminManageProfilePage() {
   const [activeTab, setActiveTab] = useState('company-info');
+  const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
   const [formData, setFormData] = useState({
     // Company Information
-    companyName: '',
-    companyType: '',
-    companySize: '',
+    companyName: 'Evergreen Equipment Leasing',
+    companyType: 'Lessor',
+    companySize: '30-50',
     companyWebsite: '',
     companyDescription: '',
     
     // Address
-    addressLine1: '',
+    addressLine1: 'Birmingham City Hall 710 20th St N',
     addressLine2: '',
-    country: '',
-    city: '',
+    country: 'us',
+    city: 'Birmingham',
     stateProvince: '',
   });
+
+  const countries = [
+    { value: 'us', label: 'United States' },
+    { value: 'ca', label: 'Canada' },
+    { value: 'mx', label: 'Mexico' },
+    { value: 'af', label: 'Afghanistan' },
+    { value: 'al', label: 'Albania' },
+    { value: 'dz', label: 'Algeria' },
+    { value: 'as', label: 'American Samoa' },
+    { value: 'ad', label: 'Andorra' },
+    { value: 'ao', label: 'Angola' },
+    { value: 'ar', label: 'Argentina' },
+    { value: 'au', label: 'Australia' },
+    { value: 'at', label: 'Austria' },
+    { value: 'az', label: 'Azerbaijan' },
+    { value: 'bs', label: 'Bahamas' },
+    { value: 'bh', label: 'Bahrain' },
+    { value: 'bd', label: 'Bangladesh' },
+    { value: 'bb', label: 'Barbados' },
+    { value: 'by', label: 'Belarus' },
+    { value: 'be', label: 'Belgium' },
+    { value: 'bz', label: 'Belize' },
+    { value: 'bj', label: 'Benin' },
+    { value: 'bt', label: 'Bhutan' },
+    { value: 'bo', label: 'Bolivia' },
+    { value: 'ba', label: 'Bosnia and Herzegovina' },
+    { value: 'bw', label: 'Botswana' },
+    { value: 'br', label: 'Brazil' },
+    { value: 'bn', label: 'Brunei' },
+    { value: 'bg', label: 'Bulgaria' },
+    { value: 'bf', label: 'Burkina Faso' },
+    { value: 'bi', label: 'Burundi' },
+    { value: 'kh', label: 'Cambodia' },
+    { value: 'cm', label: 'Cameroon' },
+    { value: 'cv', label: 'Cape Verde' },
+    { value: 'cf', label: 'Central African Republic' },
+    { value: 'td', label: 'Chad' },
+    { value: 'cl', label: 'Chile' },
+    { value: 'cn', label: 'China' },
+    { value: 'co', label: 'Colombia' },
+    { value: 'km', label: 'Comoros' },
+    { value: 'cg', label: 'Congo' },
+    { value: 'cd', label: 'Congo, Democratic Republic' },
+    { value: 'cr', label: 'Costa Rica' },
+    { value: 'ci', label: 'Côte d\'Ivoire' },
+    { value: 'hr', label: 'Croatia' },
+    { value: 'cu', label: 'Cuba' },
+    { value: 'cy', label: 'Cyprus' },
+    { value: 'cz', label: 'Czech Republic' },
+    { value: 'dk', label: 'Denmark' },
+    { value: 'dj', label: 'Djibouti' },
+    { value: 'dm', label: 'Dominica' },
+    { value: 'do', label: 'Dominican Republic' },
+    { value: 'ec', label: 'Ecuador' },
+    { value: 'eg', label: 'Egypt' },
+    { value: 'sv', label: 'El Salvador' },
+    { value: 'gq', label: 'Equatorial Guinea' },
+    { value: 'er', label: 'Eritrea' },
+    { value: 'ee', label: 'Estonia' },
+    { value: 'et', label: 'Ethiopia' },
+    { value: 'fj', label: 'Fiji' },
+    { value: 'fi', label: 'Finland' },
+    { value: 'fr', label: 'France' },
+    { value: 'ga', label: 'Gabon' },
+    { value: 'gm', label: 'Gambia' },
+    { value: 'ge', label: 'Georgia' },
+    { value: 'de', label: 'Germany' },
+    { value: 'gh', label: 'Ghana' },
+    { value: 'gr', label: 'Greece' },
+    { value: 'gd', label: 'Grenada' },
+    { value: 'gt', label: 'Guatemala' },
+    { value: 'gn', label: 'Guinea' },
+    { value: 'gw', label: 'Guinea-Bissau' },
+    { value: 'gy', label: 'Guyana' },
+    { value: 'ht', label: 'Haiti' },
+    { value: 'hn', label: 'Honduras' },
+    { value: 'hu', label: 'Hungary' },
+    { value: 'is', label: 'Iceland' },
+    { value: 'in', label: 'India' },
+    { value: 'id', label: 'Indonesia' },
+    { value: 'ir', label: 'Iran' },
+    { value: 'iq', label: 'Iraq' },
+    { value: 'ie', label: 'Ireland' },
+    { value: 'il', label: 'Israel' },
+    { value: 'it', label: 'Italy' },
+    { value: 'jm', label: 'Jamaica' },
+    { value: 'jp', label: 'Japan' },
+    { value: 'jo', label: 'Jordan' },
+    { value: 'kz', label: 'Kazakhstan' },
+    { value: 'ke', label: 'Kenya' },
+    { value: 'ki', label: 'Kiribati' },
+    { value: 'kp', label: 'North Korea' },
+    { value: 'kr', label: 'South Korea' },
+    { value: 'kw', label: 'Kuwait' },
+    { value: 'kg', label: 'Kyrgyzstan' },
+    { value: 'la', label: 'Laos' },
+    { value: 'lv', label: 'Latvia' },
+    { value: 'lb', label: 'Lebanon' },
+    { value: 'ls', label: 'Lesotho' },
+    { value: 'lr', label: 'Liberia' },
+    { value: 'ly', label: 'Libya' },
+    { value: 'li', label: 'Liechtenstein' },
+    { value: 'lt', label: 'Lithuania' },
+    { value: 'lu', label: 'Luxembourg' },
+    { value: 'mk', label: 'Macedonia' },
+    { value: 'mg', label: 'Madagascar' },
+    { value: 'mw', label: 'Malawi' },
+    { value: 'my', label: 'Malaysia' },
+    { value: 'mv', label: 'Maldives' },
+    { value: 'ml', label: 'Mali' },
+    { value: 'mt', label: 'Malta' },
+    { value: 'mh', label: 'Marshall Islands' },
+    { value: 'mr', label: 'Mauritania' },
+    { value: 'mu', label: 'Mauritius' },
+    { value: 'fm', label: 'Micronesia' },
+    { value: 'md', label: 'Moldova' },
+    { value: 'mc', label: 'Monaco' },
+    { value: 'mn', label: 'Mongolia' },
+    { value: 'me', label: 'Montenegro' },
+    { value: 'ma', label: 'Morocco' },
+    { value: 'mz', label: 'Mozambique' },
+    { value: 'mm', label: 'Myanmar' },
+    { value: 'na', label: 'Namibia' },
+    { value: 'nr', label: 'Nauru' },
+    { value: 'np', label: 'Nepal' },
+    { value: 'nl', label: 'Netherlands' },
+    { value: 'nz', label: 'New Zealand' },
+    { value: 'ni', label: 'Nicaragua' },
+    { value: 'ne', label: 'Niger' },
+    { value: 'ng', label: 'Nigeria' },
+    { value: 'no', label: 'Norway' },
+    { value: 'om', label: 'Oman' },
+    { value: 'pk', label: 'Pakistan' },
+    { value: 'pw', label: 'Palau' },
+    { value: 'pa', label: 'Panama' },
+    { value: 'pg', label: 'Papua New Guinea' },
+    { value: 'py', label: 'Paraguay' },
+    { value: 'pe', label: 'Peru' },
+    { value: 'ph', label: 'Philippines' },
+    { value: 'pl', label: 'Poland' },
+    { value: 'pt', label: 'Portugal' },
+    { value: 'qa', label: 'Qatar' },
+    { value: 'ro', label: 'Romania' },
+    { value: 'ru', label: 'Russia' },
+    { value: 'rw', label: 'Rwanda' },
+    { value: 'kn', label: 'Saint Kitts and Nevis' },
+    { value: 'lc', label: 'Saint Lucia' },
+    { value: 'vc', label: 'Saint Vincent and the Grenadines' },
+    { value: 'ws', label: 'Samoa' },
+    { value: 'sm', label: 'San Marino' },
+    { value: 'st', label: 'São Tomé and Príncipe' },
+    { value: 'sa', label: 'Saudi Arabia' },
+    { value: 'sn', label: 'Senegal' },
+    { value: 'rs', label: 'Serbia' },
+    { value: 'sc', label: 'Seychelles' },
+    { value: 'sl', label: 'Sierra Leone' },
+    { value: 'sg', label: 'Singapore' },
+    { value: 'sk', label: 'Slovakia' },
+    { value: 'si', label: 'Slovenia' },
+    { value: 'sb', label: 'Solomon Islands' },
+    { value: 'so', label: 'Somalia' },
+    { value: 'za', label: 'South Africa' },
+    { value: 'es', label: 'Spain' },
+    { value: 'lk', label: 'Sri Lanka' },
+    { value: 'sd', label: 'Sudan' },
+    { value: 'sr', label: 'Suriname' },
+    { value: 'sz', label: 'Swaziland' },
+    { value: 'se', label: 'Sweden' },
+    { value: 'ch', label: 'Switzerland' },
+    { value: 'sy', label: 'Syria' },
+    { value: 'tw', label: 'Taiwan' },
+    { value: 'tj', label: 'Tajikistan' },
+    { value: 'tz', label: 'Tanzania' },
+    { value: 'th', label: 'Thailand' },
+    { value: 'tl', label: 'Timor-Leste' },
+    { value: 'tg', label: 'Togo' },
+    { value: 'to', label: 'Tonga' },
+    { value: 'tt', label: 'Trinidad and Tobago' },
+    { value: 'tn', label: 'Tunisia' },
+    { value: 'tr', label: 'Turkey' },
+    { value: 'tm', label: 'Turkmenistan' },
+    { value: 'tv', label: 'Tuvalu' },
+    { value: 'ug', label: 'Uganda' },
+    { value: 'ua', label: 'Ukraine' },
+    { value: 'ae', label: 'United Arab Emirates' },
+    { value: 'uk', label: 'United Kingdom' },
+    { value: 'uy', label: 'Uruguay' },
+    { value: 'uz', label: 'Uzbekistan' },
+    { value: 'vu', label: 'Vanuatu' },
+    { value: 'va', label: 'Vatican City' },
+    { value: 've', label: 'Venezuela' },
+    { value: 'vn', label: 'Vietnam' },
+    { value: 'ye', label: 'Yemen' },
+    { value: 'zm', label: 'Zambia' },
+    { value: 'zw', label: 'Zimbabwe' }
+  ];
 
   const [contacts, setContacts] = useState([
     {
@@ -72,15 +269,28 @@ export default function CompanyAdminManageProfilePage() {
     toast.success('Contact deleted successfully');
   };
 
+  const handleCountrySelect = (countryValue: string) => {
+    setFormData(prev => ({
+      ...prev,
+      country: countryValue
+    }));
+    setIsCountryDropdownOpen(false);
+  };
+
+  const getSelectedCountryLabel = () => {
+    const selectedCountry = countries.find(country => country.value === formData.country);
+    return selectedCountry ? selectedCountry.label : 'Select One';
+  };
+
   return (
-    <div>
+    <div className="bg-gray-50 min-h-screen p-6">
       <div className="mb-6">
-        <h1 className="text-3xl font-bold text-black">Company Profile</h1>
-        <p className="text-gray-500">Dashboard / Manage Profile / Company Profile</p>
+        <h1 className="text-3xl font-bold text-gray-900">Company Profile</h1>
+        <p className="text-gray-500 mt-1">Dashboard / Manage Profile / Company Profile</p>
       </div>
 
-      {/* Tabs */}
-      <div className="bg-white rounded-lg shadow mb-6">
+      {/* Tab Navigation */}
+      <div className="bg-white rounded-lg shadow-sm mb-6">
         <div className="border-b border-gray-200">
           <nav className="flex space-x-8 px-6">
             <button
@@ -115,261 +325,303 @@ export default function CompanyAdminManageProfilePage() {
             </button>
           </nav>
         </div>
+      </div>
 
+      {/* Company Information Section */}
+      <div className="bg-white rounded-lg shadow-sm mb-6">
         <div className="p-6">
-          {/* Company Information Tab */}
-          {activeTab === 'company-info' && (
-            <div>
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">Company Information</h2>
-                <p className="text-sm text-gray-600">Basic details about your organizations.</p>
-              </div>
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Company Information</h2>
+            <p className="text-sm text-gray-600">Basic details about your organizations</p>
+          </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Name
-                  </label>
+          <div className="space-y-6">
+            {/* Company Name - Full Width */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Company Name
+              </label>
                   <input
                     type="text"
                     value={formData.companyName}
                     onChange={(e) => handleInputChange('companyName', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     placeholder="Enter company name"
                   />
-                </div>
+            </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Type
-                  </label>
-                  <select
-                    value={formData.companyType}
-                    onChange={(e) => handleInputChange('companyType', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  >
-                    <option value="">Select One</option>
-                    <option value="corporation">Corporation</option>
-                    <option value="llc">LLC</option>
-                    <option value="partnership">Partnership</option>
-                    <option value="sole-proprietorship">Sole Proprietorship</option>
-                  </select>
-                </div>
+            {/* Company Type and Company Size - Side by Side */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Company Type
+                </label>
+                <select
+                  value={formData.companyType}
+                  onChange={(e) => handleInputChange('companyType', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                >
+                  <option value="">Select One</option>
+                  <option value="corporation">Corporation</option>
+                  <option value="llc">LLC</option>
+                  <option value="partnership">Partnership</option>
+                  <option value="sole-proprietorship">Sole Proprietorship</option>
+                </select>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Size
-                  </label>
-                  <select
-                    value={formData.companySize}
-                    onChange={(e) => handleInputChange('companySize', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                  >
-                    <option value="">Select One</option>
-                    <option value="1-10">1-10 employees</option>
-                    <option value="11-50">11-50 employees</option>
-                    <option value="51-200">51-200 employees</option>
-                    <option value="201-500">201-500 employees</option>
-                    <option value="500+">500+ employees</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Company Size
+                </label>
+                <select
+                  value={formData.companySize}
+                  onChange={(e) => handleInputChange('companySize', e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                >
+                  <option value="">Select One</option>
+                  <option value="1-10">1-10 employees</option>
+                  <option value="11-50">11-50 employees</option>
+                  <option value="51-200">51-200 employees</option>
+                  <option value="201-500">201-500 employees</option>
+                  <option value="500+">500+ employees</option>
+                </select>
+              </div>
+            </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Company Website
-                  </label>
+            {/* Company Website - Full Width */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Company Website
+              </label>
                   <input
                     type="url"
                     value={formData.companyWebsite}
                     onChange={(e) => handleInputChange('companyWebsite', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     placeholder="https://www.company.com"
                   />
-                </div>
-              </div>
+            </div>
 
-              <div className="mt-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Company Description
-                </label>
+            {/* Company Description - Full Width */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Company Description
+              </label>
                 <textarea
                   value={formData.companyDescription}
                   onChange={(e) => handleInputChange('companyDescription', e.target.value)}
                   rows={4}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                   placeholder="Describe your company..."
                 />
-              </div>
             </div>
-          )}
+          </div>
+        </div>
+      </div>
 
-          {/* Address Tab */}
-          {activeTab === 'address' && (
+      {/* Address Section */}
+      <div className="bg-white rounded-lg shadow-sm mb-6">
+        <div className="p-6">
+          <div className="mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Address</h2>
+          </div>
+
+          <div className="space-y-6">
+            {/* Address Line 1 - Full Width */}
             <div>
-              <div className="mb-6">
-                <h2 className="text-lg font-semibold text-gray-900 mb-2">Address</h2>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Address Line 1
-                  </label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Address Line 1
+              </label>
                   <input
                     type="text"
                     value={formData.addressLine1}
                     onChange={(e) => handleInputChange('addressLine1', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     placeholder="Enter address line 1"
                   />
-                </div>
+            </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Address Line 2 (Optional)
-                  </label>
+            {/* Address Line 2 - Full Width */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Address Line 2 (Optional)
+              </label>
                   <input
                     type="text"
                     value={formData.addressLine2}
                     onChange={(e) => handleInputChange('addressLine2', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     placeholder="Enter address line 2"
                   />
-                </div>
+            </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Country
-                  </label>
-                  <select
-                    value={formData.country}
-                    onChange={(e) => handleInputChange('country', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+            {/* Country, City, State/Province - Horizontal Row */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="relative">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Country
+                </label>
+                <div className="relative">
+                  <button
+                    type="button"
+                    onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between"
                   >
-                    <option value="">Select One</option>
-                    <option value="us">United States</option>
-                    <option value="ca">Canada</option>
-                    <option value="uk">United Kingdom</option>
-                    <option value="au">Australia</option>
-                  </select>
+                    <span>{getSelectedCountryLabel()}</span>
+                    <svg
+                      className={`w-4 h-4 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  
+                  {isCountryDropdownOpen && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                      {countries.map((country) => (
+                        <div
+                          key={country.value}
+                          onClick={() => handleCountrySelect(country.value)}
+                          className={`px-3 py-2 cursor-pointer flex items-center hover:bg-gray-50 ${
+                            formData.country === country.value ? 'bg-gray-100' : ''
+                          }`}
+                        >
+                          <div className={`w-4 h-4 border-2 rounded mr-3 flex items-center justify-center ${
+                            formData.country === country.value 
+                              ? 'border-red-500 bg-red-500' 
+                              : 'border-gray-300'
+                          }`}>
+                            {formData.country === country.value && (
+                              <svg className="w-3 h-3 text-white" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                            )}
+                          </div>
+                          <span className="text-gray-900">{country.label}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    City
-                  </label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  City
+                </label>
                   <input
                     type="text"
                     value={formData.city}
                     onChange={(e) => handleInputChange('city', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                     placeholder="Enter city"
                   />
-                </div>
+              </div>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    State/Province
-                  </label>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  State/Province
+                </label>
                   <select
                     value={formData.stateProvince}
                     onChange={(e) => handleInputChange('stateProvince', e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
                   >
-                    <option value="">Select One</option>
-                    <option value="ca">California</option>
-                    <option value="ny">New York</option>
-                    <option value="tx">Texas</option>
-                    <option value="fl">Florida</option>
-                  </select>
-                </div>
+                  <option value="">Select One</option>
+                  <option value="ca">California</option>
+                  <option value="ny">New York</option>
+                  <option value="tx">Texas</option>
+                  <option value="fl">Florida</option>
+                </select>
               </div>
             </div>
-          )}
+          </div>
+        </div>
+      </div>
 
-          {/* Key Contacts Tab */}
-          {activeTab === 'key-contacts' && (
-            <div>
-              <div className="mb-6">
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h2 className="text-lg font-semibold text-gray-900 mb-2">Key Contacts</h2>
-                    <p className="text-sm text-gray-600">Primary points of contact for your organization.</p>
-                  </div>
-                  <button
-                    onClick={handleAddContact}
-                    className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors"
-                  >
-                    + Add Contact
-                  </button>
-                </div>
+      {/* Key Contacts Section */}
+      <div className="bg-white rounded-lg shadow-sm mb-6">
+        <div className="p-6">
+          <div className="mb-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 mb-2">Key Contacts</h2>
+                <p className="text-sm text-gray-600">Primary points of contact for your organization</p>
               </div>
-
-              <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
-                <table className="min-w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
-                        Name
-                      </th>
-                      <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
-                        Position
-                      </th>
-                      <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
-                        Email
-                      </th>
-                      <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
-                        Phone
-                      </th>
-                      <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
-                        Department
-                      </th>
-                      <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
-                        Action
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {contacts.map((contact, index) => (
-                      <tr key={contact.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                        <td className="py-3 px-4 border-b border-gray-200">
-                          <span className="text-gray-900">{contact.name}</span>
-                        </td>
-                        <td className="py-3 px-4 border-b border-gray-200">
-                          <span className="text-gray-900">{contact.position}</span>
-                        </td>
-                        <td className="py-3 px-4 border-b border-gray-200">
-                          <span className="text-gray-900">{contact.email}</span>
-                        </td>
-                        <td className="py-3 px-4 border-b border-gray-200">
-                          <span className="text-gray-900">{contact.phone}</span>
-                        </td>
-                        <td className="py-3 px-4 border-b border-gray-200">
-                          <span className="text-gray-900">{contact.department}</span>
-                        </td>
-                        <td className="py-3 px-4 border-b border-gray-200">
-                          <div className="flex space-x-2">
-                            <button
-                              onClick={() => handleEditContact(contact.id)}
-                              className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-                            >
-                              <img src="/pencil.svg" alt="Edit" className="w-4 h-4" />
-                            </button>
-                            <button
-                              onClick={() => handleDeleteContact(contact.id)}
-                              className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
-                            >
-                              <img src="/bin.svg" alt="Delete" className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <button
+                onClick={handleAddContact}
+                className="bg-gray-100 text-gray-700 px-4 py-2 rounded-md hover:bg-gray-200 transition-colors border border-gray-300"
+              >
+                + Add Contact
+              </button>
             </div>
-          )}
+          </div>
+
+          <div className="border border-gray-200 rounded-lg overflow-hidden">
+            <table className="min-w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
+                    Name
+                  </th>
+                  <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
+                    Position
+                  </th>
+                  <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
+                    Email
+                  </th>
+                  <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
+                    Phone
+                  </th>
+                  <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
+                    Department
+                  </th>
+                  <th className="text-left text-sm font-medium text-gray-700 py-3 px-4 border-b border-gray-200">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {contacts.map((contact, index) => (
+                  <tr key={contact.id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
+                    <td className="py-3 px-4 border-b border-gray-200">
+                      <span className="text-gray-900">{contact.name}</span>
+                    </td>
+                    <td className="py-3 px-4 border-b border-gray-200">
+                      <span className="text-gray-900">{contact.position}</span>
+                    </td>
+                    <td className="py-3 px-4 border-b border-gray-200">
+                      <span className="text-gray-900">{contact.email}</span>
+                    </td>
+                    <td className="py-3 px-4 border-b border-gray-200">
+                      <span className="text-gray-900">{contact.phone}</span>
+                    </td>
+                    <td className="py-3 px-4 border-b border-gray-200">
+                      <span className="text-gray-900">{contact.department}</span>
+                    </td>
+                    <td className="py-3 px-4 border-b border-gray-200">
+                      <div className="flex space-x-2">
+                        <button
+                          onClick={() => handleEditContact(contact.id)}
+                          className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                        >
+                          <img src="/pencil.svg" alt="Edit" className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDeleteContact(contact.id)}
+                          className="p-2 border border-gray-300 rounded-md hover:bg-gray-50"
+                        >
+                          <img src="/bin.svg" alt="Delete" className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
