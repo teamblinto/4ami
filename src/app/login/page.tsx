@@ -6,6 +6,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
+
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -78,7 +79,8 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div className="w-full max-w-[1146px] mx-auto">
         <header className="px-12 py-4">
-          <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+          <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+
         </header>
 
         {/* Main Content */}
