@@ -237,17 +237,17 @@ export default function CompanyAdminLayout({
           </div>
         <div className="flex items-center space-x-4">
           <button className="relative text-gray-600 hover:text-gray-800">
-            <Image src="/notification-bell.svg" alt="Notifications" width={20} height={20} style={{ width: "auto", height: "auto" }} />
           </button>
+            <Image src="/notification-bell.svg" alt="Notifications" width={20} height={20} style={{ width: "auto", height: "auto" }} />
 
           {/* User Profile Dropdown */}
-          <div className="relative dropdown-container flex items-center gap-2">
-            <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
+          <div className="relative dropdown-container">
             <button 
               onClick={toggleDropdown}
-              className="relative cursor-pointer text-gray-600 hover:text-gray-800"
+              className="relative  flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-800"
               title="User Menu"
             >
+            <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
               {isDropdownOpen ? (
                 <Image src="/arrow-up.svg"  alt="Close dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
               ) : (

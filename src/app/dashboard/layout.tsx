@@ -247,13 +247,13 @@ export default function DashboardLayout({
             </button>
             
             {/* User Profile Dropdown */}
-            <div className="relative dropdown-container flex items-center gap-2">
-              <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
+            <div className="relative dropdown-container">
               <button 
                 onClick={toggleDropdown}
-                className="relative cursor-pointer text-gray-600 hover:text-gray-800"
+                className="relative  flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-800"
                 title="User Menu"
               >
+              <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
                 {isDropdownOpen ? (
                   <Image src="/arrow-up.svg"  alt="Close dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
                 ) : (
