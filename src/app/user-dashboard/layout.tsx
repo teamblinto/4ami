@@ -33,18 +33,19 @@ export default function UserDashboardLayout({
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
-    toast.success('Logged out successfully',{
-      position: 'top-center',
-      icon: null,
-      style: {
-        background: 'black',
-        color: 'white',
-        borderRadius: '4px',
+      toast.success('Logged out successfully',{
+        position: 'top-center',
+        icon: null,
+        style: {
+          background: 'black',
+          color: 'white',
+          borderRadius: '4px',
+
+        }
+      } 
         
-      }
-    } 
-      
-    )
+      )
+    
     router.push('/login');
   };
 
