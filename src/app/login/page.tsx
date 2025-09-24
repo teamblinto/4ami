@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { ClientPageRoot } from "next/dist/client/components/client-page";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -32,20 +31,28 @@ export default function LoginPage() {
 
       const data = await response.json();
 
-      console.log(data)
+      console.log(data);
       if (response.ok) {
         // Store token and user data in localStorage
         if (data.token) {
           localStorage.setItem("authToken", data.token);
         }
-        
+
         // Store user data including role
         if (data.user) {
           localStorage.setItem("userData", JSON.stringify(data.user));
         }
-        
-        toast.success("Login successful!");
-        
+
+        toast.success("Login successful!", {
+          icon: null,
+          position: "top-center",
+          style: {
+            background: "red",
+            color: "#fff",
+            borderRadius: "4px",
+          },
+        });
+
         // Check user role and redirect accordingly
         if (data.user && data.user.role === "ADMIN") {
           router.push("/dashboard");
@@ -70,9 +77,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div className="w-full max-w-[1146px] mx-auto">
-      <header className="px-12 py-4">
-        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
-      </header>
+        <header className="px-12 py-4">
+          <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        </header>
 
         {/* Main Content */}
         <main className="flex-grow flex items-center justify-center bg-gray-100 pt-20 pb-20">
@@ -81,9 +88,11 @@ export default function LoginPage() {
             <div className="w-full md:w-2/5 p-6">
               <h2 className="text-2xl text-[#080607] font-bold mb-2">Log In</h2>
               <p className="text-gray-600 mb-6">
-                <span className="font-semibold text-red-500">Welcome back!</span>{" "}
-                Log in to access AMI&apos;s full suite of services designed to support
-                your physical asset management needs.
+                <span className="font-semibold text-red-500">
+                  Welcome back!
+                </span>{" "}
+                Log in to access AMI&apos;s full suite of services designed to
+                support your physical asset management needs.
               </p>
 
               <form onSubmit={handleLogin}>
@@ -186,8 +195,8 @@ export default function LoginPage() {
                     type="submit"
                     disabled={isLoading}
                     className={`${
-                      isLoading 
-                        ? "bg-gray-400 cursor-not-allowed" 
+                      isLoading
+                        ? "bg-gray-400 cursor-not-allowed"
                         : "bg-red-500 hover:bg-red-700"
                     } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors`}
                   >

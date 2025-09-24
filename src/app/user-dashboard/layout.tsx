@@ -193,7 +193,7 @@ export default function UserDashboardLayout({
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Main Content */},
         <main className="flex-grow px-8 bg-[#FAFAFA] pt-[24px] pb-[24px] overflow-x-auto min-w-0">
           {/* Top Bar */}
           <div className="flex items-center justify-between mb-6">
