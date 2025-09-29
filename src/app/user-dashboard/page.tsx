@@ -13,21 +13,14 @@ export default function UserDashboardPage() {
   return (
     <div>
       {/* Welcome Section */}
-<div>
-      <div
-        className="flex justify-between items-center "
-   
-      >
+      <div className="flex justify-between items-center mb-5">
         <div>
-          <h1 className=" font-bold  text-[#343A40] text-2xl ">Dashboard</h1>
+          <h1 className="font-bold text-[#343A40] text-2xl">Dashboard</h1>
           <p className="text-[#6C757D] mt-2">
             👋 Welcome to your dashboard Michael, let’s get started
           </p>
         </div>
-      </div>
-
-      <div className="flex justify-end items-center mb-5">
-        <button className="bg-red-500 text-white px-8 py-2 cursor-pointer rounded-lg hover:bg-red-600 flex items-center space-x-2 ml-5">
+        <button className="bg-red-500 text-white px-8 py-2 cursor-pointer rounded-lg hover:bg-red-600 flex items-center space-x-2">
           <svg
             className="w-4 h-4"
             fill="none"
@@ -44,7 +37,6 @@ export default function UserDashboardPage() {
           <span>Create New Project</span>
         </button>
       </div>
-</div>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
         {statsData.map((stat, index) => (
@@ -81,7 +73,7 @@ export default function UserDashboardPage() {
           Projects
         </h2>
         <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[75px] pb-[75px] gap-[21px]">
-            <div className="flex flex-col items-center justify-center w-full h-full">
+          <div className="flex flex-col items-center justify-center w-full h-full">
             <Image
               src="/majesticons_plus-line.svg"
               alt="majesticons_plus-line"
@@ -92,69 +84,42 @@ export default function UserDashboardPage() {
             <p className="text-gray-600 text-center mt-2">
               Start by creating your first project
             </p>
-            </div>
+          </div>
         </div>
       </div>
 
       {/* Bottom Sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Coming Soon */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">
-            Coming Soon
-          </h2>
-          <div className="flex flex-col items-center justify-center py-8">
-            <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-              <svg
-                className="w-8 h-8 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-            </div>
-            <div className="space-y-2">
-              <div className="h-2 bg-gray-200 rounded w-24"></div>
-              <div className="h-2 bg-gray-200 rounded w-20"></div>
-              <div className="h-2 bg-gray-200 rounded w-16"></div>
-            </div>
+        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col justify-center p-5 gap-2 flex-shrink-0 h-[386px]">
+          <h2 className="text-lg font-semibold text-[#080607] ">Coming Soon</h2>
+          <div className="flex flex-col items-center justify-center w-full h-full">
+            <Image
+              src="/ComingSoon.svg"
+              alt="majesticons_plus-line"
+              width={80}
+              height={80}
+              style={{ width: "auto", height: "auto" }}
+            />
           </div>
         </div>
 
         {/* Popular Services by Category */}
-        <div className="bg-white rounded-lg shadow-sm p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-6">
+        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col justify-center p-5 gap-2 flex-shrink-0 h-[386px]">
+          <h2 className="text-lg font-semibold text-[#080607] ">
             Popular Services by Category
           </h2>
-          <div className="flex flex-col items-center justify-center py-8">
-            <div className="w-16 h-16 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
-              <svg
-                className="w-8 h-8 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
-                />
-              </svg>
+          <div className="flex flex-col items-center justify-center w-full h-full">
+            <div>
+              <Image
+                src="/pie-chart.svg"
+                alt="/pie-chart"
+                width={80}
+                height={80}
+                style={{ width: "auto", height: "auto" }}
+              />
             </div>
-            <p className="text-gray-600 text-center text-sm">
+            <p className="text-[#ADB5BD] text-[12px] w-[320px] text-center mt-[27px]">
               Popular services by category distribution pie chart/bar graph will
               appear here
             </p>
