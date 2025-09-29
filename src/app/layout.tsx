@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AMI Dashboard",
+  title: "4AMI",
   description: "Super Admin Dashboard for Asset Management International",
 };
 
