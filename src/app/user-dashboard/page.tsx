@@ -13,39 +13,46 @@ export default function UserDashboardPage() {
   return (
     <div>
       {/* Welcome Section */}
-      <div className="flex flex-col ">
-        <div className="flex justify-between items-center mb-5">
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-            <p className="text-gray-600 mt-2">
-              👋 Welcome to your dashboard Michael, let’s get started
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-end mb-4">
-          <button className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 flex items-center space-x-2 ml-5">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-            <span>Create New Project</span>
-          </button>
+<div>
+      <div
+        className="flex justify-between items-center "
+   
+      >
+        <div>
+          <h1 className=" font-bold  text-[#343A40] text-2xl ">Dashboard</h1>
+          <p className="text-[#6C757D] mt-2">
+            👋 Welcome to your dashboard Michael, let’s get started
+          </p>
         </div>
       </div>
+
+      <div className="flex justify-end items-center mb-5">
+        <button className="bg-red-500 text-white px-8 py-2 cursor-pointer rounded-lg hover:bg-red-600 flex items-center space-x-2 ml-5">
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <span>Create New Project</span>
+        </button>
+      </div>
+</div>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
         {statsData.map((stat, index) => (
-          <div key={index} className="bg-white p-6 rounded-lg shadow-sm">
-            <div className="flex items-center justify-between">
+          <div
+            key={index}
+            className="bg-white p-5 rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)]"
+          >
+            <div className="flex items-start justify-between">
               <div>
                 <p className="text-sm font-medium text-[#6C757D]">
                   {stat.title}
