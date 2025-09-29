@@ -68,7 +68,7 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Projects Section */}
-      <div className="mb-11 mt-6">
+      <div className="mb-6 mt-6">
         <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
           Projects
         </h2>
