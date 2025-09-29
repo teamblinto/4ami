@@ -37,13 +37,13 @@ export default function AfterSubmitProjectTable() {
     <div className="w-full">
       {/* Filter Bar */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm">
+        <select className="border border-gray-300 text-black rounded-lg px-4 py-2 text-sm">
           <option>Project ID All</option>
           <option>P101</option>
           <option>P102</option>
         </select>
 
-        <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm">
+        <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm text-black ">
           <option>Status All</option>
           <option>Completed</option>
           <option>In Process</option>
@@ -97,7 +97,7 @@ export default function AfterSubmitProjectTable() {
 
       {/* Table */}
       <div className="overflow-x-auto bg-white">
-        <table className="w-full text-sm text-left border border-gray-200">
+        <table className="w-full text-sm text-left border border-gray-200 text-black">
             <thead className="bg-gray-50">
             <tr>
                 <th className="px-4 py-4 border border-gray-200">
