@@ -76,27 +76,23 @@ export default function UserDashboardPage() {
       </div>
 
       {/* Projects Section */}
-      <div className="bg-white rounded-lg shadow-sm p-6 text-center mb-11">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6 text-left">
+      <div className="mb-11 mt-6">
+        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
           Projects
         </h2>
-        <div className="flex flex-col items-center justify-center py-16">
-          <button className="w-12 h-12 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-4">
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M12 4v16m8-8H4"
-              />
-            </svg>
-          </button>
-          <p className="text-gray-600">Start by creating your first project</p>
+        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[75px] pb-[75px] gap-[21px]">
+            <div className="flex flex-col items-center justify-center w-full h-full">
+            <Image
+              src="/majesticons_plus-line.svg"
+              alt="majesticons_plus-line"
+              width={80}
+              height={80}
+              style={{ width: "auto", height: "auto" }}
+            />
+            <p className="text-gray-600 text-center mt-2">
+              Start by creating your first project
+            </p>
+            </div>
         </div>
       </div>
 
