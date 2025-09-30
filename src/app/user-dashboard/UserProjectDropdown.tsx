@@ -41,7 +41,7 @@ export default function ProjectDropdown() {
         {/* Trigger Button */}
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-red-500 cursor-pointer text-white px-2 py-2 rounded-lg hover:bg-red-600 flex justify-center w-[218px] "
+          className="bg-red-500 cursor-pointer  text-white px-2 py-2 rounded-lg hover:bg-red-600 flex justify-center w-[218px] "
         >
           + Create New Project
         </button>
@@ -49,7 +49,7 @@ export default function ProjectDropdown() {
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute z-10 overflow-y-auto"
+          className="absolute right-0 z-10 overflow-y-auto"
           style={{
             borderRadius: "8px",
             background: "#FFF",
