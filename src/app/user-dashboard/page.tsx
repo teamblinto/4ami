@@ -3,6 +3,7 @@
 import React from "react";
 import Image from "next/image";
 import UserProjectDropdown from "./UserProjectDropdown";
+import UserAfterSubmitProjectTable from "./UserAfterSubmitProjectTable";
 
 export default function UserDashboardPage() {
   const statsData = [
@@ -23,7 +24,7 @@ export default function UserDashboardPage() {
         </div>
       </div>
       <div className="flex justify-end mb-5">
-           <UserProjectDropdown/>
+        <UserProjectDropdown />
       </div>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
@@ -76,6 +77,10 @@ export default function UserDashboardPage() {
         </div>
       </div>
 
+      <div>
+        <UserAfterSubmitProjectTable />
+      </div>
+
       {/* Bottom Sections */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Coming Soon */}
@@ -114,7 +119,6 @@ export default function UserDashboardPage() {
           </div>
         </div>
       </div>
-      
     </div>
   );
 }
