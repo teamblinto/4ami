@@ -49,7 +49,7 @@ export default function FilterProjectStatus() {
           onClick={() => setIsOpen((v) => !v)}
           src="/Sort.svg"
           alt="Sort icon"
-          className="w-6 h-6 cursor-pointer "
+          className="w-5 h-5 cursor-pointer "
         />
 
       </div>
