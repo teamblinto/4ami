@@ -49,19 +49,27 @@ export default function ProjectDropdown() {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-10 w-full bg-white border border-gray-200 rounded-b-lg shadow-lg max-h-150 overflow-y-auto">
+        <div
+          className="absolute z-10 w-full shadow-lg max-h-150 overflow-y-auto"
+          style={{
+            borderRadius: "4px",
+            border: "1px solid #CED4DA",
+            background: "#FFF",
+          }}
+        >
           <ul className="py-2 text-sm text-gray-700 space-y-1">
             {items.map((item, idx) => (
               <li key={idx}>
-                <label className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    checked={selected.includes(item)}
-                    onChange={() => toggleItem(item)}
-                    className="mr-2"
-                  />
-                  {item}
-                </label>
+          <label className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+            <input
+              type="checkbox"
+              checked={selected.includes(item)}
+              onChange={() => toggleItem(item)}
+              className="mr-2 accent-[#ED272C]"
+              style={{ width: "18px", height: "18px", aspectRatio: "1/1" }}
+            />
+            {item}
+          </label>
               </li>
             ))}
           </ul>
