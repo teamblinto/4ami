@@ -71,26 +71,7 @@ export default function CompanyAdminContent() {
         ))}
       </div>
 
-      {/* Projects Section */}
-      <div className="mb-6 mt-6">
-        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
-          Projects
-        </h2>
-        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[75px] pb-[75px] gap-[21px]">
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            <Image
-              src="/majesticons_plus-line.svg"
-              alt="majesticons_plus-line"
-              width={80}
-              height={80}
-              style={{ width: "auto", height: "auto" }}
-            />
-            <p className="text-[#6C757D] text-[14px] font-medium text-center mt-3">
-              Start by creating your first project
-            </p>
-          </div>
-        </div>
-      </div>
+
       <AfterSubmitProjectTable />
 
       {/* Bottom Sections */}
