@@ -12,7 +12,10 @@ export default function FilterDropdown() {
   // Close when clicking outside
   useEffect(() => {
     function handleDocumentClick(e: MouseEvent) {
-      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -37,46 +40,45 @@ export default function FilterDropdown() {
   };
 
   return (
-    <div className="relative inline-block text-left" ref={containerRef}>
+    <div className="relative text-left" ref={containerRef}>
       {/* Trigger */}
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((v) => !v)}
-        className="inline-flex items-center gap-0 px-2 py-0 text-gray-700 hover:bg-gray-50 focus:outline-none"
-      >
-        <span>Time (Start to End)</span>
-      </button>
-
+      <div className="flex justify-between items-center text-gray-700">
+        <span className="flex-1">Time (Start to End)</span>
+        <img
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((v) => !v)}
+          src="/Sort.svg"
+          alt="Sort icon"
+          className="w-6 h-6 cursor-pointer "
+        />
+      </div>
       {/* Dropdown */}
       {isOpen && (
         <div className="absolute left-0 mt-0 w-80 bg-white shadow-lg rounded-lg border border-gray-200 p-4 z-50">
           <h3 className="text-gray-700 font-medium mb-3">Filter by</h3>
 
           <div className="inline-flex items-center gap-6">
+            <div className="mb-3">
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="w-full border border-gray-300 text-[#343A40] rounded-md px-3 py-2 focus:outline-none"
+              >
+                <option value="startToEnd">Start to End</option>
+                <option value="endToStart">End to Start</option>
+              </select>
+            </div>
 
-          <div className="mb-3">
-            <select
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value)}
-              className="w-full border border-gray-300 text-[#343A40] rounded-md px-3 py-2 focus:outline-none"
-            >
-              <option value="startToEnd">Start to End</option>
-              <option value="endToStart">End to Start</option>
-            </select>
-          </div>
-
-          <div className="mb-3">
-            <select
-              value={order}
-              onChange={(e) => setOrder(e.target.value)}
-              className="w-full border border-gray-300 text-[#343A40] rounded-md px-3 py-2 focus:outline-none"
-            >
-              <option value="asc">Ascending</option>
-              <option value="desc">Descending</option>
-            </select>
-          </div>
-
+            <div className="mb-3">
+              <select
+                value={order}
+                onChange={(e) => setOrder(e.target.value)}
+                className="w-full border border-gray-300 text-[#343A40] rounded-md px-3 py-2 focus:outline-none"
+              >
+                <option value="asc">Ascending</option>
+                <option value="desc">Descending</option>
+              </select>
+            </div>
           </div>
 
           <button
