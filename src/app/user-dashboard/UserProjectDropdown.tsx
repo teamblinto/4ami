@@ -37,11 +37,11 @@ export default function ProjectDropdown() {
   };
 
   return (
-    <div className="relative inline-block text-left w-60">
+    <div className="relative inline-block text-left">
       {/* Trigger Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="bg-red-500 text-white px-2 py-2 rounded-lg hover:bg-red-600 flex justify-center w-60"
+        className="bg-red-500 cursor-pointer text-white px-2 py-2 rounded-lg hover:bg-red-600 flex justify-center w-[218px] "
       >
         
         + Create New Project
@@ -50,22 +50,24 @@ export default function ProjectDropdown() {
       {/* Dropdown */}
       {isOpen && (
         <div
-          className="absolute z-10 w-full shadow-lg max-h-150 overflow-y-auto"
+          className="absolute z-10 overflow-y-auto"
           style={{
-            borderRadius: "4px",
-            border: "1px solid #CED4DA",
+            borderRadius: "8px",
             background: "#FFF",
+            boxShadow: "2px 2px 15px 0 rgba(0, 0, 0, 0.10)",
+            width: "218px",
+           
           }}
         >
-          <ul className="py-2 text-sm text-gray-700 space-y-1">
+          <ul className="text-sm  text-[#343A40] font-normal ">
             {items.map((item, idx) => (
               <li key={idx}>
-          <label className="flex items-center px-4 py-2 hover:bg-gray-100 cursor-pointer">
+          <label className="flex items-center  pl-4 pr-[10px] py-[10px] hover:bg-gray-100 cursor-pointer">
             <input
               type="checkbox"
               checked={selected.includes(item)}
               onChange={() => toggleItem(item)}
-              className="mr-2 accent-[#ED272C]"
+              className="mr-[10px] cursor-pointer accent-[#ED272C]"
               style={{ width: "18px", height: "18px", aspectRatio: "1/1" }}
             />
             {item}
