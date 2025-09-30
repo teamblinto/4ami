@@ -4,8 +4,10 @@ import { useState } from "react";
 import AddFilterDropDown from "../components/CompanyAdminModules/DashboardContent/AddFilterDropDown";
 import FilterDropdown from "../components/CompanyAdminModules/DashboardContent/FilterDropdown";
 import FilterProjectStatus from "../components/CompanyAdminModules/DashboardContent/FilterProjectStatus";
+import { useRouter } from "next/navigation";
 
 export default function AfterSubmitProjectTable() {
+  const router = useRouter();
   const [projects] = useState([
     {
       id: "P101",
@@ -102,13 +104,21 @@ export default function AfterSubmitProjectTable() {
               <th className="px-4 py-4 border border-gray-200">
                 <div className="flex items-center justify-between">
                   <span>Project ID</span>
-                  <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer " />
+                  <img
+                    src="/Sort.svg"
+                    alt=""
+                    className="w-5 h-5 cursor-pointer "
+                  />
                 </div>
               </th>
               <th className="px-4 py-4 border border-gray-200">
                 <div className="flex items-center justify-between">
                   <span>Project Type</span>
-                  <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer " />
+                  <img
+                    src="/Sort.svg"
+                    alt=""
+                    className="w-5 h-5 cursor-pointer "
+                  />
                 </div>
               </th>
               <th className="px-4 py-4 border border-gray-200">
@@ -157,15 +167,13 @@ export default function AfterSubmitProjectTable() {
           </tbody>
         </table>
       </div>
-
-      {/* Footer Link */}
       <div className="mt-3 text-right">
-        <a
-          href="#"
-          className="text-red-500 text-sm hover:underline font-medium"
+        <button
+          onClick={() => router.push("/user-dashboard/projects")}
+          className="text-red-500 text-sm hover:underline font-medium cursor-pointer mb-2 "
         >
           View All Projects
-        </a>
+        </button>
       </div>
     </div>
   );

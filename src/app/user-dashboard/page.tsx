@@ -78,6 +78,9 @@ export default function UserDashboardPage() {
       </div>
 
       <div>
+        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
+          Projects
+        </h2>
         <UserAfterSubmitProjectTable />
       </div>
 
