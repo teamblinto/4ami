@@ -1,11 +1,19 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 // import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export default function ProjectDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(["Residual Analysis"]);
+  const router = useRouter();
+
+  const handleNext = () => {
+    if (selected.includes("Residual Analysis")) {
+      router.push("/user-dashboard/residual-analysis");
+    }
+  };
 
   const items = [
     "Appraisal – Valuation",
@@ -80,7 +88,10 @@ export default function ProjectDropdown() {
 
           {/* Footer Button */}
           <div className="p-2">
-            <button className="w-full bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer">
+            <button
+              onClick={handleNext}
+              className="w-full bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer"
+            >
               Next
             </button>
           </div>
