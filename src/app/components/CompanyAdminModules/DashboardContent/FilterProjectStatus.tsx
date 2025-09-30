@@ -11,7 +11,11 @@ export default function FilterProjectStatus() {
   // Close when clicking outside
   useEffect(() => {
     function handleDocumentClick(e: MouseEvent) {
-      if (containerRef.current && e.target && !containerRef.current.contains(e.target as Node)) {
+      if (
+        containerRef.current &&
+        e.target &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -35,18 +39,20 @@ export default function FilterProjectStatus() {
   };
 
   return (
-    <div className="relative inline-block text-left" ref={containerRef}>
+    <div className="relative  text-left" ref={containerRef}>
       {/* Trigger */}
 
+      <div className="flex justify-between items-center text-gray-700">
+        <span className="flex-1">Status</span>
+        <img
+          aria-expanded={isOpen}
+          onClick={() => setIsOpen((v) => !v)}
+          src="/Sort.svg"
+          alt="Sort icon"
+          className="w-6 h-6 cursor-pointer "
+        />
 
-      <button
-        type="button"
-        aria-expanded={isOpen}
-        onClick={() => setIsOpen((v) => !v)}
-        className="inline-flex items-center gap-0 px-2 py-0 text-gray-700 hover:bg-gray-50 focus:outline-none"
-      >
-        <span>Status</span>
-      </button>
+      </div>
 
       {/* Dropdown */}
       {isOpen && (

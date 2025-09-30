@@ -36,12 +36,6 @@ export default function AfterSubmitProjectTable() {
   };
 
   return (
-
-<div>
-              <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
-          Projects
-        </h2>
-
     <div className="w-full">
       {/* Filter Bar */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
@@ -128,10 +122,9 @@ export default function AfterSubmitProjectTable() {
                     </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
-                    <div className="flex items-center justify-between">
+                    <div className="">
                         {/* <span>Status</span> */}
                         <span><FilterProjectStatus /></span>
-                        <img src="/Sort.svg" alt="" />
                     </div>
                 </th>
             </tr>
@@ -166,6 +159,5 @@ export default function AfterSubmitProjectTable() {
         </a>
       </div>
     </div>
-</div>
   );
 }
