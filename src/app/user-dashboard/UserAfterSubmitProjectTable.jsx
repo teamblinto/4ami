@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import AddFilterDropDown from "../components/CompanyAdminModules/DashboardContent/AddFilterDropDown";
-import FilterDropdown from "../components/CompanyAdminModules/DashboardContent/FilterDropdown";
-import FilterProjectStatus from "../components/CompanyAdminModules/DashboardContent/FilterProjectStatus";
+import UserFilterDropdown from "../user-dashboard/UserFilterDropdown";
+import UserFilterProjectStatus from "../user-dashboard/UserFilterProjectStatus";
 import { useRouter } from "next/navigation";
 
 export default function AfterSubmitProjectTable() {
@@ -124,7 +124,7 @@ export default function AfterSubmitProjectTable() {
               <th className="px-4 py-4 border border-gray-200">
                 <div className="">
                   <span>
-                    <FilterDropdown />
+                    <UserFilterDropdown />
                   </span>
                 </div>
               </th>
@@ -132,7 +132,7 @@ export default function AfterSubmitProjectTable() {
                 <div className="">
                   {/* <span>Status</span> */}
                   <span>
-                    <FilterProjectStatus />
+                    <UserFilterProjectStatus />
                   </span>
                 </div>
               </th>
