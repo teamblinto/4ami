@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 // import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-export default function ProjectDropdown() {
+export default function UserProjectDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState(["Residual Analysis"]);
   const router = useRouter();
