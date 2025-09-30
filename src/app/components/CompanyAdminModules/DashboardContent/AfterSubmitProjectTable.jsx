@@ -104,26 +104,27 @@ export default function AfterSubmitProjectTable() {
                 <th className="px-4 py-4 border border-gray-200">
                     <div className="flex items-center justify-between">
                         <span>Project ID</span>
-                        <img src="/Sort.svg" alt="" />
+                        <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer" />
                     </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
                     <div className="flex items-center justify-between">
                         <span>Project Type</span>
-                        <img src="/Sort.svg" alt="" />
+                         <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer" />
+                       
                     </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
-                    <div className="flex items-center justify-between">
+                    <div className="">
                         <span><FilterDropdown /></span>
-                        <img src="/Sort.svg" alt="" />
+                      
                     </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
-                    <div className="flex items-center justify-between">
+                    <div className="">
                         {/* <span>Status</span> */}
                         <span><FilterProjectStatus /></span>
-                        <img src="/Sort.svg" alt="" />
+                       
                     </div>
                 </th>
             </tr>
