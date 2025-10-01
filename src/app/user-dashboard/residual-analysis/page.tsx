@@ -62,7 +62,8 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Project Name
+                  Pr
+                  {/* oject Name */}
                 </label>
                 <input
                   type="text"
