@@ -1,7 +1,9 @@
 "use client";
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 const ResidualAnalysisPage = () => {
+  const router = useRouter();
   const [isSourceInfoOpen, setIsSourceInfoOpen] = useState(true);
   const [isClientInfoOpen, setIsClientInfoOpen] = useState(true);
   const [isTransactionInfoOpen, setIsTransactionInfoOpen] = useState(true);
@@ -14,6 +16,13 @@ const ResidualAnalysisPage = () => {
   const [communicationValue, setCommunicationValue] = useState("No");
   const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
   const [communicationValue2, setCommunicationValue2] = useState("No");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Redirect to thank you page
+    router.push('/user-dashboard/thank-you');
+  };
+
   // Figma design styles
   const labelStyles = {
     color: "#6C757D",
@@ -47,7 +56,7 @@ const ResidualAnalysisPage = () => {
           </p>
         </div>
 
-        <form className="">
+        <form className="" onSubmit={handleSubmit}>
           {/* Project Information */}
           <div className="mb-6 bg-white px-4 py-5 rounded-lg ">
             <h2 className="text-lg font-semibold text-gray-700 mb-4">
@@ -1112,6 +1121,7 @@ const ResidualAnalysisPage = () => {
           </div>
         </form>
       </div>
+
     </div>
   );
 };
