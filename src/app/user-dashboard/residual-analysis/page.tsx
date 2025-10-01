@@ -4,38 +4,43 @@ import React from "react";
 const ResidualAnalysisPage = () => {
   // Figma design styles
   const labelStyles = {
-    color: '#6C757D',
-    fontFamily: 'Inter',
-    fontSize: '14px',
-    fontWeight: '500',
-    lineHeight: '24px'
+    color: "#6C757D",
+    fontFamily: "Inter",
+    fontSize: "14px",
+    fontWeight: "500",
+    lineHeight: "24px",
   };
 
   const inputStyles = {
-    borderRadius: '8px',
-    border: '1px solid #CED4DA',
-    background: '#FBFBFB',
-    height: '40px',
-    padding: '0 12px',
-    color: '#343A40',
-    fontFamily: 'Inter',
-    fontSize: '14px',
-    fontWeight: '400',
-    lineHeight: '24px'
+    borderRadius: "8px",
+    border: "1px solid #CED4DA",
+    background: "#FBFBFB",
+    height: "40px",
+    padding: "0 12px",
+    color: "#343A40",
+    fontFamily: "Inter",
+    fontSize: "14px",
+    fontWeight: "400",
+    lineHeight: "24px",
   };
   return (
     <div className="min-h-screen">
-      <div className="mx-auto bg-white rounded-lg" style={{ padding: '20px 32px' }}>
-        <h1 className="text-2xl font-bold text-gray-800">
-          Create Residual Analysis
-        </h1>
-        <p className="text-sm text-gray-500 mb-6">
-          Dashboard / Services / Create Residual Analysis
-        </p>
+      <div
+        className="mx-auto rounded-lg gap-[44px] flex flex-col"
+        // style={{ padding: "20px 32px" }}
+      >
+        <div>
+          <h1 className="font-medium text-[#343A40] text-2xl">
+            Create Residual Analysis
+          </h1>
+          <p className="text-[#6C757D] mt-2 font-normal ">
+            Dashboard / Services / Create Residual Analysis
+          </p>
+        </div>
 
-        <form>
+        <form className="">
           {/* Project Information */}
-          <div className="mb-6">
+          <div className="mb-6 bg-white px-4 py-5 rounded-lg ">
             <h2 className="text-lg font-semibold text-gray-700 mb-4">
               Project Information
             </h2>
@@ -90,6 +95,8 @@ const ResidualAnalysisPage = () => {
               </div>
             </div>
           </div>
+
+
 
           {/* Client Information */}
           <div className="mb-6">
@@ -155,13 +162,13 @@ const ResidualAnalysisPage = () => {
                     Lease Phone
                   </label>
                   <div className="flex">
-                    <select 
+                    <select
                       className="rounded-l-md"
                       style={{
                         ...inputStyles,
-                        borderTopRightRadius: '0',
-                        borderBottomRightRadius: '0',
-                        borderRight: 'none'
+                        borderTopRightRadius: "0",
+                        borderBottomRightRadius: "0",
+                        borderRight: "none",
                       }}
                     >
                       <option value="+1">🇺🇸 +1</option>
@@ -175,8 +182,8 @@ const ResidualAnalysisPage = () => {
                       className="flex-1 rounded-r-md"
                       style={{
                         ...inputStyles,
-                        borderTopLeftRadius: '0',
-                        borderBottomLeftRadius: '0'
+                        borderTopLeftRadius: "0",
+                        borderBottomLeftRadius: "0",
                       }}
                     />
                   </div>
@@ -256,7 +263,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Current Meter<span style={{ color: 'red' }}>*</span>
+                  Current Meter<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -272,7 +279,8 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Proposed Annual Utilization<span style={{ color: 'red' }}>*</span>
+                  Proposed Annual Utilization
+                  <span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -288,7 +296,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Meter Unit<span style={{ color: 'red' }}>*</span>
+                  Meter Unit<span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   id="meter-unit"
@@ -340,7 +348,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Terms (Months)<span style={{ color: 'red' }}>*</span>
+                  Terms (Months)<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -356,13 +364,9 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Structure<span style={{ color: 'red' }}>*</span>
+                  Structure<span style={{ color: "red" }}>*</span>
                 </label>
-                <select
-                  id="structure"
-                  className="w-full"
-                  style={inputStyles}
-                >
+                <select id="structure" className="w-full" style={inputStyles}>
                   <option value="">Select</option>
                   <option value="operating">Operating</option>
                   <option value="capital">Capital</option>
@@ -375,13 +379,9 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Application<span style={{ color: 'red' }}>*</span>
+                  Application<span style={{ color: "red" }}>*</span>
                 </label>
-                <select
-                  id="application"
-                  className="w-full"
-                  style={inputStyles}
-                >
+                <select id="application" className="w-full" style={inputStyles}>
                   <option value="">Select</option>
                   <option value="construction">Construction</option>
                   <option value="mining">Mining</option>
@@ -395,13 +395,9 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Environment<span style={{ color: 'red' }}>*</span>
+                  Environment<span style={{ color: "red" }}>*</span>
                 </label>
-                <select
-                  id="environment"
-                  className="w-full"
-                  style={inputStyles}
-                >
+                <select id="environment" className="w-full" style={inputStyles}>
                   <option value="">Select</option>
                   <option value="indoor">Indoor</option>
                   <option value="outdoor">Outdoor</option>
@@ -421,16 +417,16 @@ const ResidualAnalysisPage = () => {
                 type="button"
                 className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                 style={{
-                  borderRadius: '8px',
-                  border: '1px solid #CED4DA',
-                  background: '#FBFBFB',
-                  height: '40px',
-                  padding: '0 12px',
-                  color: '#343A40',
-                  fontFamily: 'Inter',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  lineHeight: '24px'
+                  borderRadius: "8px",
+                  border: "1px solid #CED4DA",
+                  background: "#FBFBFB",
+                  height: "40px",
+                  padding: "0 12px",
+                  color: "#343A40",
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  lineHeight: "24px",
                 }}
               >
                 + Add Scenario
@@ -439,16 +435,16 @@ const ResidualAnalysisPage = () => {
                 type="button"
                 className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                 style={{
-                  borderRadius: '8px',
-                  border: '1px solid #CED4DA',
-                  background: '#FBFBFB',
-                  height: '40px',
-                  padding: '0 12px',
-                  color: '#343A40',
-                  fontFamily: 'Inter',
-                  fontSize: '14px',
-                  fontWeight: '500',
-                  lineHeight: '24px'
+                  borderRadius: "8px",
+                  border: "1px solid #CED4DA",
+                  background: "#FBFBFB",
+                  height: "40px",
+                  padding: "0 12px",
+                  color: "#343A40",
+                  fontFamily: "Inter",
+                  fontSize: "14px",
+                  fontWeight: "500",
+                  lineHeight: "24px",
                 }}
               >
                 + Add Additional Equipment
@@ -468,13 +464,9 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Industry<span style={{ color: 'red' }}>*</span>
+                  Industry<span style={{ color: "red" }}>*</span>
                 </label>
-                <select
-                  id="industry"
-                  className="w-full"
-                  style={inputStyles}
-                >
+                <select id="industry" className="w-full" style={inputStyles}>
                   <option value="">Select Industry</option>
                   <option value="construction">Construction</option>
                   <option value="mining">Mining</option>
@@ -488,7 +480,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Asset class<span style={{ color: 'red' }}>*</span>
+                  Asset class<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -504,7 +496,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Make<span style={{ color: 'red' }}>*</span>
+                  Make<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -520,7 +512,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Model<span style={{ color: 'red' }}>*</span>
+                  Model<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -536,7 +528,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Year<span style={{ color: 'red' }}>*</span>
+                  Year<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -552,7 +544,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Current Meter Reading<span style={{ color: 'red' }}>*</span>
+                  Current Meter Reading<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -568,13 +560,9 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Meter Type<span style={{ color: 'red' }}>*</span>
+                  Meter Type<span style={{ color: "red" }}>*</span>
                 </label>
-                <select
-                  id="meter-type"
-                  className="w-full"
-                  style={inputStyles}
-                >
+                <select id="meter-type" className="w-full" style={inputStyles}>
                   <option value="">select meter type</option>
                   <option value="hours">Hours</option>
                   <option value="miles">Miles</option>
@@ -588,7 +576,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Proposed Utilization<span style={{ color: 'red' }}>*</span>
+                  Proposed Utilization<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -604,7 +592,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Environment Ranking<span style={{ color: 'red' }}>*</span>
+                  Environment Ranking<span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   id="environment-ranking"
@@ -632,7 +620,7 @@ const ResidualAnalysisPage = () => {
                 className="block mb-2"
                 style={labelStyles}
               >
-                Subject Price<span style={{ color: 'red' }}>*</span>
+                Subject Price<span style={{ color: "red" }}>*</span>
               </label>
               <input
                 type="text"
@@ -656,7 +644,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Terms (Months)<span style={{ color: 'red' }}>*</span>
+                  Terms (Months)<span style={{ color: "red" }}>*</span>
                 </label>
                 <input
                   type="text"
@@ -672,7 +660,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Structure<span style={{ color: 'red' }}>*</span>
+                  Structure<span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   id="lease-structure"
@@ -691,7 +679,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Application<span style={{ color: 'red' }}>*</span>
+                  Application<span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   id="lease-application"
@@ -711,7 +699,7 @@ const ResidualAnalysisPage = () => {
                   className="block mb-2"
                   style={labelStyles}
                 >
-                  Environment<span style={{ color: 'red' }}>*</span>
+                  Environment<span style={{ color: "red" }}>*</span>
                 </label>
                 <select
                   id="lease-environment"
