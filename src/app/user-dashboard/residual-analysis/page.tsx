@@ -10,6 +10,10 @@ const ResidualAnalysisPage = () => {
   const [isEquipmentDetailsOpen, setIsEquipmentDetailsOpen] = useState(true);
   const [isFinancialInfoOpen, setIsFinancialInfoOpen] = useState(true);
   const [isLeaseTermOpen, setIsLeaseTermOpen] = useState(true);
+  const [isCommunicationOpen, setCommunicationOpen] = useState(false);
+  const [communicationValue, setCommunicationValue] = useState("No");
+  const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
+  const [communicationValue2, setCommunicationValue2] = useState("No");
   // Figma design styles
   const labelStyles = {
     color: "#6C757D",
@@ -196,7 +200,9 @@ const ResidualAnalysisPage = () => {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+
                   <div>
                     <label
                       htmlFor="website"
@@ -213,6 +219,7 @@ const ResidualAnalysisPage = () => {
                       style={inputStyles}
                     />
                   </div>
+
                   <div>
                     <label
                       htmlFor="communication"
@@ -221,16 +228,73 @@ const ResidualAnalysisPage = () => {
                     >
                       Communication
                     </label>
-                    <select
-                      id="communication"
-                      defaultValue="Yes"
-                      className="w-full"
-                      style={inputStyles}
-                    >
-                      <option value="Yes">Yes</option>
-                      <option value="No">No</option>
-                    </select>
+                    <div className="relative">
+                      <button
+                        type="button"
+                        className="w-full text-left flex justify-between items-center"
+                        style={inputStyles}
+                        onClick={() => setCommunicationOpen(!isCommunicationOpen)}
+                      >
+                        {communicationValue}
+                        <svg
+                          className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                            isCommunicationOpen ? "rotate-180" : ""
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                      {isCommunicationOpen && (
+                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                          <ul>
+                            <li
+                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                              onClick={() => {
+                                setCommunicationValue("Yes");
+                                setCommunicationOpen(false);
+                              }}
+                            >
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="form-checkbox"
+                                  checked={communicationValue === "Yes"}
+                                  readOnly
+                                />
+                                <span className="ml-2">Yes</span>
+                              </div>
+                            </li>
+                            <li
+                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                              onClick={() => {
+                                setCommunicationValue("No");
+                                setCommunicationOpen(false);
+                              }}
+                            >
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="form-checkbox text-red-600"
+                                  checked={communicationValue === "No"}
+                                  readOnly
+                                />
+                                <span className="ml-2">No</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
+                    </div>
                   </div>
+
                 </div>
               </div>
             )}
@@ -357,38 +421,70 @@ const ResidualAnalysisPage = () => {
                     >
                       Communication
                     </label>
-                    <div className="flex items-center gap-4 mt-2">
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="comm-yes"
-                          name="communication"
-                          value="Yes"
-                          className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
-                        />
-                        <label
-                          htmlFor="comm-yes"
-                          className="ml-2 text-sm text-gray-700"
+                    <div className="relative">
+                      <button
+                        type="button"
+                        className="w-full text-left flex justify-between items-center"
+                        style={inputStyles}
+                        onClick={() => setCommunicationOpen2(!isCommunicationOpen2)}
+                      >
+                        {communicationValue2}
+                        <svg
+                          className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                            isCommunicationOpen2 ? "rotate-180" : ""
+                          }`}
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
                         >
-                          Yes
-                        </label>
-                      </div>
-                      <div className="flex items-center">
-                        <input
-                          type="radio"
-                          id="comm-no"
-                          name="communication"
-                          value="No"
-                          defaultChecked
-                          className="h-4 w-4 text-red-600 border-gray-300 focus:ring-red-500"
-                        />
-                        <label
-                          htmlFor="comm-no"
-                          className="ml-2 text-sm text-gray-700"
-                        >
-                          No
-                        </label>
-                      </div>
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </button>
+                      {isCommunicationOpen2 && (
+                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
+                          <ul>
+                            <li
+                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                              onClick={() => {
+                                setCommunicationValue2("Yes");
+                                setCommunicationOpen2(false);
+                              }}
+                            >
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="form-checkbox"
+                                  checked={communicationValue2 === "Yes"}
+                                  readOnly
+                                />
+                                <span className="ml-2">Yes</span>
+                              </div>
+                            </li>
+                            <li
+                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
+                              onClick={() => {
+                                setCommunicationValue2("No");
+                                setCommunicationOpen2(false);
+                              }}
+                            >
+                              <div className="flex items-center">
+                                <input
+                                  type="checkbox"
+                                  className="form-checkbox text-red-600"
+                                  checked={communicationValue2 === "No"}
+                                  readOnly
+                                />
+                                <span className="ml-2">No</span>
+                              </div>
+                            </li>
+                          </ul>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
