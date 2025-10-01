@@ -201,8 +201,6 @@ const ResidualAnalysisPage = () => {
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-
-
                   <div>
                     <label
                       htmlFor="website"
@@ -233,7 +231,9 @@ const ResidualAnalysisPage = () => {
                         type="button"
                         className="w-full text-left flex justify-between items-center"
                         style={inputStyles}
-                        onClick={() => setCommunicationOpen(!isCommunicationOpen)}
+                        onClick={() =>
+                          setCommunicationOpen(!isCommunicationOpen)
+                        }
                       >
                         {communicationValue}
                         <svg
@@ -294,7 +294,6 @@ const ResidualAnalysisPage = () => {
                       )}
                     </div>
                   </div>
-
                 </div>
               </div>
             )}
@@ -426,7 +425,9 @@ const ResidualAnalysisPage = () => {
                         type="button"
                         className="w-full text-left flex justify-between items-center"
                         style={inputStyles}
-                        onClick={() => setCommunicationOpen2(!isCommunicationOpen2)}
+                        onClick={() =>
+                          setCommunicationOpen2(!isCommunicationOpen2)
+                        }
                       >
                         {communicationValue2}
                         <svg
@@ -556,265 +557,6 @@ const ResidualAnalysisPage = () => {
                     />
                   </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Transaction Information */}
-          <div className="mb-6 bg-white px-4 py-5 rounded-lg">
-            <div
-              className="flex items-center justify-between cursor-pointer"
-              onClick={() => setIsTransactionInfoOpen(!isTransactionInfoOpen)}
-            >
-              <h2 className="text-lg font-semibold text-gray-700">
-                Transaction Information
-              </h2>
-              <svg
-                className={`w-5 h-5 text-gray-400 transform transition-transform ${
-                  isTransactionInfoOpen ? "rotate-180" : ""
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-            {isTransactionInfoOpen && (
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
-                <div>
-                  <label
-                    htmlFor="current-meter"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Current Meter<span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="current-meter"
-                    placeholder="Enter current meter"
-                    className="w-full"
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="proposed-annual-utilization"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Proposed Annual Utilization
-                    <span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="proposed-annual-utilization"
-                    defaultValue="2,580"
-                    className="w-full"
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="meter-unit"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Meter Unit<span style={{ color: "red" }}>*</span>
-                  </label>
-                  <select
-                    id="meter-unit"
-                    defaultValue="vPY"
-                    className="w-full"
-                    style={inputStyles}
-                  >
-                    <option value="vPY">vPY</option>
-                    <option value="hours">Hours</option>
-                    <option value="miles">Miles</option>
-                    <option value="kilometers">Kilometers</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="maintenance-records"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Maintenance Records
-                  </label>
-                  <input
-                    type="text"
-                    id="maintenance-records"
-                    defaultValue="N/A"
-                    className="w-full"
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="inspection-report"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Inspection Report
-                  </label>
-                  <input
-                    type="text"
-                    id="inspection-report"
-                    defaultValue="N/A"
-                    className="w-full"
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="terms-months"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Terms (Months)<span style={{ color: "red" }}>*</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="terms-months"
-                    placeholder="Number only"
-                    className="w-full"
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="structure"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Structure<span style={{ color: "red" }}>*</span>
-                  </label>
-                  <select
-                    id="structure"
-                    className="w-full"
-                    style={inputStyles}
-                  >
-                    <option value="">Select</option>
-                    <option value="operating">Operating</option>
-                    <option value="capital">Capital</option>
-                    <option value="sale-leaseback">Sale Leaseback</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="application"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Application<span style={{ color: "red" }}>*</span>
-                  </label>
-                  <select
-                    id="application"
-                    className="w-full"
-                    style={inputStyles}
-                  >
-                    <option value="">Select</option>
-                    <option value="construction">Construction</option>
-                    <option value="mining">Mining</option>
-                    <option value="agriculture">Agriculture</option>
-                    <option value="transportation">Transportation</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="environment"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Environment<span style={{ color: "red" }}>*</span>
-                  </label>
-                  <select
-                    id="environment"
-                    className="w-full"
-                    style={inputStyles}
-                  >
-                    <option value="">Select</option>
-                    <option value="indoor">Indoor</option>
-                    <option value="outdoor">Outdoor</option>
-                    <option value="mixed">Mixed</option>
-                  </select>
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Utilization Scenario */}
-          <div className="mb-6 bg-white px-4 py-5 rounded-lg">
-            <div
-              className="flex items-center justify-between cursor-pointer"
-              onClick={() =>
-                setIsUtilizationScenarioOpen(!isUtilizationScenarioOpen)
-              }
-            >
-              <h2 className="text-lg font-semibold text-gray-700">
-                Utilization Scenario
-              </h2>
-              <svg
-                className={`w-5 h-5 text-gray-400 transform transition-transform ${
-                  isUtilizationScenarioOpen ? "rotate-180" : ""
-                }`}
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </div>
-            {isUtilizationScenarioOpen && (
-              <div className="flex gap-4 mt-4">
-                <button
-                  type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid #CED4DA",
-                    background: "#FBFBFB",
-                    height: "40px",
-                    padding: "0 12px",
-                    color: "#343A40",
-                    fontFamily: "Inter",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    lineHeight: "24px",
-                  }}
-                >
-                  + Add Scenario
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  style={{
-                    borderRadius: "8px",
-                    border: "1px solid #CED4DA",
-                    background: "#FBFBFB",
-                    height: "40px",
-                    padding: "0 12px",
-                    color: "#343A40",
-                    fontFamily: "Inter",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                    lineHeight: "24px",
-                  }}
-                >
-                  + Add Additional Equipment
-                </button>
               </div>
             )}
           </div>
@@ -1030,37 +772,87 @@ const ResidualAnalysisPage = () => {
               </svg>
             </div>
             {isFinancialInfoOpen && (
-              <div className="mt-4">
-                <label
-                  htmlFor="subject-price"
-                  className="block mb-2"
-                  style={labelStyles}
-                >
-                  Subject Price<span style={{ color: "red" }}>*</span>
-                </label>
-                <input
-                  type="text"
-                  id="subject-price"
-                  placeholder="Enter subject price"
-                  className="w-full"
-                  style={inputStyles}
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                <div>
+                  <label
+                    htmlFor="subject-price"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Subject Price<span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="subject-price"
+                    placeholder="Enter subject price"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="concession"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Concession<span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="concession"
+                    placeholder="Enter concession"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="extended-warranty"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Extended Warranty
+                  </label>
+                  <input
+                    type="text"
+                    id="extended-warranty"
+                    placeholder="Enter extended warranty"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="maintenance-pms"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Maintenance/PMs
+                  </label>
+                  <input
+                    type="text"
+                    id="maintenance-pms"
+                    placeholder="Enter maintenance/PMs"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
               </div>
             )}
           </div>
 
-          {/* Lease Term */}
+          {/* Transaction Information */}
           <div className="mb-6 bg-white px-4 py-5 rounded-lg">
             <div
               className="flex items-center justify-between cursor-pointer"
-              onClick={() => setIsLeaseTermOpen(!isLeaseTermOpen)}
+              onClick={() => setIsTransactionInfoOpen(!isTransactionInfoOpen)}
             >
               <h2 className="text-lg font-semibold text-gray-700">
-                Lease Term
+                Transaction Information
               </h2>
               <svg
                 className={`w-5 h-5 text-gray-400 transform transition-transform ${
-                  isLeaseTermOpen ? "rotate-180" : ""
+                  isTransactionInfoOpen ? "rotate-180" : ""
                 }`}
                 fill="none"
                 stroke="currentColor"
@@ -1074,11 +866,96 @@ const ResidualAnalysisPage = () => {
                 />
               </svg>
             </div>
-            {isLeaseTermOpen && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+            {isTransactionInfoOpen && (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-4">
                 <div>
                   <label
-                    htmlFor="lease-terms-months"
+                    htmlFor="current-meter"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Current Meter<span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="current-meter"
+                    placeholder="Enter current meter"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="proposed-annual-utilization"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Proposed Annual Utilization
+                    <span style={{ color: "red" }}>*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="proposed-annual-utilization"
+                    defaultValue="2,580"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="meter-unit"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Meter Unit<span style={{ color: "red" }}>*</span>
+                  </label>
+                  <select
+                    id="meter-unit"
+                    defaultValue="vPY"
+                    className="w-full"
+                    style={inputStyles}
+                  >
+                    <option value="vPY">vPY</option>
+                    <option value="hours">Hours</option>
+                    <option value="miles">Miles</option>
+                    <option value="kilometers">Kilometers</option>
+                  </select>
+                </div>
+                <div>
+                  <label
+                    htmlFor="maintenance-records"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Maintenance Records
+                  </label>
+                  <input
+                    type="text"
+                    id="maintenance-records"
+                    defaultValue="N/A"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="inspection-report"
+                    className="block mb-2"
+                    style={labelStyles}
+                  >
+                    Inspection Report
+                  </label>
+                  <input
+                    type="text"
+                    id="inspection-report"
+                    defaultValue="N/A"
+                    className="w-full"
+                    style={inputStyles}
+                  />
+                </div>
+                <div>
+                  <label
+                    htmlFor="terms-months"
                     className="block mb-2"
                     style={labelStyles}
                   >
@@ -1086,7 +963,7 @@ const ResidualAnalysisPage = () => {
                   </label>
                   <input
                     type="text"
-                    id="lease-terms-months"
+                    id="terms-months"
                     placeholder="Number only"
                     className="w-full"
                     style={inputStyles}
@@ -1094,17 +971,13 @@ const ResidualAnalysisPage = () => {
                 </div>
                 <div>
                   <label
-                    htmlFor="lease-structure"
+                    htmlFor="structure"
                     className="block mb-2"
                     style={labelStyles}
                   >
                     Structure<span style={{ color: "red" }}>*</span>
                   </label>
-                  <select
-                    id="lease-structure"
-                    className="w-full"
-                    style={inputStyles}
-                  >
+                  <select id="structure" className="w-full" style={inputStyles}>
                     <option value="">Select</option>
                     <option value="operating">Operating</option>
                     <option value="capital">Capital</option>
@@ -1113,14 +986,14 @@ const ResidualAnalysisPage = () => {
                 </div>
                 <div>
                   <label
-                    htmlFor="lease-application"
+                    htmlFor="application"
                     className="block mb-2"
                     style={labelStyles}
                   >
                     Application<span style={{ color: "red" }}>*</span>
                   </label>
                   <select
-                    id="lease-application"
+                    id="application"
                     className="w-full"
                     style={inputStyles}
                   >
@@ -1133,14 +1006,14 @@ const ResidualAnalysisPage = () => {
                 </div>
                 <div>
                   <label
-                    htmlFor="lease-environment"
+                    htmlFor="environment"
                     className="block mb-2"
                     style={labelStyles}
                   >
                     Environment<span style={{ color: "red" }}>*</span>
                   </label>
                   <select
-                    id="lease-environment"
+                    id="environment"
                     className="w-full"
                     style={inputStyles}
                   >
@@ -1150,6 +1023,75 @@ const ResidualAnalysisPage = () => {
                     <option value="mixed">Mixed</option>
                   </select>
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* Utilization Scenario */}
+          <div className="mb-6 bg-white px-4 py-5 rounded-lg">
+            <div
+              className="flex items-center justify-between cursor-pointer"
+              onClick={() =>
+                setIsUtilizationScenarioOpen(!isUtilizationScenarioOpen)
+              }
+            >
+              <h2 className="text-lg font-semibold text-gray-700">
+                Utilization Scenario
+              </h2>
+              <svg
+                className={`w-5 h-5 text-gray-400 transform transition-transform ${
+                  isUtilizationScenarioOpen ? "rotate-180" : ""
+                }`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </div>
+            {isUtilizationScenarioOpen && (
+              <div className="flex gap-4 mt-4">
+                <button
+                  type="button"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  style={{
+                    borderRadius: "8px",
+                    border: "1px solid #CED4DA",
+                    background: "#FBFBFB",
+                    height: "40px",
+                    padding: "0 12px",
+                    color: "#343A40",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    lineHeight: "24px",
+                  }}
+                >
+                  + Add Scenario
+                </button>
+                <button
+                  type="button"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  style={{
+                    borderRadius: "8px",
+                    border: "1px solid #CED4DA",
+                    background: "#FBFBFB",
+                    height: "40px",
+                    padding: "0 12px",
+                    color: "#343A40",
+                    fontFamily: "Inter",
+                    fontSize: "14px",
+                    fontWeight: "500",
+                    lineHeight: "24px",
+                  }}
+                >
+                  + Add Additional Equipment
+                </button>
               </div>
             )}
           </div>
