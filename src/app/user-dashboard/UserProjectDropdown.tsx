@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function UserProjectDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPrintOpen, setIsPrintOpen] = useState(false);
-  const [printView, setPrintView] = useState("categories"); // 'categories' or 'projects'
+  const [showProjectList, setShowProjectList] = useState(false);
   const [selected, setSelected] = useState(["Residual Analysis"]);
   const [selectedPrintItems, setSelectedPrintItems] = useState<string[]>([]);
   const router = useRouter();
@@ -60,9 +60,9 @@ export default function UserProjectDropdown() {
   const handlePrintButtonClick = () => {
     if (isPrintOpen) {
       setIsPrintOpen(false);
+      setShowProjectList(false);
     } else {
       setIsPrintOpen(true);
-      setPrintView("categories");
     }
   };
 
@@ -81,36 +81,38 @@ export default function UserProjectDropdown() {
       {/* Print Report Dropdown */}
       {isPrintOpen && (
         <div
-          className="absolute left-0 mt-2 z-10"
+          className="absolute -left-55 mt-2 z-10 flex"
           style={{
             borderRadius: "8px",
             background: "#FFF",
             boxShadow: "2px 2px 15px 0 rgba(0, 0, 0, 0.10)",
           }}
         >
-          {printView === "categories" && (
-            <div style={{ width: "218px" }}>
-              <ul className="text-sm text-[#343A40] font-normal">
-                {items.map((item, idx) => (
-                  <li
-                    key={idx}
-                    onClick={() => {
-                      if (item === "Residual Analysis") {
-                        setPrintView("projects");
-                      }
-                    }}
-                    className="flex items-center justify-between pl-4 pr-[10px] py-[10px] hover:bg-gray-100 cursor-pointer"
-                  >
-                    <span>{item}</span>
-                    <span className="text-gray-400">&gt;</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          {/* Category List */}
+          <div style={{ width: "218px" }}>
+            <ul className="text-sm text-[#343A40] font-normal">
+              {items.map((item, idx) => (
+                <li
+                  key={idx}
+                  onClick={() => {
+                    if (item === "Residual Analysis") {
+                      setShowProjectList(true);
+                    } else {
+                      setShowProjectList(false); // Hide project list for other categories
+                    }
+                  }}
+                  className="flex items-center justify-between pl-4 pr-[10px] py-[10px] hover:bg-gray-100 cursor-pointer"
+                >
+                  <span>{item}</span>
+                  <span className="text-gray-400">{'>'}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
 
-          {printView === "projects" && (
-            <div style={{ width: "350px" }}>
+          {/* Project List (conditionally shown) */}
+          {showProjectList && (
+            <div style={{ width: "350px", borderLeft: "1px solid #eee" }}>
               <ul className="text-sm  text-[#343A40] font-normal ">
                 {printItems.map((item, idx) => (
                   <li key={idx}>
