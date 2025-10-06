@@ -11,7 +11,6 @@ const ResidualAnalysisPage = () => {
     useState(true);
   const [isEquipmentDetailsOpen, setIsEquipmentDetailsOpen] = useState(true);
   const [isFinancialInfoOpen, setIsFinancialInfoOpen] = useState(true);
-  const [isLeaseTermOpen, setIsLeaseTermOpen] = useState(true);
   const [isCommunicationOpen, setCommunicationOpen] = useState(false);
   const [communicationValue, setCommunicationValue] = useState("No");
   const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
