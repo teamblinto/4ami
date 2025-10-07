@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 // import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export default function UserProjectDropdown() {
@@ -81,7 +82,7 @@ export default function UserProjectDropdown() {
       {/* Print Report Dropdown */}
       {isPrintOpen && (
         <div
-          className="absolute -left-55 mt-2 z-10 flex"
+          className="absolute -left-55 mt-4 z-10 flex"
           style={{
             borderRadius: "8px",
             background: "#FFF",
@@ -90,7 +91,7 @@ export default function UserProjectDropdown() {
         >
           {/* Category List */}
           <div style={{ width: "218px" }}>
-            <ul className="text-sm text-[#343A40] font-normal">
+            <ul className="text-sm text-[#343A40] font-normal  ">
               {items.map((item, idx) => (
                 <li
                   key={idx}
@@ -104,7 +105,14 @@ export default function UserProjectDropdown() {
                   className="flex items-center justify-between pl-4 pr-[10px] py-[10px] hover:bg-gray-100 cursor-pointer"
                 >
                   <span>{item}</span>
-                  <span className="text-gray-400">{'>'}</span>
+                  <span className="text-gray-400">
+                    <Image
+                      src="/mingcute_down-fill.svg"
+                      alt="Right Arrow"
+                      width={16}
+                      height={16}
+                    />
+                  </span>
                 </li>
               ))}
             </ul>
