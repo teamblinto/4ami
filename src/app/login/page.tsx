@@ -181,7 +181,7 @@ export default function LoginPage() {
                     </button>
                   </div>
 
-                  <div className="flex  justify-between text-sm mt-2">
+                  <div className="flex items-center justify-between text-sm mt-2">
                     <label className="flex items-center text-gray-600">
                       <input type="checkbox" className="form-checkbox mr-2" />
                       Remember Password
