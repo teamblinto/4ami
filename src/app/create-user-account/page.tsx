@@ -164,7 +164,7 @@ function CreateUserAccountContent() {
   return (
     <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
       <header className="px-12 py-4">
-        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
       <main className="flex-grow flex items-center mt-4 justify-center">
         <div
@@ -297,7 +297,7 @@ function CreateUserAccountContent() {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="py-2 px-6 border border-gray-300 rounded-md text-gray-700 font-semibold"
+                    className="py-2 px-6 border border-gray-300 rounded-md text-gray-700 font-semibold cursor-pointer"
                   >
                     Back
                   </button>
@@ -305,9 +305,9 @@ function CreateUserAccountContent() {
                     type="submit"
                     disabled={isLoading}
                     className={`font-semibold py-2 px-6 rounded-md ${
-                      isLoading 
-                        ? 'bg-gray-400 cursor-not-allowed text-white' 
-                        : 'bg-red-500 text-white'
+                      isLoading
+                        ? 'bg-gray-400 cursor-not-allowed text-white'
+                        : 'bg-red-500 text-white cursor-pointer'
                     }`}
                   >
                     {isLoading ? 'Creating...' : 'Sign Up'}

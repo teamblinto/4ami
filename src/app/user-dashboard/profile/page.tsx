@@ -140,13 +140,13 @@ export default function UserProfilePage() {
                   <div className="flex space-x-2">
                     <button
                       onClick={handleSaveName}
-                      className="flex-1 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+                      className="flex-1 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors cursor-pointer"
                     >
                       Save
                     </button>
                     <button
                       onClick={handleCancelName}
-                      className="flex-1 bg-white text-gray-700 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors"
+                      className="flex-1 bg-white text-gray-700 px-4 py-2 rounded-md border border-gray-300 hover:bg-gray-50 transition-colors cursor-pointer"
                     >
                       Cancel
                     </button>
@@ -182,7 +182,7 @@ export default function UserProfilePage() {
             {!isEditingName && (
               <button
                 onClick={handleEditProfile}
-                className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors"
+                className="w-full bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 transition-colors cursor-pointer"
               >
                 Edit Profile
               </button>
@@ -201,7 +201,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.firstName}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -224,7 +224,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.lastName}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -247,7 +247,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.email}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -270,7 +270,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.department || "Not Set"}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -293,7 +293,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.linkedin || "Not Set"}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -316,7 +316,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.companyName}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -341,7 +341,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.companyWebsite}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -366,7 +366,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.phoneNumber1 || "Not Set"}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -391,7 +391,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.phoneNumber2 || "Not Set"}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -414,7 +414,7 @@ export default function UserProfilePage() {
                       <span className="text-sm text-gray-900">
                         {formData.mobilePhone}
                       </span>
-                      <button className="text-gray-400 hover:text-gray-600">
+                      <button className="text-gray-400 hover:text-gray-600 cursor-pointer">
                         <svg
                           className="w-4 h-4"
                           fill="none"
@@ -606,13 +606,13 @@ export default function UserProfilePage() {
                 <div className="flex justify-end space-x-4 pt-6">
                   <button
                     onClick={handleCancelProfile}
-                    className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+                    className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     Cancel
                   </button>
                   <button
                     onClick={handleSaveProfile}
-                    className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                    className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors cursor-pointer"
                   >
                     Save Changes
                   </button>
@@ -759,7 +759,7 @@ export default function UserProfilePage() {
                 <div className="flex justify-end pt-6">
                   <button
                     onClick={handleSaveProfile}
-                    className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                    className="px-6 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors cursor-pointer"
                   >
                     Save Changes
                   </button>

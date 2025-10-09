@@ -211,7 +211,7 @@ export default function ProjectReportPage() {
                 <XAxis dataKey="termMonth" tick={{ fill: '#6b7280', fontSize: 12 }} />
                 <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[15, 90]} label={{ value: 'Residual %', angle: -90, position: 'insideLeft', offset: -5, fill: '#6b7280' }} />
                 <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ value: 'Residuals Value ($)', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} tickFormatter={(v)=>`$${v.toLocaleString()}`} />
-                <Tooltip formatter={(val: any, name: any) => {
+                <Tooltip formatter={(val: number | string, name: string) => {
                   if (name.includes('Value')) return [`$${Number(val).toLocaleString()}`, name];
                   return [`${val}%`, name];
                 }} />
@@ -387,7 +387,7 @@ export default function ProjectReportPage() {
                   <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'insideLeft', offset: -5, fill: '#6b7280' }} />
                   <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[10, 14]}
                          label={{ value: 'Effective Age', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} />
-                  <Tooltip formatter={(val: any, name: any) => name === 'Residual %' ? [`${val}%`, name] : [val, name]} labelFormatter={(l)=>`Hours/Year: ${l}`} />
+                  <Tooltip formatter={(val: number | string, name: string) => name === 'Residual %' ? [`${val}%`, name] : [val, name]} labelFormatter={(l)=>`Hours/Year: ${l}`} />
                   <Legend verticalAlign="bottom" height={36} />
 
                   <Line yAxisId="left" type="monotone" dataKey="residual" name="Residual %" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
@@ -446,7 +446,7 @@ export default function ProjectReportPage() {
                 <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
                 <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} />
                 <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(v)=>`$${v.toLocaleString()}`} domain={[0, 500000]} />
-                <Tooltip formatter={(val: any) => `$${Number(val).toLocaleString()}`} />
+                <Tooltip formatter={(val: number | string) => `$${Number(val).toLocaleString()}`} />
                 <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value === 'sl' ? 'Straight-Line Methods' : value === 'ddb' ? 'Double Declining Balance' : value === 'syd' ? 'Sum-of-Years-Digits' : 'MACRS'}</span>} />
 
                 <Line type="monotone" dataKey="sl" name="Straight-Line Methods" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
@@ -473,7 +473,7 @@ export default function ProjectReportPage() {
                 <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }}
                        domain={[5.6, 7.4]}
                        label={{ value: 'Residuals Value ($)', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} />
-                <Tooltip formatter={(val: any, name: any) => {
+                <Tooltip formatter={(val: number | string, name: string) => {
                   if (name.includes('Value')) return [`$${Number(val).toLocaleString()}k`, name];
                   return [`${val}%`, name];
                 }} />

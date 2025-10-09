@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
 export default function FilterProjectStatus() {
@@ -44,12 +45,14 @@ export default function FilterProjectStatus() {
 
       <div className="flex justify-between items-center text-gray-700">
         <span className="flex-1">Status</span>
-        <img
+        <Image
           aria-expanded={isOpen}
           onClick={() => setIsOpen((v) => !v)}
           src="/Sort.svg"
           alt="Sort icon"
-          className="w-5 h-5 cursor-pointer "
+          width={20}
+          height={20}
+          className="cursor-pointer "
         />
 
       </div>

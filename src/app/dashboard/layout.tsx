@@ -306,7 +306,7 @@ export default function DashboardLayout({
               </svg>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="relative text-gray-600 hover:text-gray-800">
+              <button className="relative text-gray-600 hover:text-gray-800 cursor-pointer">
                 <Image
                   src="/notification-bell.svg"
                   alt="Notifications"
@@ -388,7 +388,7 @@ export default function DashboardLayout({
 
                     {/* Menu Options */}
                     <div className="py-2">
-                      <button className="w-full cursor-pointer px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3">
+                      <button className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer">
                         <svg
                           className="w-4 h-4 text-gray-400"
                           fill="none"
@@ -405,7 +405,7 @@ export default function DashboardLayout({
                         View profile
                       </button>
 
-                      <button className="w-full cursor-pointer px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3">
+                      <button className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer">
                         <svg
                           className="w-4 h-4 text-gray-400"
                           fill="none"
@@ -430,7 +430,7 @@ export default function DashboardLayout({
 
                       <button
                         onClick={handleLogout}
-                        className="w-full px-4 cursor-pointer py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3"
+                        className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer"
                       >
                         <svg
                           className="w-4 h-4 text-gray-400"

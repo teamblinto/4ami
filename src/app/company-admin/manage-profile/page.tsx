@@ -315,6 +315,7 @@ export default function CompanyAdminManageProfilePage() {
     setContacts([...contacts, newContact]);
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleEditContact = (id: number) => {
     toast.success("Edit contact functionality will be implemented");
   };
@@ -369,7 +370,7 @@ export default function CompanyAdminManageProfilePage() {
           <nav className="flex space-x-8 px-6">
             <button
               onClick={() => setActiveTab("company-info")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === "company-info"
                   ? "border-red-500 text-red-600"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -379,7 +380,7 @@ export default function CompanyAdminManageProfilePage() {
             </button>
             <button
               onClick={() => setActiveTab("address")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === "address"
                   ? "border-red-500 text-red-600"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -389,7 +390,7 @@ export default function CompanyAdminManageProfilePage() {
             </button>
             <button
               onClick={() => setActiveTab("key-contacts")}
-              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+              className={`py-4 px-1 border-b-2 font-medium text-sm cursor-pointer ${
                 activeTab === "key-contacts"
                   ? "border-red-500 text-red-600"
                   : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
@@ -563,7 +564,7 @@ export default function CompanyAdminManageProfilePage() {
                     onClick={() =>
                       setIsCountryDropdownOpen(!isCountryDropdownOpen)
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between cursor-pointer"
                   >
                     <span>{getSelectedCountryLabel()}</span>
                     <svg
@@ -645,7 +646,7 @@ export default function CompanyAdminManageProfilePage() {
                   <button
                     type="button"
                     onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between cursor-pointer"
                   >
                     <span>{getSelectedStateLabel()}</span>
                     <svg

@@ -179,9 +179,9 @@
 
 "use client";
 
+import Image from "next/image";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import toast from 'react-hot-toast';
 import SendInvitationForm from './SendInvitationForm';
 
 interface ManageUsersProps {
@@ -273,7 +273,7 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Username</span>
-                  <img src="/Sort.svg" alt="" />
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">First Name</th>
@@ -310,10 +310,10 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
                   <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
                   <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
                     <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                      <img src="/pencil.svg" alt="" />
+                      <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
                     </button>
                     <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                      <img src="/bin.svg" alt="" />
+                      <Image src="/bin.svg" alt="Delete" width={16} height={16} />
                     </button>
                   </td>
                 </tr>

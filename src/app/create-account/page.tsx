@@ -36,6 +36,7 @@ function ClientContent() {
     if (token) {
       fetchVerificationData(token);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   // Function to map API role values to form option values
@@ -179,7 +180,7 @@ function ClientContent() {
   return (
     <div className="min-h-screen  bg-[#FBFBFB] flex flex-col">
       <header className="px-12 py-4">
-        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
       <main className="flex-grow flex items-center  mt-4 justify-center">
         <div
@@ -438,7 +439,7 @@ function ClientContent() {
                   <button
                     type="button"
                     onClick={handleBack}
-                    className="py-2 px-6 border border-gray-300 rounded-md text-gray-700 font-semibold"
+                    className="py-2 px-6 border border-gray-300 rounded-md text-gray-700 font-semibold cursor-pointer"
                   >
                     Back
                   </button>
@@ -446,9 +447,9 @@ function ClientContent() {
                     type="submit"
                     disabled={isVerifying}
                     className={`font-semibold py-2 px-6 rounded-md ${
-                      isVerifying 
-                        ? 'bg-gray-400 cursor-not-allowed text-white' 
-                        : 'bg-red-500 text-white'
+                      isVerifying
+                        ? 'bg-gray-400 cursor-not-allowed text-white'
+                        : 'bg-red-500 text-white cursor-pointer'
                     }`}
                   >
                     {isVerifying ? 'Loading...' : 'Next'}

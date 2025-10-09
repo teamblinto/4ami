@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 
 const ProjectsPage = () => {
-  const [selectedRows, setSelectedRows] = useState([]);
+  const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -23,7 +23,7 @@ const ProjectsPage = () => {
   const totalItems = 120;
   const totalPages = Math.ceil(totalItems / rowsPerPage);
 
-  const handleSelectAll = (checked) => {
+  const handleSelectAll = (checked: boolean) => {
     if (checked) {
       setSelectedRows(projectsData.map((_, index) => index));
     } else {
@@ -31,7 +31,7 @@ const ProjectsPage = () => {
     }
   };
 
-  const handleSelectRow = (index) => {
+  const handleSelectRow = (index: number) => {
     if (selectedRows.includes(index)) {
       setSelectedRows(selectedRows.filter(i => i !== index));
     } else {

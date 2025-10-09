@@ -1,4 +1,5 @@
 "use client";
+
 import Image from "next/image";
 
 export default function SignupSuccessfullPage() {
@@ -6,7 +7,7 @@ export default function SignupSuccessfullPage() {
   return (
     <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
       <header className="px-12 py-4">
-        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
       <main className="flex-grow flex items-center justify-center">
         <div
@@ -34,7 +35,7 @@ export default function SignupSuccessfullPage() {
                 <button
                   type="button"
                   onClick={() => window.location.href = '/login'}
-                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 rounded focus:outline-none focus:shadow-outline"
+                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-3 px-8 rounded focus:outline-none focus:shadow-outline cursor-pointer"
                 >
                   Go to Log In
                 </button>

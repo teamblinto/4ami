@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useState, useRef } from 'react';
 import toast from 'react-hot-toast';
 
@@ -235,7 +236,7 @@ export default function ImportAssets({ onBack }: ImportAssetsProps) {
             onClick={handleDownloadTemplate}
             className="flex gap-2 underline items-center text-sm font-medium text-[#080607] cursor-pointer "
           >
-            <img src="/arrow-drag.svg" alt="" />
+            <Image src="/arrow-drag.svg" alt="Download" width={16} height={16} />
             Download Pre-Mapped Template
           </button>
         </div>
@@ -295,7 +296,7 @@ export default function ImportAssets({ onBack }: ImportAssetsProps) {
           >
             {/* Cloud Upload Icon */}
             <div className='flex justify-center items-center'>
-              <img src="/draganddrop.svg" alt="" />
+              <Image src="/draganddrop.svg" alt="Upload" width={100} height={100} />
             </div>
             {selectedFile ? (
               <div className="mb-6">

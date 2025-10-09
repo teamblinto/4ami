@@ -57,7 +57,7 @@ export default function ManageProjects() {
           <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
             <span className="text-[10px]">
               <svg width="11" height="10" viewBox="0 0 11 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <g clip-path="url(#clip0_3122_5489)">
+              <g clipPath="url(#clip0_3122_5489)">
               <path d="M3.95396 4.9359C4.11109 5.16328 4.06412 4.97381 4.06412 9.50615C4.06412 9.91174 4.52686 10.1439 4.85299 9.90127C6.2466 8.85055 6.52504 8.75955 6.52504 8.26809C6.52504 4.96527 6.48654 5.15102 6.63519 4.9359L8.89826 1.85547H1.69092L3.95396 4.9359Z" fill="#ED272C"/>
               <path d="M9.7533 0.251172C9.67244 0.0962891 9.51385 0 9.33926 0H1.25027C0.873223 0 0.651367 0.425332 0.867656 0.734375C0.869434 0.737344 0.843105 0.701309 1.26063 1.26953H9.32889C9.68469 0.785293 9.92252 0.576074 9.7533 0.251172Z" fill="#ED272C"/>
               </g>
@@ -94,7 +94,7 @@ export default function ManageProjects() {
                 <div className="flex items-center justify-between gap-1">
                   Service Name
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
@@ -103,7 +103,7 @@ export default function ManageProjects() {
                 <div className="flex items-center justify-between gap-1">
                   Status
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" stroke-width="1.5" stroke-linecap="round"/>
+                  <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>

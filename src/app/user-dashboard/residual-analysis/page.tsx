@@ -16,7 +16,7 @@ const ResidualAnalysisPage = () => {
   const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
   const [communicationValue2, setCommunicationValue2] = useState("No");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // Redirect to thank you page
     router.push('/user-dashboard/thank-you');
@@ -237,7 +237,7 @@ const ResidualAnalysisPage = () => {
                     <div className="relative">
                       <button
                         type="button"
-                        className="w-full text-left flex justify-between items-center"
+                        className="w-full text-left flex justify-between items-center cursor-pointer"
                         style={inputStyles}
                         onClick={() =>
                           setCommunicationOpen(!isCommunicationOpen)
@@ -1066,7 +1066,7 @@ const ResidualAnalysisPage = () => {
               <div className="flex gap-4 mt-4">
                 <button
                   type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
                   style={{
                     borderRadius: "8px",
                     border: "1px solid #CED4DA",
@@ -1084,7 +1084,7 @@ const ResidualAnalysisPage = () => {
                 </button>
                 <button
                   type="button"
-                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                  className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
                   style={{
                     borderRadius: "8px",
                     border: "1px solid #CED4DA",
@@ -1107,13 +1107,13 @@ const ResidualAnalysisPage = () => {
           <div className="flex justify-end gap-4">
             <button
               type="button"
-              className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              className="px-6 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700"
+              className="px-6 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 cursor-pointer"
             >
               Submit Form
             </button>

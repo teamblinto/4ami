@@ -71,20 +71,6 @@ export default function AddUserPage() {
     }));
   };
 
-  const generateUsername = (firstName: string, lastName: string) => {
-    if (!firstName || !lastName) return '';
-    
-    // Clean names: remove special characters, convert to lowercase
-    const cleanFirst = firstName.toLowerCase().replace(/[^a-z]/g, '');
-    const cleanLast = lastName.toLowerCase().replace(/[^a-z]/g, '');
-    
-    // Generate random suffix for uniqueness
-    const randomSuffix = Math.floor(Math.random() * 9999).toString().padStart(4, '0');
-    
-    // Professional format: firstname.lastname.XXXX
-    return `${cleanFirst}.${cleanLast}.${randomSuffix}`;
-  };
-
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
@@ -172,7 +158,7 @@ export default function AddUserPage() {
         <div className="flex justify-end mb-6">
           <button
             onClick={handleImportUserData}
-            className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 flex items-center gap-2"
+            className="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 flex items-center gap-2 cursor-pointer"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
@@ -242,7 +228,7 @@ export default function AddUserPage() {
                   <button
                     type="button"
                     onClick={generateCode}
-                    className="bg-gray-200 text-gray-800 font-bold py-2 px-4 border border-gray-300 rounded focus:outline-none focus:shadow-outline whitespace-nowrap"
+                    className="bg-gray-200 text-gray-800 font-bold py-2 px-4 border border-gray-300 rounded focus:outline-none focus:shadow-outline whitespace-nowrap cursor-pointer"
                   >
                     Generate Code
                   </button>
@@ -360,9 +346,9 @@ export default function AddUserPage() {
               type="submit"
               disabled={isLoading}
               className={`${
-                isLoading 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-red-500 hover:bg-red-700'
+                isLoading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-red-500 hover:bg-red-700 cursor-pointer'
               } text-white font-bold py-2 px-6 rounded focus:outline-none focus:shadow-outline`}
             >
               {isLoading ? 'Creating...' : 'Create'}
@@ -370,14 +356,14 @@ export default function AddUserPage() {
             <button
               type="button"
               onClick={handleDiscardChanges}
-              className="bg-white text-gray-800 font-bold py-2 px-6 border border-gray-300 rounded focus:outline-none focus:shadow-outline hover:bg-gray-50"
+              className="bg-white text-gray-800 font-bold py-2 px-6 border border-gray-300 rounded focus:outline-none focus:shadow-outline hover:bg-gray-50 cursor-pointer"
             >
               Discard Changes
             </button>
             <button
               type="button"
               onClick={handleCancel}
-              className="bg-white text-gray-800 font-bold py-2 px-6 border border-gray-300 rounded focus:outline-none focus:shadow-outline hover:bg-gray-50"
+              className="bg-white text-gray-800 font-bold py-2 px-6 border border-gray-300 rounded focus:outline-none focus:shadow-outline hover:bg-gray-50 cursor-pointer"
             >
               Cancel
             </button>

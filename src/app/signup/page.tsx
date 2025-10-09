@@ -55,7 +55,7 @@ function ClientContent() {
   return (
     <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
       <header className="px-12 py-4">
-        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
       <main className="flex-grow flex items-center mt-4 justify-center">
         <div
@@ -215,7 +215,7 @@ function ClientContent() {
                         <button
                         type="button"
                         onClick={() => router.back()}
-                        className="py-3 px-8 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition"
+                        className="py-3 px-8 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-100 transition cursor-pointer"
                       >
                         Back
                       </button>
@@ -224,9 +224,9 @@ function ClientContent() {
                         type="submit"
                         disabled={isLoading}
                         className={`font-bold py-3 px-8 border rounded-lg focus:outline-none focus:shadow-outline w-full sm:w-auto flex items-center justify-center ${
-                          isLoading 
-                            ? 'bg-gray-400 cursor-not-allowed text-white' 
-                            : 'bg-red-500 hover:bg-red-700 text-white'
+                          isLoading
+                            ? 'bg-gray-400 cursor-not-allowed text-white'
+                            : 'bg-red-500 hover:bg-red-700 text-white cursor-pointer'
                         }`}
                       >
                         {isLoading ? (
