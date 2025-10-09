@@ -1,11 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import ImportAssets from './ImportAssets';
 
 export default function ManageAssets() {
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery] = useState("");
   const router = useRouter();
 
   const assets = [
@@ -95,25 +95,25 @@ export default function ManageAssets() {
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Asset</span>
-                  <img src="/Sort.svg" alt="" />
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Industry</span>
-                  <img src="/Sort.svg" alt="" />
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Make</span>
-                  <img src="/Sort.svg" alt="" />
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Model</span>
-                  <img src="/Sort.svg" alt="" />
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
               <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
@@ -133,10 +133,10 @@ export default function ManageAssets() {
                   <td className="px-6 pt-3 pb-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.model}</td>
                   <td className="px-6 pt-3 pb-3 whitespace-nowrap border border-[#D0D5DD]">
                     <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                      <img src="/pencil.svg" alt="" />
+                      <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
                     </button>
                     <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                      <img src="/bin.svg" alt="" />
+                      <Image src="/bin.svg" alt="Delete" width={16} height={16} />
                     </button>
                   </td>
                 </tr>

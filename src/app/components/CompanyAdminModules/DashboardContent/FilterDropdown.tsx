@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 
 export default function FilterDropdown() {
@@ -44,12 +45,14 @@ export default function FilterDropdown() {
       {/* Trigger */}
       <div className="flex justify-between items-center text-gray-700">
         <span className="flex-1">Time (Start to End)</span>
-        <img
+        <Image
           aria-expanded={isOpen}
           onClick={() => setIsOpen((v) => !v)}
           src="/Sort.svg"
           alt="Sort icon"
-          className="w-5 h-5 cursor-pointer "
+          width={20}
+          height={20}
+          className="cursor-pointer "
         />
       </div>
       {/* Dropdown */}
@@ -83,7 +86,7 @@ export default function FilterDropdown() {
 
           <button
             onClick={handleConfirm}
-            className="w-30 text-[#343A40] border border-[#6C757D]  py-2 rounded-md transition"
+            className="w-30 text-[#343A40] border border-[#6C757D]  py-2 rounded-md transition cursor-pointer"
           >
             Confirm
           </button>

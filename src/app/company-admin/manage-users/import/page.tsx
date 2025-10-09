@@ -1,11 +1,9 @@
 "use client";
 
-import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import ImportUsers from "../../../components/CompanyAdminModules/ImportUsers/ImportUsers";
 
 export default function ImportUsersPage() {
-  const [showForm, setShowForm] = useState(true);
   const router = useRouter();
 
   const handleImportComplete = () => {

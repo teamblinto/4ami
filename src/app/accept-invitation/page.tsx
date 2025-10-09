@@ -41,8 +41,7 @@ function ClientContent() {
       // Check if response is JSON
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        const textResponse = await response.text();
-        // console.log('Non-JSON response:', textResponse);
+        await response.text();
         toast.error('Invalid response from verification service');
         return;
       }
@@ -92,7 +91,7 @@ function ClientContent() {
     <div className="min-h-screen bg-[#FBFBFB]">
       {/* Header with Logo */}
       <header className="px-12 py-4">
-        <img src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
 
       {/* Main Content */}
@@ -214,9 +213,9 @@ function ClientContent() {
                   type="submit"
                   disabled={isVerifying}
                   className={`font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 transition-colors ${
-                    isVerifying 
-                      ? 'bg-gray-400 cursor-not-allowed text-white' 
-                      : 'bg-red-500 hover:bg-red-600 text-white'
+                    isVerifying
+                      ? 'bg-gray-400 cursor-not-allowed text-white'
+                      : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
                   }`}
                 >
                   {isVerifying ? 'Loading...' : 'Next'}
@@ -228,7 +227,7 @@ function ClientContent() {
           {/* Right Side - Illustration */}
           <div className="flex flex-col items-center justify-between">
             <div className="flex-grow flex items-center">
-              <img src="Illustration Banner.svg" alt="" />
+              <Image src="/Illustration Banner.svg" alt="Illustration" width={500} height={500} />
             </div>
             {/* Footer */}
             <footer className="p-6">

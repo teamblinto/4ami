@@ -466,7 +466,7 @@ export default function RegisterCompany() {
                                 style={{ fontFamily: 'Inter, sans-serif' }}
                               >
                                 <span>
-                                  <img src="/bin.svg" alt="Delete" width={12} height={12} />
+                                  <Image src="/bin.svg" alt="Delete" width={12} height={12} />
                                 </span>
                                 Delete
                               </button>
@@ -540,8 +540,8 @@ export default function RegisterCompany() {
             {/* Warning Icon */}
             <div className="flex justify-center mb-4">
               <div className="">
-                <img src="worn.svg" alt="" />
-             
+                <Image src="/worn.svg" alt="Warning" width={80} height={80} />
+
               </div>
             </div>
             

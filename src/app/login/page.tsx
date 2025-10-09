@@ -78,7 +78,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
       <div className="w-full max-w-[1146px] mx-auto">
         <header className="px-12 py-4">
-          <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+          <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} style={{ width: "auto", height: "auto" }} />
         </header>
 
         {/* Main Content */}
@@ -132,7 +132,7 @@ export default function LoginPage() {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
                     >
                       {showPassword ? (
                         // Eye OFF icon
@@ -199,7 +199,7 @@ export default function LoginPage() {
                       isLoading
                         ? "bg-gray-400 cursor-not-allowed"
                         : "bg-red-500 hover:bg-red-700"
-                    } text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors`}
+                    } text-white font-bold cursor-pointer py-2 px-4 rounded focus:outline-none focus:shadow-outline transition-colors`}
                   >
                     {isLoading ? "Signing In..." : "Log In"}
                   </button>

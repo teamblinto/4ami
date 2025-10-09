@@ -83,9 +83,9 @@ function ThankYouContent() {
               onClick={handleConfirmEmail}
               disabled={isLoading}
               className={`w-full py-3 px-6 rounded-md font-semibold text-white mb-6 ${
-                isLoading 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-red-500 hover:bg-red-600'
+                isLoading
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-red-500 hover:bg-red-600 cursor-pointer'
               }`}
             >
               {isLoading ? 'Sending...' : 'Confirm Email'}
