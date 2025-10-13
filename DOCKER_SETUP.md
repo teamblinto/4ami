@@ -1,4 +1,12 @@
-# Docker Setup for 4ami Next.js Application
+# Docker Setup for 4ami Next.js 
+
+# Build the Docker image with tag '4ami'
+docker build -t 4ami .
+
+# Run the container and map port 3000
+docker run -p 3000:3000 4ami
+
+Application
 
 This document provides comprehensive instructions for Dockerizing your Next.js application for both development and production environments.
 
