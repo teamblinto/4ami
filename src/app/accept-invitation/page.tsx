@@ -173,7 +173,7 @@ function ClientContent() {
                     value={invitationCode}
                     onChange={(e) => setInvitationCode(e.target.value)}
                     readOnly={isAutoPopulated}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:border-transparent ${
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-1 focus:border-transparent ${
                       isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                     }`}
                     placeholder=""
@@ -198,7 +198,7 @@ function ClientContent() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     readOnly={isAutoPopulated}
-                    className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-2 focus:border-transparent ${
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-1 focus:border-transparent ${
                       isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                     }`}
                     placeholder=""
@@ -212,7 +212,7 @@ function ClientContent() {
                 <button
                   type="submit"
                   disabled={isVerifying}
-                  className={`font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-2 transition-colors ${
+                  className={`font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-1 transition-colors ${
                     isVerifying
                       ? 'bg-gray-400 cursor-not-allowed text-white'
                       : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'

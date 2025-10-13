@@ -426,7 +426,7 @@ export default function CompanyAdminManageProfilePage() {
                 onChange={(e) =>
                   handleInputChange("companyName", e.target.value)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 placeholder="Enter company name"
               />
             </div>
@@ -442,7 +442,7 @@ export default function CompanyAdminManageProfilePage() {
                   onChange={(e) =>
                     handleInputChange("companyType", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 >
                   <option value="">Select One</option>
                   <option value="corporation">Corporation</option>
@@ -463,7 +463,7 @@ export default function CompanyAdminManageProfilePage() {
                   onChange={(e) =>
                     handleInputChange("companySize", e.target.value)
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 >
                   <option value="">Select One</option>
                   <option value="1-10">1-10 employees</option>
@@ -486,7 +486,7 @@ export default function CompanyAdminManageProfilePage() {
                 onChange={(e) =>
                   handleInputChange("companyWebsite", e.target.value)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 placeholder="https://www.company.com"
               />
             </div>
@@ -502,7 +502,7 @@ export default function CompanyAdminManageProfilePage() {
                   handleInputChange("companyDescription", e.target.value)
                 }
                 rows={4}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 placeholder="Describe your company..."
               />
             </div>
@@ -531,7 +531,7 @@ export default function CompanyAdminManageProfilePage() {
                 onChange={(e) =>
                   handleInputChange("addressLine1", e.target.value)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 placeholder="Enter address line 1"
               />
             </div>
@@ -547,7 +547,7 @@ export default function CompanyAdminManageProfilePage() {
                 onChange={(e) =>
                   handleInputChange("addressLine2", e.target.value)
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                 placeholder="Enter address line 2"
               />
             </div>
@@ -564,7 +564,7 @@ export default function CompanyAdminManageProfilePage() {
                     onClick={() =>
                       setIsCountryDropdownOpen(!isCountryDropdownOpen)
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between cursor-pointer"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between cursor-pointer"
                   >
                     <span>{getSelectedCountryLabel()}</span>
                     <svg
@@ -633,7 +633,7 @@ export default function CompanyAdminManageProfilePage() {
                   type="text"
                   value={formData.city}
                   onChange={(e) => handleInputChange("city", e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900"
                   placeholder="Enter city"
                 />
               </div>
@@ -646,7 +646,7 @@ export default function CompanyAdminManageProfilePage() {
                   <button
                     type="button"
                     onClick={() => setIsStateDropdownOpen(!isStateDropdownOpen)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between cursor-pointer"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent text-gray-900 text-left bg-white flex items-center justify-between cursor-pointer"
                   >
                     <span>{getSelectedStateLabel()}</span>
                     <svg

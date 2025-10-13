@@ -484,7 +484,7 @@ export default function RegisterCompany() {
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className=" cursor-pointer bg-red-600 text-white px-8 py-[10px] rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                  className=" cursor-pointer bg-red-600 text-white px-8 py-[10px] rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   {isLoading ? 'Registering...' : 'Register Company'}
@@ -492,7 +492,7 @@ export default function RegisterCompany() {
                 <button
                   type="button"
                   onClick={handleCancelClick}
-                  className=" cursor-pointer bg-white text-[#343A40] py-[10px] px-8 rounded-[8px] border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                  className=" cursor-pointer bg-white text-[#343A40] py-[10px] px-8 rounded-[8px] border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                   style={{ fontFamily: 'Inter, sans-serif' }}
                 >
                   Cancel
@@ -516,14 +516,14 @@ export default function RegisterCompany() {
             <div className="flex gap-[24px] text-center justify-center">
               <button
                 onClick={handleStayOnPage}
-                className=" bg-red-600 cursor-pointer text-white py-[10px] px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors"
+                className=" bg-red-600 cursor-pointer text-white py-[10px] px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 transition-colors"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 No, Stay
               </button>
               <button
                 onClick={handleConfirmCancel}
-                className=" bg-white text-[#343A40] cursor-pointer  py-[10px] px-4 rounded-md border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
+                className=" bg-white text-[#343A40] cursor-pointer  py-[10px] px-4 rounded-md border border-[#CED4DA] hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-gray-500 focus:ring-offset-2 transition-colors"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Yes, Cancel
@@ -555,7 +555,7 @@ export default function RegisterCompany() {
             <div className="flex justify-center">
               <button
                 onClick={handleRegisterCompany}
-                className="bg-red-600 text-white py-[10px] px-6 rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors cursor-pointer"
+                className="bg-red-600 text-white py-[10px] px-6 rounded-[8px] hover:bg-red-700 focus:outline-none focus:ring-1 focus:ring-red-500 focus:ring-offset-2 transition-colors cursor-pointer"
                 style={{ fontFamily: 'Inter, sans-serif' }}
               >
                 Register Company
