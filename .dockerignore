@@ -110,3 +110,17 @@ coverage/
 
 # Misc
 *.tsbuildinfo
+
+node_modules
+.next
+.env.local
+.env.development
+.dockerignore
+Dockerfile*
+docker-compose*.yml
+.vscode
+.git
+.gitignore
+npm-debug.log
+yarn-error.log
+
