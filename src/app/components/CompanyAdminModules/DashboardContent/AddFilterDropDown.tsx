@@ -63,7 +63,7 @@ export default function AddFilterDropDown() {
                   value={industry}  // ✅ fixed binding
                   onChange={(e) => setIndustry(e.target.value)}
                   placeholder="Type or Select One"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   list="industryOptions"
                 />
                 <datalist id="industryOptions">
@@ -80,7 +80,7 @@ export default function AddFilterDropDown() {
                 <select
                   value={industry}
                   onChange={(e) => setIndustry(e.target.value)}
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                 >
                   <option value="">Other</option>
                   <option value="industry">Select Industry</option>
@@ -99,7 +99,7 @@ export default function AddFilterDropDown() {
                   value={assetType}
                   onChange={(e) => setAssetType(e.target.value)}
                   placeholder="Type or Select One"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   list="assetOptions"
                 />
                 <datalist id="assetOptions">
@@ -117,7 +117,7 @@ export default function AddFilterDropDown() {
                   value={make}
                   onChange={(e) => setMake(e.target.value)}
                   placeholder="Type or Select One"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   list="makeOptions"
                 />
                 <datalist id="makeOptions">
@@ -135,7 +135,7 @@ export default function AddFilterDropDown() {
                   value={model}
                   onChange={(e) => setModel(e.target.value)}
                   placeholder="Type or Select One"
-                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-gray-700 focus:ring-1 focus:ring-blue-500 focus:outline-none"
                   list="modelOptions"
                 />
                 <datalist id="modelOptions">

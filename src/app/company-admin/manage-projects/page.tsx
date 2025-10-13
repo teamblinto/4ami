@@ -153,6 +153,85 @@ export default function CompanyAdminManageProjectsPage() {
         </p>
       </div>
 
+      {/* Project Information Section */}
+      <div className="bg-white mt-6 px-4 py-5 rounded-lg shadow">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4">
+          Project Information
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label
+              htmlFor="project-id"
+              className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
+            >
+              Project ID
+            </label>
+            <input
+              type="text"
+              id="project-id"
+              defaultValue="P1013492"
+              className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="start-date"
+              className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
+            >
+              Start Date
+            </label>
+            <input
+              type="text"
+              id="start-date"
+              defaultValue="21/08/2025"
+              className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="submitted-date"
+              className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
+            >
+              Submitted Date
+            </label>
+            <input
+              type="text"
+              id="submitted-date"
+              placeholder="N/A"
+              className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+            />
+          </div>
+        </div>
+        <div className="mt-4">
+          <label
+            htmlFor="project-name"
+            className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
+          >
+            Project Name
+          </label>
+          <input
+            type="text"
+            id="project-name"
+            defaultValue="Burleson Sand Volvo A40G Water Truck"
+            className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+          />
+        </div>
+        <div className="mt-4">
+          <label
+            htmlFor="project-note"
+            className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
+          >
+            Project Note
+          </label>
+          <textarea
+            id="project-note"
+            rows={4}
+            placeholder="Type here...."
+            className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
+          />
+        </div>
+      </div>
+
       <div className="bg-white mt-6 rounded-lg shadow">
         {/* Header Section */}
         <div className="p-6 border-b border-gray-200">

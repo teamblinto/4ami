@@ -58,7 +58,7 @@ const ProjectsPage = () => {
             {/* Filter Dropdowns */}
             <div className="flex flex-wrap items-center gap-4">
               <div className="flex items-center gap-2">
-                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 text-black">
+                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-red-500 text-black">
                   <option>Project ID All</option>
                 </select>
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -67,7 +67,7 @@ const ProjectsPage = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 text-black">
+                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-red-500 text-black">
                   <option>Asset Type All</option>
                 </select>
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -76,7 +76,7 @@ const ProjectsPage = () => {
               </div>
 
               <div className="flex items-center gap-2">
-                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 text-black">
+                <select className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-red-500 text-black">
                   <option>Status All</option>
                 </select>
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +116,7 @@ const ProjectsPage = () => {
                 <select 
                   value={rowsPerPage} 
                   onChange={(e) => setRowsPerPage(Number(e.target.value))}
-                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-red-500 text-black"
+                  className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-red-500 text-black"
                 >
                   <option value={10}>10</option>
                   <option value={25}>25</option>

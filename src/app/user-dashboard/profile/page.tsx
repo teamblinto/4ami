@@ -125,7 +125,7 @@ export default function UserProfilePage() {
                     onChange={(e) =>
                       handleNameChange("firstName", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     placeholder="First Name"
                   />
                   <input
@@ -134,7 +134,7 @@ export default function UserProfilePage() {
                     onChange={(e) =>
                       handleNameChange("lastName", e.target.value)
                     }
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     placeholder="Last Name"
                   />
                   <div className="flex space-x-2">
@@ -464,7 +464,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("firstName", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -477,7 +477,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("lastName", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -493,7 +493,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("email", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -506,7 +506,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("department", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                       placeholder="Enter department"
                     />
                   </div>
@@ -523,7 +523,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("linkedin", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                       placeholder="Enter LinkedIn profile"
                     />
                   </div>
@@ -537,7 +537,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("companyName", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                 </div>
@@ -553,7 +553,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("companyWebsite", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                   <div>
@@ -566,7 +566,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("phoneNumber1", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                       placeholder="Enter phone number"
                     />
                   </div>
@@ -583,7 +583,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("phoneNumber2", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                       placeholder="Enter phone number"
                     />
                   </div>
@@ -597,7 +597,7 @@ export default function UserProfilePage() {
                       onChange={(e) =>
                         handleFormChange("mobilePhone", e.target.value)
                       }
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-red-500 focus:border-transparent"
                     />
                   </div>
                 </div>
