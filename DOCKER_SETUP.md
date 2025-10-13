@@ -1,11 +1,11 @@
-# Docker Setup for 4ami Next.js 
+# 🐳 Docker Setup for 4AMI Next.js Application
 
-# Build the Docker image with tag '4ami'
-docker build -t 4ami .
+Simple Docker setup for the 4AMI application.
 
-# Run the container and map port 3000
-docker run -p 3000:3000 4ami
+## 📋 Prerequisites
 
+- Docker installed on your system
+- Node.js 22.17.
 Application
 
 This document provides comprehensive instructions for Dockerizing your Next.js application for both development and production environments.
@@ -248,3 +248,119 @@ NEXT_TELEMETRY_DISABLED=1
 ---
 
 **Note:** This setup is optimized for your specific Next.js application with TypeScript and Tailwind CSS. Adjust configurations as needed for your specific requirements.
+1 (for local development)
+
+## 🚀 Quick Start
+
+### 1. Environment Setup
+
+First, copy the environment example file and configure it:
+
+```bash
+# Copy the environment template
+cp env.example .env.local
+
+# Edit the environment variables
+# Fill in your actual values in .env.local
+```
+
+### 2. Build and Run with Docker
+
+```bash
+# Build the Docker image
+docker build -t 4ami .
+
+# Run the container
+docker run -p 3000:3000 --env-file .env.local 4ami
+```
+
+## 🔧 Development Setup
+
+### For Development with Hot Reload
+
+```bash
+# Run with volume mounting for hot reload
+docker run -p 3000:3000 \
+  --env-file .env.local \
+  -v $(pwd):/app \
+  -v /app/node_modules \
+  4ami
+```
+
+## 🌐 Access Points
+
+After running the container:
+
+- **Frontend Application**: http://localhost:3000
+
+## 🔑 Default Credentials
+
+### Application Login
+- **Email**: user@4ami.com
+- **Password**: Admin@123456
+
+## 🛠️ Useful Docker Commands
+
+### Container Management
+```bash
+# View running containers
+docker ps
+
+# View all containers
+docker ps -a
+
+# Stop a container
+docker stop <container_id>
+
+# Remove a container
+docker rm <container_id>
+
+# View container logs
+docker logs <container_id>
+
+# Execute command in running container
+docker exec -it <container_id> /bin/bash
+```
+
+### Image Management
+```bash
+# List images
+docker images
+
+# Remove an image
+docker rmi <image_id>
+
+# Build with no cache
+docker build --no-cache -t 4ami .
+
+# Remove unused images
+docker image prune
+```
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Port already in use**
+   ```bash
+   # Find process using port 3000
+   lsof -i :3000
+   
+   # Kill the process
+   kill -9 <PID>
+   ```
+
+2. **Permission denied**
+   ```bash
+   # Fix file permissions
+   sudo chown -R $USER:$USER .
+   ```
+
+3. **Container won't start**
+   ```bash
+   # Check logs
+   docker logs <container_name>
+   
+   # Check container status
+   docker inspect <container_name>
+   ```
