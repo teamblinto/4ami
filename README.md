@@ -2,6 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+
 First, run the development server:
 
 ```bash
@@ -34,3 +35,45 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+
+# HOW TO RUN LOCALLY:
+
+1. Copy this file: cp env.example .env.local
+2. Update NEXT_PUBLIC_API_BASE_URL with your backend URL
+3. Run: npm run dev
+4. Access: http://localhost:3000
+5.Admin Login with: admin@4ami.com / Admin@123456
+
+
+
+
+## Docker in development
+
+# Build and start
+docker-compose up --build
+
+# Run in detached mode
+docker-compose up -d
+
+# Stop
+docker-compose down
+
+# View logs
+docker-compose logs -f
+
+
+## Docker in production
+
+# Build and start production
+docker-compose -f docker-compose.prod.yml up --build
+
+# Run in detached mode
+docker-compose -f docker-compose.prod.yml up -d
+
+# Stop containers
+docker-compose -f docker-compose.prod.yml down
+
+# View production logs
+docker-compose -f docker-compose.prod.yml logs -f
