@@ -86,8 +86,8 @@ export default function LoginPage() {
           <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
             {/* Left Section - Login Form */}
             <div className="w-full md:w-2/5 p-6">
-              <h2 className="text-2xl text-[#080607] font-bold mb-2">Log In</h2>
-              <p className="text-gray-600 mb-6">
+              <h2 className="text-[24px] text-[#080607] font-medium mb-2">Log In</h2>
+              <p className="text-[#6C757D] mb-6">
                 <span className="font-semibold text-red-500">
                   Welcome back!
                 </span>{" "}
@@ -99,14 +99,14 @@ export default function LoginPage() {
                 <div className="mb-4">
                   <label
                     htmlFor="email"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-[#343A40] text-sm font-medium mb-2"
                   >
                     Email
                   </label>
                   <input
                     type="email"
                     id="email"
-                    className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -115,7 +115,7 @@ export default function LoginPage() {
                 <div className="mb-6">
                   <label
                     htmlFor="password"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-[#343A40] text-sm font-medium mb-2"
                   >
                     Password
                   </label>
@@ -124,7 +124,7 @@ export default function LoginPage() {
                     <input
                       type={showPassword ? "text" : "password"}
                       id="password"
-                      className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 mb-0 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                      className="appearance-none w-full py-2 px-3 text-gray-700 mb-0 leading-tight focus:outline-none focus:shadow-outline pr-10 rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
                       placeholder="Enter your password"
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
@@ -183,7 +183,7 @@ export default function LoginPage() {
 
                   <div className="flex items-center justify-between text-sm mt-2">
                     <label className="flex items-center text-gray-600">
-                      <input type="checkbox" className="form-checkbox mr-2" />
+                      <input type="checkbox" className="form-checkbox mr-2 accent-red-500 " />
                       Remember Password
                     </label>
                     <Link href="/forgot-password" className="text-red-500 hover:underline">

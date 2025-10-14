@@ -34,8 +34,8 @@ export default function ForgotPasswordPage() {
           <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
             {/* Left Section - Form */}
             <div className="w-full md:w-2/5 p-6">
-              <h1 className="text-3xl font-bold text-black mb-2">Forgot Password</h1>
-              <p className="text-gray-600 mb-6">
+              <h1 className="text-[24px] font-medium text-[#080607] mb-2">Forgot Password</h1>
+              <p className="text-[#6C757D] mb-6">
                 Enter your sign-up email address to receive a password reset link
               </p>
 
@@ -55,14 +55,14 @@ export default function ForgotPasswordPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                    className="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
                   />
                 </div>
 
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className={`px-5 py-2 rounded-md text-white font-medium cursor-pointer ${
+                  className={`px-[32px] py-[10px] rounded-md text-white font-medium text-[14px] cursor-pointer ${
                     isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
                   }`}
                 >
