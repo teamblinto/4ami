@@ -75,15 +75,15 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100">
-      <div className="w-full max-w-[1146px] mx-auto">
-        <header className="px-12 py-4">
-          <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} style={{ width: "auto", height: "auto" }} />
-        </header>
+    <div className="min-h-screen flex flex-col items-center pt-2 bg-gray-100">
+      <div className="w-full max-w-[1200px] mx-auto ">
+      <header className="px-12 py-4">
+        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+      </header>
 
         {/* Main Content */}
-        <main className="flex-grow flex items-center justify-center bg-gray-100 pt-20 pb-20">
-          <div className="bg-white shadow-md rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
+        <main className="flex-grow flex max-w-[1000px] mx-auto items-center justify-center bg-gray-100 pt-6 pb-6">
+          <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
             {/* Left Section - Login Form */}
             <div className="w-full md:w-2/5 p-6">
               <h2 className="text-2xl text-[#080607] font-bold mb-2">Log In</h2>
@@ -186,7 +186,7 @@ export default function LoginPage() {
                       <input type="checkbox" className="form-checkbox mr-2" />
                       Remember Password
                     </label>
-                    <Link href="#" className="text-red-500 hover:underline">
+                    <Link href="/forgot-password" className="text-red-500 hover:underline">
                       Forgot Password?
                     </Link>
                   </div>
