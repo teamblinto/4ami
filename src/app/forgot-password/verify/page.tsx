@@ -80,8 +80,8 @@ export default function VerifyCodePage() {
           <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
             {/* Left Section - Verification */}
             <div className="w-full md:w-2/5 p-6">
-              <h1 className="text-2xl font-bold text-black mb-2">Please Check Your Email</h1>
-              <p className="text-gray-600 mb-6">
+              <h1 className="text-[24px] font-medium text-[#080607] mb-2">Please Check Your Email</h1>
+              <p className="text-[#6C757D] mb-6">
                 We have sent a code to <span className="font-semibold">{email}</span>
               </p>
 
@@ -90,13 +90,15 @@ export default function VerifyCodePage() {
                   {code.map((d, idx) => (
                     <input
                       key={idx}
-                      ref={(el) => (inputsRef.current[idx] = el)}
+                      ref={(el) => {
+                        inputsRef.current[idx] = el;
+                      }}
                       inputMode="numeric"
                       maxLength={1}
                       value={d}
                       onChange={(e) => handleChange(idx, e.target.value)}
                       onKeyDown={(e) => handleKeyDown(idx, e)}
-                      className="w-10 h-10 text-center border border-gray-300 rounded-md bg-white focus:outline-none focus:ring-1 focus:ring-red-500"
+                      className="w-10 h-10 text-center focus:outline-none focus:ring-1 text-black rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
                     />
                   ))}
                 </div>

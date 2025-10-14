@@ -50,8 +50,8 @@ export default function ResetPasswordPage() {
           <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
             {/* Left Section - Reset Form */}
             <div className="w-full md:w-2/5 p-6">
-              <h1 className="text-2xl font-bold text-black mb-2">Reset Password</h1>
-              <p className="text-gray-600 mb-6">Please enter your new password below</p>
+              <h1 className="text-[24px] font-medium text-[#080607] mb-2">Reset Password</h1>
+              <p className="text-[#6C757D] mb-6">Please enter your new password below</p>
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
@@ -62,7 +62,7 @@ export default function ResetPasswordPage() {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                      className="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10 rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
                       placeholder="Enter new password"
                     />
                     <button
@@ -77,7 +77,7 @@ export default function ResetPasswordPage() {
                       </svg>
                     </button>
                   </div>
-                  <p className="text-xs mt-1">
+                  <p className="text-xs text-[#6C757D] mt-1">
                     Password strength: <span className="text-red-500 font-medium">{passwordStrength}</span>
                   </p>
                 </div>
@@ -90,7 +90,7 @@ export default function ResetPasswordPage() {
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
-                      className="shadow appearance-none border rounded border-gray-300 w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10"
+                      className="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10 rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
                       placeholder="Confirm new password"
                     />
                     <button
