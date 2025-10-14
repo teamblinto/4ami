@@ -100,27 +100,20 @@ Thumbs.db
 README.md
 
 # Docker
-Dockerfile*
+Dockerfile.dev
 docker-compose*
 .dockerignore
 
 # Testing
-coverage/
 .nyc_output/
 
 # Misc
 *.tsbuildinfo
 
-node_modules
-.next
-.env.local
+
 .env.development
-.dockerignore
-Dockerfile*
 docker-compose*.yml
 .vscode
-.git
-.gitignore
 npm-debug.log
 yarn-error.log
 
