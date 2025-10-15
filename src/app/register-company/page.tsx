@@ -77,12 +77,35 @@ export default function RegisterCompany() {
     setIsLoading(true);
     
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Company registration data:', { formData, administrators });
+      // Prepare the registration data
+      const registrationData = {
+        ...formData,
+        administrators: administrators.map(admin => admin.email)
+      };
+
+      console.log('Sending company registration data:', registrationData);
+
+      // Call the API endpoint
+      const response = await fetch('/api/companies/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.message || `HTTP error! status: ${response.status}`);
+      }
+
+      console.log('Company registration success:', result);
       router.push('/login');
     } catch (error) {
       console.error('Registration error:', error);
+      // You can add toast notification here if needed
+      // toast.error('Failed to register company. Please try again.');
     } finally {
       setIsLoading(false);
     }
