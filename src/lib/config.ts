@@ -12,6 +12,9 @@ export const config = {
     },
     users: {
       invite: '/api/v1/users/invite',
+    },
+    companies: {
+      register: '/api/v1/companies/register',
     }
   }
 };
