@@ -4,7 +4,10 @@ import Image from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function VerifyCodePage() {
+
+import { Suspense } from "react";
+
+function VerifyCodePageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
@@ -143,6 +146,14 @@ export default function VerifyCodePage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function VerifyCodePage() {
+  return (
+    <Suspense>
+      <VerifyCodePageContent />
+    </Suspense>
   );
 }
 
