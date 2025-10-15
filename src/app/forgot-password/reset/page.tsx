@@ -4,7 +4,10 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
-export default function ResetPasswordPage() {
+
+import { Suspense } from "react";
+
+function ResetPasswordPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const email = searchParams.get("email") || "";
@@ -134,6 +137,14 @@ export default function ResetPasswordPage() {
         </main>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense>
+      <ResetPasswordPageContent />
+    </Suspense>
   );
 }
 
