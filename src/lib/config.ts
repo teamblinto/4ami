@@ -1,8 +1,7 @@
 // Environment configuration
 export const config = {
   // Backend API Base URL
-  // API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://167.71.201.234/api/v1',
-    API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://4ami.morshadunnur.me/api/v1',
+    API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://4ami.morshadunnur.me/api/v1",
   
   
   // API Endpoints
