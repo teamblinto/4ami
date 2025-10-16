@@ -8,8 +8,8 @@ export default function RegisterCompany() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     companyName: '',
-    userName: '',
     companyEmail: '',
+    einTaxId: '',
     regionBranch: '',
     phone: '',
     mobile: '',
@@ -77,19 +77,33 @@ export default function RegisterCompany() {
     setIsLoading(true);
     
     try {
-      // Prepare the registration data
+      // Prepare the registration data strictly as backend expects
       const registrationData = {
-        ...formData,
-        administrators: administrators.map(admin => admin.email)
+        companyName: formData.companyName,
+        companyEmail: formData.companyEmail,
+        einTaxId: String(formData.einTaxId || ''),
+        regionBranch: formData.regionBranch,
+        phone: formData.phone,
+        mobile: formData.mobile,
+        address1: formData.address1,
+        address2: formData.address2,
+        city: formData.city,
+        state: formData.state,
+        zip: formData.zip,
+        country: formData.country,
       };
 
       console.log('Sending company registration data:', registrationData);
 
       // Call the API endpoint
+      const storedToken =
+        (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+
       const response = await fetch('/api/companies/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(storedToken ? { Authorization: storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}` } : {}),
         },
         body: JSON.stringify(registrationData),
       });
@@ -138,7 +152,7 @@ export default function RegisterCompany() {
               {/* Company Details Section */}
               <div className="space-y-4">
                 
-                {/* Row 1: Company Name & User Name */}
+                {/* Row 1: Company Name & EIN/Tax ID */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="companyName" className="block text-[#343A40] mb-2" style={{ 
@@ -163,19 +177,19 @@ export default function RegisterCompany() {
                     />
                   </div>
                   <div>
-                    <label htmlFor="userName" className="block text-[#343A40] mb-2" style={{ 
+                    <label htmlFor="einTaxId" className="block text-[#343A40] mb-2" style={{ 
                       fontFamily: 'Inter, sans-serif',
                       fontSize: '14px',
                       fontStyle: 'normal',
                       fontWeight: '500'
                     }}>
-                      User Name
+                      EIN/Tax ID
                     </label>
                     <input
                       type="text"
-                      id="userName"
-                      name="userName"
-                      value={formData.userName}
+                      id="einTaxId"
+                      name="einTaxId"
+                      value={formData.einTaxId}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                       style={{ 
