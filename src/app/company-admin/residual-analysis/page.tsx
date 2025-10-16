@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 
 const ResidualAnalysisPage = () => {
@@ -76,17 +76,14 @@ const ResidualAnalysisPage = () => {
 
   // Transaction fields
   const [currentMeter, setCurrentMeter] = useState("");
-  const [proposedAnnualUtilization, setProposedAnnualUtilization] = useState("");
-  const [meterUnit, setMeterUnit] = useState("");
-  const [maintenanceRecords, setMaintenanceRecords] = useState("");
-  const [inspectionReport, setInspectionReport] = useState("");
-  const [terms, setTerms] = useState("");
+  const [proposedAnnualUtilization] = useState("");
+  const [meterUnit] = useState("");
+  const [maintenanceRecords] = useState("");
+  const [inspectionReport] = useState("");
+  const [terms] = useState("");
   const [structure, setStructure] = useState("");
   const [application, setApplication] = useState("");
   const [environment, setEnvironment] = useState("");
-
-  // Static project type code to avoid backend validation issues
-  const PROJECT_TYPE_CODE = "PROJECT";
 
   // Functions for managing scenarios
   const addScenario = () => {
@@ -129,7 +126,7 @@ const ResidualAnalysisPage = () => {
       ? Number(String(firstScenario.annualUtilization).replace(/[^0-9.]/g, ""))
       : undefined;
 
-    const payload = {
+    const payload: ResidualAnalysisPayload = {
       projectTypeCode: "residual_analysis",
       name: projectName || projectId,
       description: projectNote,
@@ -191,13 +188,13 @@ const ResidualAnalysisPage = () => {
         environment,
       },
       utilizationScenarios: scenarios.map((scenario, index) => ({
-        equipmentId: crypto.randomUUID(), // Generate a proper UUID
+        equipmentId: crypto.randomUUID(),
         scenarioNo: index + 1,
         terms: scenario.termsMonths ? Number(scenario.termsMonths.replace(/[^0-9]/g, "")) : undefined,
         proposedUtilization: scenario.annualUtilization ? Number(scenario.annualUtilization.replace(/[^0-9.]/g, "")) : undefined,
         unitPrice: scenario.unitPrice ? Number(scenario.unitPrice.replace(/[^0-9.]/g, "")) : undefined,
       })),
-    } as any;
+    } as ResidualAnalysisPayload;
 
     try {
       const storedToken =
@@ -1488,5 +1485,74 @@ const ResidualAnalysisPage = () => {
     </div>
   );
 };
+
+// Define a type for the payload
+interface ResidualAnalysisPayload {
+  projectTypeCode: string;
+  name: string;
+  description: string;
+  startDate?: string;
+  endDate?: string;
+  status: string;
+  metadata: {
+    priority: string;
+    category: string;
+  };
+  client: {
+    clientName: string;
+    clientEmail: string;
+    lesseePhone: string;
+    countryCode: string;
+    website: string;
+    communicationPreference: boolean;
+  };
+  source: {
+    sourceNo: string;
+    sourceName: string;
+    sourceType: string;
+    contact: string;
+    title: string;
+    communication: boolean;
+    phoneNumber1: string;
+    phoneNumber2: string;
+    email: string;
+    website: string;
+  };
+  equipments: Array<{
+    industry: string;
+    assetClass: string;
+    make: string;
+    model: string;
+    year?: number;
+    currentMeterReading?: number;
+    meterType: string;
+    proposedUtilization?: number;
+    environmentRanking: string;
+  }>;
+  financial: {
+    subjectPrice?: number;
+    concession?: number;
+    extendedWarranty: string;
+    maintenancePMs: string;
+  };
+  transaction: {
+    currentMeter?: number;
+    proposedAnnualUtilization?: number;
+    meterUnit: string;
+    maintenanceRecords: string;
+    inspectionReport: string;
+    terms?: number;
+    structure: string;
+    application: string;
+    environment: string;
+  };
+  utilizationScenarios: Array<{
+    equipmentId: string;
+    scenarioNo: number;
+    terms?: number;
+    proposedUtilization?: number;
+    unitPrice?: number;
+  }>;
+}
 
 export default ResidualAnalysisPage;
