@@ -11,7 +11,7 @@ export default function ProjectDropdown() {
 
   const handleNext = () => {
     if (selected.includes("Residual Analysis")) {
-      router.push("/user-dashboard/residual-analysis");
+      router.push("/company-admin/residual-analysis");
     }
   };
 
