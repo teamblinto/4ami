@@ -3,6 +3,7 @@ export const config = {
   // Backend API Base URL
   API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://167.71.201.234',
   
+  
   // API Endpoints
   endpoints: {
     auth: {
