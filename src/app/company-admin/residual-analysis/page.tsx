@@ -188,7 +188,7 @@ const ResidualAnalysisPage = () => {
         environment,
       },
       utilizationScenarios: scenarios.map((scenario, index) => ({
-        equipmentId: crypto.randomUUID(),
+     
         scenarioNo: index + 1,
         terms: scenario.termsMonths ? Number(scenario.termsMonths.replace(/[^0-9]/g, "")) : undefined,
         proposedUtilization: scenario.annualUtilization ? Number(scenario.annualUtilization.replace(/[^0-9.]/g, "")) : undefined,
@@ -1547,7 +1547,7 @@ interface ResidualAnalysisPayload {
     environment: string;
   };
   utilizationScenarios: Array<{
-    equipmentId: string;
+   
     scenarioNo: number;
     terms?: number;
     proposedUtilization?: number;
