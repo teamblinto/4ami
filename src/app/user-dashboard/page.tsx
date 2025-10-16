@@ -15,7 +15,7 @@ export default function UserDashboardPage() {
   return (
     <div>
       {/* Welcome Section */}
-      <div className="flex justify-between items-center mb-5">
+      <div className="flex justify-between  items-center mb-5">
         <div>
           <h1 className="font-medium text-[#343A40] text-2xl">Dashboard</h1>
           <p className="text-[#6C757D] mt-2 font-normal ">
@@ -27,7 +27,7 @@ export default function UserDashboardPage() {
         <UserProjectDropdown />
       </div>
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2  lg:grid-cols-3 gap-6 mb-3">
         {statsData.map((stat, index) => (
           <div
             key={index}

@@ -79,7 +79,7 @@ export default function UserDashboardLayout({
 
   return (
     // <ProtectedRoute requiredRole="USER">
-      <div className="flex min-h-screen bg-gray-100">
+      <div className="flex min-h-screen  bg-gray-100">
         {/* Sidebar */}
         <aside
           className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
@@ -206,7 +206,7 @@ export default function UserDashboardLayout({
         </aside>
 
         {/* Main Content */},
-        <main className="flex-grow px-8 bg-[#FAFAFA] pt-[24px] pb-[24px] overflow-x-auto min-w-0">
+        <main className="flex-grow px-8 bg-[#FAFAFA] -ml-1 pt-[24px] pb-[24px] overflow-x-auto min-w-0">
           {/* Top Bar */}
           <div className="flex items-center justify-between mb-6">
             <div className="relative w-[320px]">
