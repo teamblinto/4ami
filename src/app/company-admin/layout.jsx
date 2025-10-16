@@ -49,6 +49,17 @@ export default function CompanyAdminLayout({
     }
   }, []);
 
+  // Redirect company admins to register-company if no company registered yet
+  useEffect(() => {
+    try {
+      const isRegistered = localStorage.getItem('companyRegistered');
+      // Only gate company-admin routes; this layout only wraps those pages
+      if (!isRegistered) {
+        router.push('/register-company');
+      }
+    } catch {}
+  }, [router]);
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
