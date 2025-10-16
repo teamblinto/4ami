@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-import ProtectedRoute from "../components/ProtectedRoute";
+// import ProtectedRoute from "../components/ProtectedRoute";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
@@ -78,7 +78,7 @@ export default function DashboardLayout({
   }, [isDropdownOpen]);
 
   return (
-    <ProtectedRoute requiredRole="ADMIN">
+    // <ProtectedRoute requiredRole="ADMIN">
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
@@ -457,6 +457,6 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-    </ProtectedRoute>
+    // </ProtectedRoute>
   );
 }
