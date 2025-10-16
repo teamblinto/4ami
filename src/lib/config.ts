@@ -29,11 +29,17 @@ export const getApiUrl = (endpoint: string): string => {
 export const getAuthHeaders = (authToken?: string) => {
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
-    'ngrok-skip-browser-warning': 'true', // For ngrok
   };
   
+  // Only include ngrok header when targeting an ngrok URL to avoid CORS issues elsewhere
+  try {
+    if (config.API_BASE_URL.includes('ngrok')) {
+      headers['ngrok-skip-browser-warning'] = 'true';
+    }
+  } catch {}
+
   if (authToken) {
-    headers['Authorization'] = authToken;
+    headers['Authorization'] = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`;
   }
   
   return headers;

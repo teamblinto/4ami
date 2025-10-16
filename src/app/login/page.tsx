@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+import { getApiUrl, getAuthHeaders, config } from "@/lib/config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -18,18 +19,18 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/auth/signin", {
+      const response = await fetch(getApiUrl(config.endpoints.auth.signin), {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: getAuthHeaders(),
         body: JSON.stringify({
-          email: email,
+          email: email.trim(),
           password: password,
         }),
       });
 
-      const data = await response.json();
+      const contentType = response.headers.get("content-type");
+      const isJson = contentType && contentType.includes("application/json");
+      const data = isJson ? await response.json() : { message: await response.text() };
 
       console.log(data);
       if (response.ok) {
@@ -64,7 +65,7 @@ export default function LoginPage() {
           toast.error("Access denied. Valid role required.");
         }
       } else {
-        toast.error(data.message || "Invalid credentials");
+        toast.error((data && (data.message || data.error)) || "Invalid credentials");
       }
     } catch (error) {
       console.error("Login error:", error);
