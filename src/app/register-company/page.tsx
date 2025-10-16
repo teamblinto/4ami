@@ -75,7 +75,7 @@ export default function RegisterCompany() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    
+
     try {
       // Prepare the registration data strictly as backend expects
       const registrationData = {
@@ -151,17 +151,21 @@ export default function RegisterCompany() {
             <form onSubmit={handleSubmit} className="space-y-6 bg-white rounded-lg p-8">
               {/* Company Details Section */}
               <div className="space-y-4">
-                
+
+
+
+
+
                 {/* Row 1: Company Name & EIN/Tax ID */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
                   <div>
-                    <label htmlFor="companyName" className="block text-[#343A40] mb-2" style={{ 
+                    <label htmlFor="companyName" className="block text-[#343A40] mb-2" style={{
                       fontFamily: 'Inter, sans-serif',
                       fontSize: '14px',
                       fontStyle: 'normal',
                       fontWeight: '500'
                     }}>
-                      Company Name
+                      Company Name <samp className='text-[#6C757D] text-sm  '>(Full Legal Name)</samp>
                     </label>
                     <input
                       type="text"
@@ -170,14 +174,46 @@ export default function RegisterCompany() {
                       value={formData.companyName}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
+                      style={{
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
                       }}
                     />
                   </div>
+
+                  {/* Row 2: Company Email */}
                   <div>
-                    <label htmlFor="einTaxId" className="block text-[#343A40] mb-2" style={{ 
+                    <label htmlFor="companyEmail" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Company Email
+                    </label>
+                    <input
+                      type="email"
+                      id="companyEmail"
+                      name="companyEmail"
+                      value={formData.companyEmail}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+
+
+
+
+                </div>
+                {/* here */}
+                <div className='grid grid-cols-1 md:grid-cols-2 gap-4'>
+
+                  <div>
+                    <label htmlFor="einTaxId" className="block text-[#343A40] mb-2" style={{
                       fontFamily: 'Inter, sans-serif',
                       fontSize: '14px',
                       fontStyle: 'normal',
@@ -192,7 +228,82 @@ export default function RegisterCompany() {
                       value={formData.einTaxId}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+                  {/* Row 3: Region/Branch (Optional) */}
+                  <div>
+                    <label htmlFor="regionBranch" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Region/Branch (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      id="regionBranch"
+                      name="regionBranch"
+                      value={formData.regionBranch}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-md focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+
+
+                </div>
+                <h2 className='text-[#343A40] font-semibold text-lg' >Address of headquarter</h2>
+                {/* Row 4: Phone & Mobile */}
+
+                {/* Row 5: Address 1 & Address 2 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="address1" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Address 1
+                    </label>
+                    <input
+                      type="text"
+                      id="address1"
+                      name="address1"
+                      value={formData.address1}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="address2" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Address 2
+                    </label>
+                    <input
+                      type="text"
+                      id="address2"
+                      name="address2"
+                      value={formData.address2}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
                       }}
@@ -200,58 +311,105 @@ export default function RegisterCompany() {
                   </div>
                 </div>
 
-                {/* Row 2: Company Email */}
-                <div>
-                  <label htmlFor="companyEmail" className="block text-[#343A40] mb-2" style={{ 
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    fontStyle: 'normal',
-                    fontWeight: '500'
-                  }}>
-                    Company Email
-                  </label>
-                  <input
-                    type="email"
-                    id="companyEmail"
-                    name="companyEmail"
-                    value={formData.companyEmail}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                    style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      border: '1px solid var(--Neutral-400, #CED4DA)'
-                    }}
-                  />
-                </div>
-
-                {/* Row 3: Region/Branch (Optional) */}
-                <div>
-                  <label htmlFor="regionBranch" className="block text-[#343A40] mb-2" style={{ 
-                    fontFamily: 'Inter, sans-serif',
-                    fontSize: '14px',
-                    fontStyle: 'normal',
-                    fontWeight: '500'
-                  }}>
-                    Region/Branch (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    id="regionBranch"
-                    name="regionBranch"
-                    value={formData.regionBranch}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-md focus:border-transparent"
-                    style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      border: '1px solid var(--Neutral-400, #CED4DA)'
-                    }}
-                  />
-                </div>
-
-                {/* Row 4: Phone & Mobile */}
+                {/* Row 6: City & State */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <label htmlFor="phone" className="block text-[#343A40] mb-2" style={{ 
+                    <label htmlFor="city" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      City
+                    </label>
+                    <input
+                      type="text"
+                      id="city"
+                      name="city"
+                      value={formData.city}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="state" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      State
+                    </label>
+                    <input
+                      type="text"
+                      id="state"
+                      name="state"
+                      value={formData.state}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                {/* Row 7: ZIP & Country */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="zip" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      ZIP
+                    </label>
+                    <input
+                      type="text"
+                      id="zip"
+                      name="zip"
+                      value={formData.zip}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="country" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Country
+                    </label>
+                    <input
+                      type="text"
+                      id="country"
+                      name="country"
+                      value={formData.country}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="phone" className="block text-[#343A40] mb-2" style={{
                       fontFamily: 'Inter, sans-serif',
                       fontSize: '14px',
                       fontStyle: 'normal',
@@ -273,7 +431,7 @@ export default function RegisterCompany() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         className="flex-1 px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-r-[8px] focus:border-transparent"
-                        style={{ 
+                        style={{
                           fontFamily: 'Inter, sans-serif',
                           border: '1px solid var(--Neutral-400, #CED4DA)'
                         }}
@@ -281,13 +439,13 @@ export default function RegisterCompany() {
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{ 
+                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{
                       fontFamily: 'Inter, sans-serif',
                       fontSize: '14px',
                       fontStyle: 'normal',
                       fontWeight: '500'
                     }}>
-                      Mobile
+                      Company Telephone
                     </label>
                     <input
                       type="tel"
@@ -296,157 +454,116 @@ export default function RegisterCompany() {
                       value={formData.mobile}
                       onChange={handleInputChange}
                       className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
+                      style={{
                         fontFamily: 'Inter, sans-serif',
                         border: '1px solid var(--Neutral-400, #CED4DA)'
                       }}
                     />
                   </div>
+
+                  {/* Company Size & Industry */}
+                  <div>
+                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Company Size
+                    </label>
+                    <input
+                      type="tel"
+                      id="mobile"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Industry
+                    </label>
+                    <input
+                      type="tel"
+                      id="mobile"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+
+
+
+
+
+
+                  {/* Website & Note */}
+                  <div>
+                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Website
+                    </label>
+                    <input
+                      type="tel"
+                      id="mobile"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="mobile" className="block text-[#343A40] mb-2" style={{
+                      fontFamily: 'Inter, sans-serif',
+                      fontSize: '14px',
+                      fontStyle: 'normal',
+                      fontWeight: '500'
+                    }}>
+                      Industry
+                    </label>
+                    <input
+                      type="tel"
+                      id="mobile"
+                      name="mobile"
+                      value={formData.mobile}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
+                      style={{
+                        fontFamily: 'Inter, sans-serif',
+                        border: '1px solid var(--Neutral-400, #CED4DA)'
+                      }}
+                    />
+                  </div>
+
+
+
                 </div>
 
-                {/* Row 5: Address 1 & Address 2 */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="address1" className="block text-[#343A40] mb-2" style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '500'
-                    }}>
-                      Address 1
-                    </label>
-                    <input
-                      type="text"
-                      id="address1"
-                      name="address1"
-                      value={formData.address1}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        border: '1px solid var(--Neutral-400, #CED4DA)'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="address2" className="block text-[#343A40] mb-2" style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '500'
-                    }}>
-                      Address 2
-                    </label>
-                    <input
-                      type="text"
-                      id="address2"
-                      name="address2"
-                      value={formData.address2}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        border: '1px solid var(--Neutral-400, #CED4DA)'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Row 6: City & State */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="city" className="block text-[#343A40] mb-2" style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '500'
-                    }}>
-                      City
-                    </label>
-                    <input
-                      type="text"
-                      id="city"
-                      name="city"
-                      value={formData.city}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        border: '1px solid var(--Neutral-400, #CED4DA)'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="state" className="block text-[#343A40] mb-2" style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '500'
-                    }}>
-                      State
-                    </label>
-                    <input
-                      type="text"
-                      id="state"
-                      name="state"
-                      value={formData.state}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        border: '1px solid var(--Neutral-400, #CED4DA)'
-                      }}
-                    />
-                  </div>
-                </div>
-
-                {/* Row 7: ZIP & Country */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <label htmlFor="zip" className="block text-[#343A40] mb-2" style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '500'
-                    }}>
-                      ZIP
-                    </label>
-                    <input
-                      type="text"
-                      id="zip"
-                      name="zip"
-                      value={formData.zip}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        border: '1px solid var(--Neutral-400, #CED4DA)'
-                      }}
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="country" className="block text-[#343A40] mb-2" style={{ 
-                      fontFamily: 'Inter, sans-serif',
-                      fontSize: '14px',
-                      fontStyle: 'normal',
-                      fontWeight: '500'
-                    }}>
-                      Country
-                    </label>
-                    <input
-                      type="text"
-                      id="country"
-                      name="country"
-                      value={formData.country}
-                      onChange={handleInputChange}
-                      className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
-                      style={{ 
-                        fontFamily: 'Inter, sans-serif',
-                        border: '1px solid var(--Neutral-400, #CED4DA)'
-                      }}
-                    />
-                  </div>
-                </div>
               </div>
 
               {/* System Administration Section */}
@@ -460,13 +577,13 @@ export default function RegisterCompany() {
                   <table className="min-w-full border-collapse">
                     <thead className="bg-gray-50">
                       <tr>
-                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA] border-r border-[#CED4DA]" style={{ 
+                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA] border-r border-[#CED4DA]" style={{
                           fontFamily: 'Inter, sans-serif',
                           width: '70%'
                         }}>
                           Email
                         </th>
-                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA]" style={{ 
+                        <th className="text-left text-sm font-medium text-[#343A40] py-3 px-4 border-b border-[#CED4DA]" style={{
                           fontFamily: 'Inter, sans-serif',
                           width: '30%'
                         }}>
@@ -581,14 +698,14 @@ export default function RegisterCompany() {
 
               </div>
             </div>
-            
+
             <h3 className="text-lg font-semibold text-[#343A40] mb-3" style={{ fontFamily: 'Inter, sans-serif' }}>
               Register Your Company
             </h3>
             <p className="text-[#6C757D] text-sm mb-6" style={{ fontFamily: 'Inter, sans-serif' }}>
               Register your company before start a project
             </p>
-            
+
             <div className="flex justify-center">
               <button
                 onClick={handleRegisterCompany}
