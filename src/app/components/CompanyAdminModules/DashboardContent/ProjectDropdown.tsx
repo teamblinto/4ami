@@ -118,7 +118,8 @@ export default function UserProjectDropdown() {
 
   const handleNext = () => {
     if (selected.includes("Residual Analysis")) {
-      router.push("/user-dashboard/residual-analysis");
+      const projectType = "Residual Analysis";
+      router.push(`/company-admin/residual-analysis?type=${encodeURIComponent(projectType)}`);
     }
   };
 

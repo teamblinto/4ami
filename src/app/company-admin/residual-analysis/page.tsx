@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Image from "next/image";
 
 const ResidualAnalysisPage = () => {
@@ -32,6 +32,61 @@ const ResidualAnalysisPage = () => {
     }
   ]);
   const [utilizationNote, setUtilizationNote] = useState("");
+
+  // Basic project fields
+  const [projectId, setProjectId] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [submittedDate, setSubmittedDate] = useState("");
+  const [projectName, setProjectName] = useState("");
+  const [projectNote, setProjectNote] = useState("");
+
+  // Client fields
+  const [clientName, setClientName] = useState("");
+  const [clientEmail, setClientEmail] = useState("");
+  const [lesseePhone, setLesseePhone] = useState("");
+  const [clientCountryCode, setClientCountryCode] = useState("US");
+  const [clientWebsite, setClientWebsite] = useState("");
+
+  // Source fields
+  const [sourceNo, setSourceNo] = useState("");
+  const [sourceName, setSourceName] = useState("");
+  const [sourceType, setSourceType] = useState("");
+  const [sourceContact, setSourceContact] = useState("");
+  const [sourceTitle, setSourceTitle] = useState("");
+  const [sourcePhone1, setSourcePhone1] = useState("");
+  const [sourcePhone2, setSourcePhone2] = useState("");
+  const [sourceEmail, setSourceEmail] = useState("");
+  const [sourceWebsite, setSourceWebsite] = useState("");
+
+  // Equipment fields
+  const [industry, setIndustry] = useState("");
+  const [assetClass, setAssetClass] = useState("");
+  const [make, setMake] = useState("");
+  const [model, setModel] = useState("");
+  const [year, setYear] = useState("");
+  const [currentMeterReading, setCurrentMeterReading] = useState("");
+  const [meterType, setMeterType] = useState("");
+  const [environmentRanking, setEnvironmentRanking] = useState("New");
+
+  // Financial fields
+  const [subjectPrice, setSubjectPrice] = useState("");
+  const [concession, setConcession] = useState("");
+  const [extendedWarranty, setExtendedWarranty] = useState("");
+  const [maintenancePMs, setMaintenancePMs] = useState("");
+
+  // Transaction fields
+  const [currentMeter, setCurrentMeter] = useState("");
+  const [proposedAnnualUtilization, setProposedAnnualUtilization] = useState("");
+  const [meterUnit, setMeterUnit] = useState("");
+  const [maintenanceRecords, setMaintenanceRecords] = useState("");
+  const [inspectionReport, setInspectionReport] = useState("");
+  const [terms, setTerms] = useState("");
+  const [structure, setStructure] = useState("");
+  const [application, setApplication] = useState("");
+  const [environment, setEnvironment] = useState("");
+
+  // Static project type code to avoid backend validation issues
+  const PROJECT_TYPE_CODE = "PROJECT";
 
   // Functions for managing scenarios
   const addScenario = () => {
@@ -66,10 +121,122 @@ const ResidualAnalysisPage = () => {
     ));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Redirect to thank you page
-    router.push('/company-admin/thank-you');
+
+    const firstScenario = scenarios[0];
+    const proposedUtilization = firstScenario?.annualUtilization
+      ? Number(String(firstScenario.annualUtilization).replace(/[^0-9.]/g, ""))
+      : undefined;
+
+    const payload = {
+      projectTypeCode: "residual_analysis",
+      name: projectName || projectId,
+      description: projectNote,
+      startDate: startDate && startDate.trim() ? startDate : undefined,
+      endDate: submittedDate && submittedDate.trim() ? submittedDate : undefined,
+      status: "draft",
+      metadata: {
+        priority: "high",
+        category: "infrastructure",
+      },
+      client: {
+        clientName,
+        clientEmail,
+        lesseePhone,
+        countryCode: clientCountryCode,
+        website: clientWebsite,
+        communicationPreference: communicationValue === "Yes",
+      },
+      source: {
+        sourceNo,
+        sourceName,
+        sourceType,
+        contact: sourceContact,
+        title: sourceTitle,
+        communication: communicationValue2 === "Yes",
+        phoneNumber1: sourcePhone1,
+        phoneNumber2: sourcePhone2,
+        email: sourceEmail,
+        website: sourceWebsite,
+      },
+      equipments: [
+        {
+          industry,
+          assetClass,
+          make,
+          model,
+          year: year ? Number(year) : undefined,
+          currentMeterReading: currentMeterReading ? Number(currentMeterReading) : undefined,
+          meterType,
+          proposedUtilization,
+          environmentRanking,
+        },
+      ],
+      financial: {
+        subjectPrice: subjectPrice ? Number(subjectPrice) : undefined,
+        concession: concession ? Number(concession) : undefined,
+        extendedWarranty,
+        maintenancePMs,
+      },
+      transaction: {
+        currentMeter: currentMeter ? Number(currentMeter) : undefined,
+        proposedAnnualUtilization: proposedAnnualUtilization ? Number(proposedAnnualUtilization) : undefined,
+        meterUnit,
+        maintenanceRecords,
+        inspectionReport,
+        terms: terms ? Number(terms) : undefined,
+        structure,
+        application,
+        environment,
+      },
+      utilizationScenarios: scenarios.map((scenario, index) => ({
+        equipmentId: crypto.randomUUID(), // Generate a proper UUID
+        scenarioNo: index + 1,
+        terms: scenario.termsMonths ? Number(scenario.termsMonths.replace(/[^0-9]/g, "")) : undefined,
+        proposedUtilization: scenario.annualUtilization ? Number(scenario.annualUtilization.replace(/[^0-9.]/g, "")) : undefined,
+        unitPrice: scenario.unitPrice ? Number(scenario.unitPrice.replace(/[^0-9.]/g, "")) : undefined,
+      })),
+    } as any;
+
+    try {
+      const storedToken =
+        (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+        
+      console.log('Retrieved token:', storedToken ? 'Token found' : 'No token found');
+
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+      };
+
+      if (storedToken) {
+        headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
+      }
+
+      console.log('Request headers:', headers);
+      console.log('Payload being sent:', payload);
+
+      const response = await fetch('/api/projects', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+
+      const contentType = response.headers.get('content-type');
+      const isJson = contentType && contentType.includes('application/json');
+      const data = isJson ? await response.json() : { message: await response.text() };
+
+      if (!response.ok) {
+        console.error('Project create failed:', data);
+        alert((data && (data.message || data.error)) || 'Failed to submit project');
+        return;
+      }
+
+      router.push('/company-admin/thank-you');
+    } catch (err) {
+      console.error('Project submit error:', err);
+      alert('Network error. Please try again.');
+    }
   };
 
   // Figma design styles
@@ -124,6 +291,8 @@ const ResidualAnalysisPage = () => {
                   id="project-id"
                   placeholder="P1013492"
                   className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1  focus:border-transparent"
+                  value={projectId}
+                  onChange={(e) => setProjectId(e.target.value)}
                 />
               </div>
               <div>
@@ -136,8 +305,9 @@ const ResidualAnalysisPage = () => {
                 <input
                   type="date"
                   id="start-date"
-
                   className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
                 />
               </div>
               <div>
@@ -145,13 +315,14 @@ const ResidualAnalysisPage = () => {
                   htmlFor="submitted-date"
                   className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
                 >
-                  Submitted Date
+                  End Date
                 </label>
                 <input
-                  type="text"
+                  type="date"
                   id="submitted-date"
-                  placeholder="N/A"
                   className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+                  value={submittedDate}
+                  onChange={(e) => setSubmittedDate(e.target.value)}
                 />
               </div>
             </div>
@@ -167,6 +338,8 @@ const ResidualAnalysisPage = () => {
                 id="project-name"
                 placeholder="Burleson Sand Volvo A40G Water Truck"
                 className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+                value={projectName}
+                onChange={(e) => setProjectName(e.target.value)}
               />
             </div>
             <div className="mt-4">
@@ -181,6 +354,8 @@ const ResidualAnalysisPage = () => {
                 rows={3}
                 placeholder="Type here...."
                 className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
+                value={projectNote}
+                onChange={(e) => setProjectNote(e.target.value)}
               />
             </div>
           </div>
@@ -225,6 +400,8 @@ const ResidualAnalysisPage = () => {
                       id="client-name"
                       placeholder="Your name"
                       className="w-full"
+                      value={clientName}
+                      onChange={(e) => setClientName(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -241,6 +418,8 @@ const ResidualAnalysisPage = () => {
                       id="client-email"
                       placeholder="yorkerho@gmail.com"
                       className="w-full"
+                      value={clientEmail}
+                      onChange={(e) => setClientEmail(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -261,6 +440,7 @@ const ResidualAnalysisPage = () => {
                           borderBottomRightRadius: "0",
                           borderRight: "none",
                         }}
+                        onChange={(e) => setClientCountryCode(e.target.value === "+1" ? "US" : e.target.value)}
                       >
                         <option value="+1">🇺🇸 +1</option>
                         <option value="+44">🇬🇧 +44</option>
@@ -276,6 +456,8 @@ const ResidualAnalysisPage = () => {
                           borderTopLeftRadius: "0",
                           borderBottomLeftRadius: "0",
                         }}
+                        value={lesseePhone}
+                        onChange={(e) => setLesseePhone(e.target.value)}
                       />
                     </div>
                   </div>
@@ -294,6 +476,8 @@ const ResidualAnalysisPage = () => {
                       id="website"
                       placeholder="www.lorem.com"
                       className="w-full"
+                      value={clientWebsite}
+                      onChange={(e) => setClientWebsite(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -421,6 +605,8 @@ const ResidualAnalysisPage = () => {
                       id="source-no"
                       placeholder="S-1002"
                       className="w-full"
+                      value={sourceNo}
+                      onChange={(e) => setSourceNo(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -437,6 +623,8 @@ const ResidualAnalysisPage = () => {
                       id="source-name"
                       placeholder="GreenTech Machinery"
                       className="w-full"
+                      value={sourceName}
+                      onChange={(e) => setSourceName(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -451,6 +639,8 @@ const ResidualAnalysisPage = () => {
                     <select
                       id="source-type"
                       className="w-full"
+                      value={sourceType}
+                      onChange={(e) => setSourceType(e.target.value)}
                       style={inputStyles}
                     >
                       <option value="">Select Source</option>
@@ -474,6 +664,8 @@ const ResidualAnalysisPage = () => {
                       id="contact"
                       placeholder="Blair Nolan"
                       className="w-full"
+                      value={sourceContact}
+                      onChange={(e) => setSourceContact(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -490,6 +682,8 @@ const ResidualAnalysisPage = () => {
                       id="title"
                       placeholder="Sales Manager"
                       className="w-full"
+                      value={sourceTitle}
+                      onChange={(e) => setSourceTitle(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -586,6 +780,8 @@ const ResidualAnalysisPage = () => {
                       id="phone-1"
                       placeholder="+(123) 456-7890"
                       className="w-full"
+                      value={sourcePhone1}
+                      onChange={(e) => setSourcePhone1(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -602,6 +798,8 @@ const ResidualAnalysisPage = () => {
                       id="phone-2"
                       placeholder="+(123) 555-6789"
                       className="w-full"
+                      value={sourcePhone2}
+                      onChange={(e) => setSourcePhone2(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -620,6 +818,8 @@ const ResidualAnalysisPage = () => {
                       id="email"
                       placeholder="b.nolan@greentechmachinery.com"
                       className="w-full"
+                      value={sourceEmail}
+                      onChange={(e) => setSourceEmail(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -636,6 +836,8 @@ const ResidualAnalysisPage = () => {
                       id="website"
                       placeholder="www.greentechmachinery.com"
                       className="w-full"
+                      value={sourceWebsite}
+                      onChange={(e) => setSourceWebsite(e.target.value)}
                       style={inputStyles}
                     />
                   </div>
@@ -678,7 +880,7 @@ const ResidualAnalysisPage = () => {
                   >
                     Industry<span style={{ color: "red" }}>*</span>
                   </label>
-                  <select id="industry" className="w-full" style={inputStyles}>
+                  <select id="industry" className="w-full" style={inputStyles} value={industry} onChange={(e) => setIndustry(e.target.value)}>
                     <option value="">Select Industry</option>
                     <option value="construction">Construction</option>
                     <option value="mining">Mining</option>
@@ -699,6 +901,8 @@ const ResidualAnalysisPage = () => {
                     id="asset-class"
                     placeholder="Enter asset class"
                     className="w-full"
+                    value={assetClass}
+                    onChange={(e) => setAssetClass(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -715,6 +919,8 @@ const ResidualAnalysisPage = () => {
                     id="make"
                     placeholder="Enter make"
                     className="w-full"
+                    value={make}
+                    onChange={(e) => setMake(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -731,6 +937,8 @@ const ResidualAnalysisPage = () => {
                     id="model"
                     placeholder="Enter model"
                     className="w-full"
+                    value={model}
+                    onChange={(e) => setModel(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -747,6 +955,8 @@ const ResidualAnalysisPage = () => {
                     id="year"
                     placeholder="Enter year"
                     className="w-full"
+                    value={year}
+                    onChange={(e) => setYear(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -764,6 +974,8 @@ const ResidualAnalysisPage = () => {
                     id="current-meter-reading"
                     placeholder="Number type"
                     className="w-full"
+                    value={currentMeterReading}
+                    onChange={(e) => setCurrentMeterReading(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -778,6 +990,8 @@ const ResidualAnalysisPage = () => {
                   <select
                     id="meter-type"
                     className="w-full"
+                    value={meterType}
+                    onChange={(e) => setMeterType(e.target.value)}
                     style={inputStyles}
                   >
                     <option value="">select meter type</option>
@@ -798,8 +1012,9 @@ const ResidualAnalysisPage = () => {
                   </label>
                   <select
                     id="environment-ranking"
-                    defaultValue="New"
                     className="w-full"
+                    value={environmentRanking}
+                    onChange={(e) => setEnvironmentRanking(e.target.value)}
                     style={inputStyles}
                   >
                     <option value="New">New</option>
@@ -851,6 +1066,8 @@ const ResidualAnalysisPage = () => {
                     id="subject-price"
                     placeholder="Enter subject price"
                     className="w-full"
+                    value={subjectPrice}
+                    onChange={(e) => setSubjectPrice(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -867,6 +1084,8 @@ const ResidualAnalysisPage = () => {
                     id="concession"
                     placeholder="Enter concession"
                     className="w-full"
+                    value={concession}
+                    onChange={(e) => setConcession(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -883,6 +1102,8 @@ const ResidualAnalysisPage = () => {
                     id="extended-warranty"
                     placeholder="Enter extended warranty"
                     className="w-full"
+                    value={extendedWarranty}
+                    onChange={(e) => setExtendedWarranty(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -899,6 +1120,8 @@ const ResidualAnalysisPage = () => {
                     id="maintenance-pms"
                     placeholder="Enter maintenance/PMs"
                     className="w-full"
+                    value={maintenancePMs}
+                    onChange={(e) => setMaintenancePMs(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -945,6 +1168,8 @@ const ResidualAnalysisPage = () => {
                     id="current-meter"
                     placeholder="Enter current meter"
                     className="w-full"
+                    value={currentMeter}
+                    onChange={(e) => setCurrentMeter(e.target.value)}
                     style={inputStyles}
                   />
                 </div>
@@ -961,11 +1186,12 @@ const ResidualAnalysisPage = () => {
                   >
                     Structure<span style={{ color: "red" }}>*</span>
                   </label>
-                  <select id="structure" className="w-full" style={inputStyles}>
+                  <select id="structure" className="w-full" style={inputStyles} value={structure} onChange={(e) => setStructure(e.target.value)}>
                     <option value="">Select</option>
                     <option value="operating">Operating</option>
                     <option value="capital">Capital</option>
                     <option value="sale-leaseback">Sale Leaseback</option>
+                    <option value="Bullet">Bullet</option>
                   </select>
                 </div>
                 <div>
@@ -980,6 +1206,8 @@ const ResidualAnalysisPage = () => {
                     id="application"
                     className="w-full"
                     style={inputStyles}
+                    value={application}
+                    onChange={(e) => setApplication(e.target.value)}
                   >
                     <option value="">Select</option>
                     <option value="construction">Construction</option>
@@ -1000,6 +1228,8 @@ const ResidualAnalysisPage = () => {
                     id="environment"
                     className="w-full"
                     style={inputStyles}
+                    value={environment}
+                    onChange={(e) => setEnvironment(e.target.value)}
                   >
                     <option value="">Select</option>
                     <option value="indoor">Indoor</option>
