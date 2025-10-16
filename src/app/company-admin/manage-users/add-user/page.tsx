@@ -298,7 +298,6 @@ export default function AddUserPage() {
                   className="block w-full border border-gray-300 text-gray-700 py-2 px-3 rounded focus:outline-none focus:border-gray-500"
                 >
                   <option value="">Select One</option>
-                  <option value="Admin">Admin</option>
                   <option value="User">User</option>
                 </select>
               </div>
