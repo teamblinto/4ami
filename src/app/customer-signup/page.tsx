@@ -1,360 +1,262 @@
 "use client";
 
 import Image from "next/image";
-import { useState, useEffect, Suspense } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-function CreateUserAccountContent() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    confirmPassword: "",
-    agreeTerms: false,
-  });
-  const [userData, setUserData] = useState({
-    firstName: "",
-    lastName: "",
-    phoneNumber: "",
-    companyName: "",
-    role: "",
-    username: "",
-    invitationCode: "",
-    sendNotification: false,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState("");
+function ClientContent() {
+  const [email, setEmail] = useState("");
+  const [invitationCode, setInvitationCode] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isAutoPopulated, setIsAutoPopulated] = useState(false);
 
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
-    // Get data from URL parameters
-    const firstName = searchParams.get("firstName") || "";
-    const lastName = searchParams.get("lastName") || "";
-    const email = searchParams.get("email") || "";
-    const phoneNumber = searchParams.get("phoneNumber") || "";
-    const companyName = searchParams.get("companyName") || "";
-    const role = searchParams.get("role") || "";
-    const username = searchParams.get("username") || "";
-    const invitationCode = searchParams.get("invitationCode") || "";
-    const sendNotification = searchParams.get("sendNotification") === "true";
+    // Get email and code from URL parameters
+    const emailParam = searchParams.get("email");
+    const codeParam = searchParams.get("code");
+    const token = searchParams.get("token");
 
-    setUserData({
-      firstName,
-      lastName,
-      phoneNumber,
-      companyName,
-      role,
-      username,
-      invitationCode,
-      sendNotification,
-    });
+    if (emailParam) setEmail(emailParam);
+    if (codeParam) setInvitationCode(codeParam);
 
-    setFormData(prev => ({
-      ...prev,
-      email: email
-    }));
+    // If token is present, fetch verification data
+    if (token) {
+      fetchVerificationData(token);
+    }
   }, [searchParams]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value, type } = e.target;
-    const checked = (e.target as HTMLInputElement).checked;
-
-    setFormData(prev => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value
-    }));
-
-    // Check password strength
-    if (name === "password") {
-      checkPasswordStrength(value);
-    }
-  };
-
-  const checkPasswordStrength = (password: string) => {
-    if (password.length === 0) {
-      setPasswordStrength("");
-      return;
-    }
-
-    let strength = 0;
-    if (password.length >= 8) strength++;
-    if (/[a-z]/.test(password)) strength++;
-    if (/[A-Z]/.test(password)) strength++;
-    if (/[0-9]/.test(password)) strength++;
-    if (/[^A-Za-z0-9]/.test(password)) strength++;
-
-    if (strength < 3) {
-      setPasswordStrength("Weak");
-    } else if (strength < 5) {
-      setPasswordStrength("Medium");
-    } else {
-      setPasswordStrength("Strong");
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
+  const fetchVerificationData = async (token: string) => {
+    setIsVerifying(true);
     try {
-      // Validate form data
-      if (!formData.email.trim()) {
-        throw new Error('Email is required');
-      }
-      if (!formData.password.trim()) {
-        throw new Error('Password is required');
-      }
-      if (!formData.confirmPassword.trim()) {
-        throw new Error('Please confirm your password');
-      }
-      if (formData.password !== formData.confirmPassword) {
-        throw new Error('Passwords do not match');
-      }
-      if (!formData.agreeTerms) {
-        throw new Error('Please agree to the terms and conditions');
+      console.log('Fetching verification data for token:', token);
+      const response = await fetch(`/api/auth/verify-email?token=${token}`);
+      
+      console.log('Response status:', response.status);
+      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+
+      // Check if response is JSON
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        await response.text();
+        toast.error('Invalid response from verification service');
+        return;
       }
 
-      // Email validation
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email.trim())) {
-        throw new Error('Please enter a valid email address');
-      }
+      const data = await response.json();
+      console.log('Response data:', data);
 
-      // Prepare complete user data for API
-      const completeUserData = {
-        ...userData,
-        email: formData.email.trim(),
-        password: formData.password,
-        createdAt: new Date().toISOString(),
-        status: 'active'
-      };
+      if (response.ok) {
+        // Auto-populate fields based on the response data
+        if (data.user) {
+          // Map email from user object
+          if (data.user.email) {
+            setEmail(data.user.email);
+          }
+          
+          // Map invitation code from emailVerificationToken
+          if (data.user.emailVerificationToken) {
+            setInvitationCode(data.user.emailVerificationToken);
+          }
+        }
 
-      console.log('Creating user account with data:', completeUserData);
-
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      toast.success('User account created successfully!');
-      
-      // Redirect to thank you page with email parameter
-      router.push(`/thank-you?email=${encodeURIComponent(formData.email)}`);
-    } catch (error: unknown) {
-      console.error('Error creating account:', error);
-      
-      let errorMessage = 'Failed to create account. ';
-      
-      if (error instanceof Error) {
-        errorMessage += error.message;
+        setIsAutoPopulated(true);
+        toast.success('Email verification data loaded successfully!');
       } else {
-        errorMessage += 'Please check your internet connection and try again.';
+        // Handle different error cases
+        if (response.status === 400) {
+          toast.error(data.message || 'Invalid verification token');
+        } else if (response.status === 404) {
+          toast.error('Verification token not found');
+        } else {
+          toast.error(data.message || `Failed to verify email (Status: ${response.status})`);
+        }
       }
-      
-      toast.error(errorMessage);
+    } catch (error) {
+      console.error('Error fetching verification data:', error);
+      if (error instanceof SyntaxError) {
+        toast.error('Invalid response format from server');
+      } else {
+        toast.error('Failed to load verification data. Please check your connection.');
+      }
     } finally {
-      setIsLoading(false);
+      setIsVerifying(false);
     }
-  };
-
-  const handleBack = () => {
-    router.back();
   };
 
   return (
-    <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
+    <div className="min-h-screen bg-[#FBFBFB]">
+      {/* Header with Logo */}
       <header className="px-12 py-4">
         <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
       </header>
-      <main className="flex-grow flex items-center mt-4 justify-center">
-        <div
-          className="rounded-lg"
-          style={{ width: "1210px", maxWidth: "1210px" }}
-        >
-          <div className="flex gap-[64px] p-6 bg-white text-black min-h-[600px]">
-            {/* Form Section */}
-            <div className="flex-1 flex flex-col">
-              <h1 className="text-3xl font-bold text-black mb-2">
+
+      {/* Main Content */}
+      <div className="">
+        <main className="flex justify-center w-6xl mx-auto bg-[#FFFFFF] p-4 gap-[64px] ">
+          {/* Left Side - Form */}
+          <div className="bg-white align-top flex flex-col">
+            <div className="max-w-md mx-auto w-full mt-20">
+              <h1 className="text-3xl font-bold text-black mb-4">
                 Create Your Account
               </h1>
-              <p className="text-gray-600 mb-6">
+              <p className="text-black text-base mb-8 leading-relaxed">
                 Please provide your details below to set up your new account.
                 This will allow you to access all services and manage your
-                profile securely.
+                profile securely
               </p>
 
-              {/* Step Progress */}
-              <div className="mb-8">
-                <div className="flex justify-end mb-1">
-                  <p className="text-sm font-medium text-gray-600">
-                    <span className="text-red-500">Step 2</span> of 2
-                  </p>
+              {/* Loading indicator for verification */}
+              {isVerifying && (
+                <div className="mb-6 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <div className="flex items-center">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
+                    <span className="text-blue-700 text-sm">Loading verification data...</span>
+                  </div>
                 </div>
-                <div className="relative h-2 bg-gray-200 rounded-full">
-                  <div className="absolute top-0 left-0 h-2 bg-red-500 rounded-full w-full"></div>
+              )}
+
+              {/* Progress Bar */}
+              <div className="mb-8">
+                <div className="flex justify-end mb-2">
+                  <span className="text-sm text-gray-500 font-medium">
+                  <span className="text-[#ED272C]" >Step 1</span> of 3
+                  </span>
+                </div>
+                <div className="h-2 bg-gray-200 rounded-full">
+                  <div className="h-2 bg-red-500 rounded-full w-1/3"></div>
                 </div>
               </div>
 
-              <form onSubmit={handleSubmit}>
-                <div className="space-y-6">
-                  {/* Email */}
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded-md bg-white"
-                    />
-                  </div>
-
-                  {/* Password */}
-                  <div>
-                    <label
-                      htmlFor="password"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      id="password"
-                      name="password"
-                      value={formData.password}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded-md bg-white"
-                    />
-                    {passwordStrength && (
-                      <p className="text-sm text-red-500 mt-1">
-                        Password strength: {passwordStrength}
-                      </p>
-                    )}
-                  </div>
-
-                  {/* Confirm Password */}
-                  <div>
-                    <label
-                      htmlFor="confirmPassword"
-                      className="block text-sm font-medium text-gray-700 mb-1"
-                    >
-                      Confirm Password
-                    </label>
-                    <input
-                      type="password"
-                      id="confirmPassword"
-                      name="confirmPassword"
-                      value={formData.confirmPassword}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full p-2 border border-gray-300 rounded-md bg-white"
-                    />
-                  </div>
-                </div>
-
-                {/* Terms and Conditions */}
-                <div className="mt-6 mb-6">
-                  <label className="flex items-start">
-                    <input
-                      type="checkbox"
-                      name="agreeTerms"
-                      checked={formData.agreeTerms}
-                      onChange={handleInputChange}
-                      required
-                      className="mt-1 mr-2 h-4 w-4"
-                    />
-                    <span className="text-sm text-gray-600">
-                      I acknowledge that I have read and agree to the{" "}
-                      <a href="#" className="text-red-500 underline">
-                        Terms of Use
-                      </a>
-                      ,{" "}
-                      <a href="#" className="text-red-500 underline">
-                        Privacy Policy
-                      </a>
-                      ,{" "}
-                      <a href="#" className="text-red-500 underline">
-                        Cookie Policy
-                      </a>{" "}
-                      and{" "}
-                      <a href="#" className="text-red-500 underline">
-                        Anti Bribery Policy
-                      </a>
-                    </span>
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                  if (!invitationCode.trim() || !email.trim()) {
+                    alert(
+                      "Please fill in both invitation code and email address"
+                    );
+                    return;
+                  }
+                  
+                  // Get token from URL to pass to next page
+                  const token = searchParams.get("token");
+                  
+                  // Build URL with all parameters
+                  const params = new URLSearchParams({
+                    email: email,
+                    code: invitationCode
+                  });
+                  
+                  // Add token if it exists
+                  if (token) {
+                    params.append('token', token);
+                  }
+                  
+                  router.push(`/create-account?${params.toString()}`);
+                }}
+              >
+                {/* Invitation Code */}
+                <div className="mb-6">
+                  <label
+                    htmlFor="invitationCode"
+                    className="block text-black text-sm font-medium mb-2"
+                  >
+                    Invitation Code
                   </label>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex items-center gap-4">
-                  <button
-                    type="button"
-                    onClick={handleBack}
-                    className="py-2 px-6 border border-gray-300 rounded-md text-gray-700 font-semibold cursor-pointer"
-                  >
-                    Back
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isLoading}
-                    className={`font-semibold py-2 px-6 rounded-md ${
-                      isLoading
-                        ? 'bg-gray-400 cursor-not-allowed text-white'
-                        : 'bg-red-500 text-white cursor-pointer'
+                  <input
+                    type="text"
+                    id="invitationCode"
+                    name="invitationCode"
+                    value={invitationCode}
+                    onChange={(e) => setInvitationCode(e.target.value)}
+                    readOnly={isAutoPopulated}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-1 focus:border-transparent ${
+                      isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                     }`}
-                  >
-                    {isLoading ? 'Creating...' : 'Sign Up'}
-                  </button>
+                    placeholder=""
+                  />
+                  {isAutoPopulated && (
+                    <p className="text-xs text-gray-500 mt-1">Auto-populated from verification link</p>
+                  )}
                 </div>
-              </form>
-            </div>
 
-            {/* Image Section */}
-            <div className="flex flex-col items-center justify-center">
-              <Image
-                src="/banner.svg"
-                alt="Dashboard Illustration"
-                width={400}
-                height={200}
-                className="w-full h-auto"
-              />
+                {/* Email */}
+                <div className="mb-8">
+                  <label
+                    htmlFor="email"
+                    className="block text-black text-sm font-medium mb-2"
+                  >
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    readOnly={isAutoPopulated}
+                    className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-1 focus:border-transparent ${
+                      isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                    }`}
+                    placeholder=""
+                  />
+                  {isAutoPopulated && (
+                    <p className="text-xs text-gray-500 mt-1">Auto-populated from verification link</p>
+                  )}
+                </div>
+
+                {/* Next Button */}
+                <button
+                  type="submit"
+                  disabled={isVerifying}
+                  className={`font-bold py-3 px-6 rounded-md focus:outline-none focus:ring-1 transition-colors ${
+                    isVerifying
+                      ? 'bg-gray-400 cursor-not-allowed text-white'
+                      : 'bg-red-500 hover:bg-red-600 text-white cursor-pointer'
+                  }`}
+                >
+                  {isVerifying ? 'Loading...' : 'Next'}
+                </button>
+              </form>
             </div>
           </div>
 
-          {/* Footer */}
-          <footer className="p-6">
-            <div className="flex justify-end space-x-6 text-sm text-gray-500">
-              <a href="#" className="hover:text-gray-700">
-                Terms of Use
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Privacy Policy
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Cookie Policy
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Anti Bribery Policy
-              </a>
+          {/* Right Side - Illustration */}
+          <div className="flex flex-col items-center justify-between">
+            <div className="flex-grow flex items-center">
+              <Image src="/Illustration Banner.svg" alt="Illustration" width={500} height={500} />
             </div>
-          </footer>
-        </div>
-      </main>
+            {/* Footer */}
+            <footer className="p-6">
+              <div className="flex justify-center space-x-6 text-sm text-gray-500">
+                <a href="#" className="hover:text-gray-700">
+                  Terms of Use
+                </a>
+                <a href="#" className="hover:text-gray-700">
+                  Privacy Policy
+                </a>
+                <a href="#" className="hover:text-gray-700">
+                  Cookie Policy
+                </a>
+                <a href="#" className="hover:text-gray-700">
+                  Anti Bribery Policy
+                </a>
+              </div>
+            </footer>
+          </div>
+        </main>
+      </div>
     </div>
   );
 }
 
-export default function CreateUserAccountPage() {
+export default function CustomerSignupPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <CreateUserAccountContent />
+    <Suspense fallback={<div>Loading customer signup form...</div>}>
+      <ClientContent />
     </Suspense>
   );
 }
