@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
     console.log('Company registration data:', body);
     
     // Forward the request to the external API
-    const response = await fetch(getApiUrl('/api/v1/companies/register'), {
+    const response = await fetch(getApiUrl('/companies/register'), {
       method: 'POST',
       headers: getAuthHeaders(authHeader || undefined),
       body: JSON.stringify(body),

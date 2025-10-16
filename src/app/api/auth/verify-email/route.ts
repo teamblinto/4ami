@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('Fetching verification data for token:', token);
-    const externalUrl = `${getApiUrl('/api/v1/auth/verify-email')}/${token}`;
+    const externalUrl = `${getApiUrl('/auth/verify-email')}/${token}`;
     console.log('External API URL:', externalUrl);
 
     // Forward the request to the external API

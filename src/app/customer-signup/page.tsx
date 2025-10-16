@@ -9,7 +9,8 @@ function ClientContent() {
   const [email, setEmail] = useState("");
   const [invitationCode, setInvitationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [isAutoPopulated, setIsAutoPopulated] = useState(false);
+  const [isCodeAutoPopulated, setIsCodeAutoPopulated] = useState(false);
+  const [isEmailAutoPopulated, setIsEmailAutoPopulated] = useState(false);
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -20,13 +21,30 @@ function ClientContent() {
     const codeParam = searchParams.get("code");
     const token = searchParams.get("token");
 
-    if (emailParam) setEmail(emailParam);
-    if (codeParam) setInvitationCode(codeParam);
-
-    // If token is present, fetch verification data
-    if (token) {
-      fetchVerificationData(token);
+    if (emailParam) {
+      setEmail(emailParam);
+      setIsEmailAutoPopulated(true);
     }
+    if (codeParam) {
+      setInvitationCode(codeParam);
+      setIsCodeAutoPopulated(true);
+    }
+
+    // If only token is present (no code), use token as invitation code and skip verification
+    if (!codeParam && token) {
+      setInvitationCode(token);
+      setIsCodeAutoPopulated(true);
+      return;
+    }
+
+    // If token is present and not the same as invitation code, verify
+    if (token && token !== codeParam) {
+      fetchVerificationData(token);
+      return;
+    }
+
+    // Auto-populate when email/code exist and no verification needed
+    // Nothing else to do
   }, [searchParams]);
 
   const fetchVerificationData = async (token: string) => {
@@ -55,15 +73,14 @@ function ClientContent() {
           // Map email from user object
           if (data.user.email) {
             setEmail(data.user.email);
+            setIsEmailAutoPopulated(true);
           }
-          
           // Map invitation code from emailVerificationToken
           if (data.user.emailVerificationToken) {
             setInvitationCode(data.user.emailVerificationToken);
+            setIsCodeAutoPopulated(true);
           }
         }
-
-        setIsAutoPopulated(true);
         toast.success('Email verification data loaded successfully!');
       } else {
         // Handle different error cases
@@ -172,13 +189,13 @@ function ClientContent() {
                     name="invitationCode"
                     value={invitationCode}
                     onChange={(e) => setInvitationCode(e.target.value)}
-                    readOnly={isAutoPopulated}
+                    readOnly={isCodeAutoPopulated}
                     className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-1 focus:border-transparent ${
-                      isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                      isCodeAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                     }`}
                     placeholder=""
                   />
-                  {isAutoPopulated && (
+                  {isCodeAutoPopulated && (
                     <p className="text-xs text-gray-500 mt-1">Auto-populated from verification link</p>
                   )}
                 </div>
@@ -197,13 +214,13 @@ function ClientContent() {
                     name="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    readOnly={isAutoPopulated}
+                    readOnly={isEmailAutoPopulated}
                     className={`w-full px-3 py-2 border border-gray-300 rounded-md text-black focus:outline-none focus:ring-1 focus:border-transparent ${
-                      isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
+                      isEmailAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                     }`}
                     placeholder=""
                   />
-                  {isAutoPopulated && (
+                  {isEmailAutoPopulated && (
                     <p className="text-xs text-gray-500 mt-1">Auto-populated from verification link</p>
                   )}
                 </div>

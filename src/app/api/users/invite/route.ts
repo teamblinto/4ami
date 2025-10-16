@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
     console.log('Forwarding invitation request with auth header:', authHeader ? 'Present' : 'Not present');
     
     // Forward the request to the external API
-    const response = await fetch(getApiUrl('/api/v1/users/invite'), {
+    const response = await fetch(getApiUrl('/users/invite'), {
       method: 'POST',
       headers: getAuthHeaders(authHeader || undefined),
       body: JSON.stringify(body),
