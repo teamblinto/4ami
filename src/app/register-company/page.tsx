@@ -6,6 +6,7 @@ import Image from 'next/image';
 
 export default function RegisterCompany() {
   const router = useRouter();
+  const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     companyName: '',
     companyEmail: '',
@@ -115,7 +116,11 @@ export default function RegisterCompany() {
       }
 
       console.log('Company registration success:', result);
-      router.push('/login');
+      try {
+        localStorage.setItem('companyRegistered', 'true');
+      } catch {}
+      // Show success confirmation UI; user can click Continue to go to dashboard
+      setIsSuccess(true);
     } catch (error) {
       console.error('Registration error:', error);
       // You can add toast notification here if needed
@@ -134,6 +139,27 @@ export default function RegisterCompany() {
 
       {/* Main Content */}
       <main className="flex-grow flex items-center justify-center p-4">
+        {isSuccess ? (
+          <div className="max-w-[803px] w-full">
+            <div className="bg-white rounded-lg p-10 text-center shadow-sm">
+              <div className="flex justify-center mb-4">
+                <div className="w-12 h-12 bg-red-600 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <h2 className="text-xl font-semibold text-[#343A40] mb-1">Company Registered Successfully!</h2>
+              <p className="text-sm text-[#6C757D] mb-6">Your company has been registered successfully.</p>
+              <button
+                onClick={() => router.push('/company-admin')}
+                className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 cursor-pointer"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        ) : (
         <div className="max-w-[803px] w-full">
           {/* Main Content Card */}
           <div className=" ">
@@ -655,6 +681,7 @@ export default function RegisterCompany() {
             </form>
           </div>
         </div>
+        )}
       </main>
 
       {/* Cancel Confirmation Modal */}
