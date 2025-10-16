@@ -43,7 +43,7 @@ yarn dev
 
 - `src/app/api/auth/signin/route.ts`
 - `src/app/api/auth/customer-admin-signup/route.ts`
-- `src/app/api/auth/verify-email/route.ts`
+- `src/app/api/verify-email/route.ts`
 - `src/app/api/users/invite/route.ts`
 
 ## Benefits
