@@ -1,21 +1,21 @@
 // Environment configuration
 export const config = {
   // Backend API Base URL
-  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://167.71.201.234',
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'http://167.71.201.234/api/v1',
   
   
   // API Endpoints
   endpoints: {
     auth: {
-      signin: '/api/v1/auth/signin',
-      customerAdminSignup: '/api/v1/auth/customer-admin-signup',
-      verifyEmail: '/api/v1/auth/verify-email',
+      signin: '/auth/signin',
+      customerAdminSignup: '/auth/customer-admin-signup',
+      verifyEmail: '/auth/verify-email',
     },
     users: {
-      invite: '/api/v1/users/invite',
+      invite: '/users/invite',
     },
     companies: {
-      register: '/api/v1/companies/register',
+      register: '/companies/register',
     }
   }
 };

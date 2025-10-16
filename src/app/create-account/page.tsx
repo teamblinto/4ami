@@ -17,7 +17,7 @@ function ClientContent() {
     company: "",
     phone: "",
     source: "",
-    role: "",
+    role: "Customer Admin", // default selection for role
     agreeTerms: false,
   });
 
@@ -32,8 +32,21 @@ function ClientContent() {
     if (emailParam) setEmail(emailParam);
     if (codeParam) setInvitationCode(codeParam);
 
-    // If token is present, fetch verification data
-    if (token) {
+    // If only token is present (no code), treat token as invitation code and skip verification
+    if (!codeParam && token) {
+      setInvitationCode(token);
+      setIsAutoPopulated(true);
+      return;
+    }
+
+    // If token equals the provided code, skip verification
+    if (token && codeParam && token === codeParam) {
+      setIsAutoPopulated(true);
+      return;
+    }
+
+    // If token is present and different from the code, verify
+    if (token && token !== codeParam) {
       fetchVerificationData(token);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -48,6 +61,17 @@ function ClientContent() {
       'APPRAISER': 'Appraiser'
     };
     return roleMapping[apiRole] || '';
+  };
+
+  // Function to map form option values back to API role enums
+  const mapFormRoleToApiRole = (formRole: string): string => {
+    const reverseMapping: Record<string, string> = {
+      'Admin': 'ADMIN',
+      'Customer Admin': 'CUSTOMER_ADMIN',
+      'Company User': 'CUSTOMER_USER',
+      'Appraiser': 'APPRAISER'
+    };
+    return reverseMapping[formRole] || '';
   };
 
   const fetchVerificationData = async (token: string) => {
@@ -153,10 +177,16 @@ function ClientContent() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const apiRole = mapFormRoleToApiRole(formData.role);
+    if (!apiRole) {
+      toast.error('Please select a valid role');
+      return;
+    }
     console.log("Account creation data:", {
       ...formData,
       email,
       invitationCode,
+      role: apiRole,
     });
     router.push(
       `/signup?email=${encodeURIComponent(
@@ -169,7 +199,7 @@ function ClientContent() {
         formData.title
       )}&company=${encodeURIComponent(formData.company)}&phone=${encodeURIComponent(
         formData.phone
-      )}&source=${encodeURIComponent(formData.source)}&role=${encodeURIComponent(formData.role)}`
+      )}&source=${encodeURIComponent(formData.source)}&role=${encodeURIComponent(apiRole)}`
     );
   };
 

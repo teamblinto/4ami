@@ -8,7 +8,7 @@ export async function POST(request: NextRequest) {
     console.log('Customer admin signup request:', body);
 
     // Forward the request to the external API
-    const response = await fetch(getApiUrl('/api/v1/auth/customer-admin-signup'), {
+    const response = await fetch(getApiUrl('/auth/customer-admin-signup'), {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(body),

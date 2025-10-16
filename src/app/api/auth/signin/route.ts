@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     }
 
     // If not static credentials, try the original API
-    const response = await fetch(getApiUrl('/api/v1/auth/signin'), {
+    const response = await fetch(getApiUrl('/auth/signin'), {
       method: 'POST',
       headers: getAuthHeaders(),
       body: JSON.stringify(body),

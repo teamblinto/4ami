@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const authHeader = request.headers.get('authorization');
 
-    const response = await fetch(getApiUrl('/api/v1/users'), {
+    const response = await fetch(getApiUrl('/users'), {
       method: 'POST',
       headers: getAuthHeaders(authHeader || undefined),
       body: JSON.stringify(body),
