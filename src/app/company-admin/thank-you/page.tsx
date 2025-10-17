@@ -7,7 +7,7 @@ const ThankYouPage = () => {
 
   const handleViewStatus = () => {
     // Navigate to projects page
-    router.push('/company-admin/projects');
+    router.push('/company-admin/manage-projects');
   };
 
   return (
