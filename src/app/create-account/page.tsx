@@ -17,7 +17,7 @@ function ClientContent() {
     company: "",
     phone: "",
     source: "",
-    role: "Company User",
+    role: "",
     agreeTerms: false,
   });
   const [countryCode, setCountryCode] = useState("+1");
