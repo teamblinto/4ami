@@ -26,7 +26,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     title: '',
     company: '',
     email: '',
-    role: '',
+    role: 'Customer Admin',
     source: ''
   });
 

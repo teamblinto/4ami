@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
+// import { ClientPageRoot } from "next/dist/client/components/client-page";
 
 function ClientContent() {
   const [email, setEmail] = useState("");
@@ -17,12 +18,14 @@ function ClientContent() {
     company: "",
     phone: "",
     source: "",
-    role: "Customer Admin", // default selection for role
+    role: "",
     agreeTerms: false,
   });
 
   const searchParams = useSearchParams();
   const router = useRouter();
+
+  
 
   useEffect(() => {
     const emailParam = searchParams.get("email");
@@ -407,16 +410,13 @@ function ClientContent() {
                         value={formData.role}
                         onChange={handleInputChange}
                         required
-                        disabled={isAutoPopulated}
-                        className={`w-full appearance-none border border-gray-300 text-gray-700 py-2 px-3 rounded-md ${
-                          isAutoPopulated ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
-                        }`}
+                        className="w-full appearance-none border border-gray-300 text-gray-700 py-2 px-3 rounded-md bg-white"
                       >
                         <option value="">Select One</option>
-                        <option value="Admin">Admin</option>
+                        {/* <option value="Admin">Admin</option> */}
                         <option value="Customer Admin">Customer Admin</option>
                         <option value="Company User">Company User</option>
-                        <option value="Appraiser">Appraiser</option>
+                        {/* <option value="Appraiser">Appraiser</option> */}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg
@@ -429,7 +429,7 @@ function ClientContent() {
                       </div>
                     </div>
                     {isAutoPopulated && (
-                      <p className="text-xs text-gray-500 mt-1">Auto-populated from verification</p>
+                      <p className="text-xs text-gray-500 mt-1">Pre-filled from verification (editable)</p>
                     )}
                   </div>
                 </div>
