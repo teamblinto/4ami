@@ -4,7 +4,6 @@ import Image from "next/image";
 import { Suspense, useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-// import { ClientPageRoot } from "next/dist/client/components/client-page";
 
 function ClientContent() {
   const [email, setEmail] = useState("");
@@ -18,9 +17,10 @@ function ClientContent() {
     company: "",
     phone: "",
     source: "",
-    role: "",
+    role: "Company User",
     agreeTerms: false,
   });
+  const [countryCode, setCountryCode] = useState("+1");
 
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -30,9 +30,32 @@ function ClientContent() {
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
     const token = searchParams.get("token");
+    const roleParam = searchParams.get("role");
+
+    // Console log all URL parameters (only in development)
+    if (process.env.NODE_ENV === 'development') {
+      console.log("=== URL Parameters ===");
+      console.log("email:", emailParam);
+      console.log("code:", codeParam);
+      console.log("token:", token);
+      console.log("role:", roleParam);
+      console.log("All search params:", Object.fromEntries(searchParams.entries()));
+      console.log("=====================");
+    }
 
     if (emailParam) setEmail(emailParam);
     if (codeParam) setInvitationCode(codeParam);
+    
+    // Set role from URL parameter if provided, otherwise keep default
+    if (roleParam) {
+      const mappedRole = mapApiRoleToFormRole(roleParam);
+      if (mappedRole) {
+        if (process.env.NODE_ENV === 'development') {
+          console.log("Setting role from URL param:", roleParam, "->", mappedRole);
+        }
+        setFormData(prev => ({ ...prev, role: mappedRole }));
+      }
+    }
 
     // If only token is present (no code), treat token as invitation code and skip verification
     if (!codeParam && token) {
@@ -79,45 +102,61 @@ function ClientContent() {
   const fetchVerificationData = async (token: string) => {
     setIsVerifying(true);
     try {
-      console.log('Fetching verification data for token:', token);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Fetching verification data for token:', token);
+      }
       const response = await fetch(`/api/auth/verify-email?token=${token}`);
       
-      console.log(response)
-      console.log('Response status:', response.status);
-      console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      if (process.env.NODE_ENV === 'development') {
+        console.log(response);
+        console.log('Response status:', response.status);
+        console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+      }
 
       // Check if response is JSON
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         const textResponse = await response.text();
-        console.log('Non-JSON response:', textResponse);
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Non-JSON response:', textResponse);
+        }
         toast.error('Invalid response from verification service');
         return;
       }
 
       const data = await response.json();
-      console.log('Response data:', data);
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Response data:', data);
+      }
 
       if (response.ok) {
         // Auto-populate fields based on the response data
         if (data.user) {
-          console.log('Auto-populating fields with user data:', data.user);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Auto-populating fields with user data:', data.user);
+          }
           
           // Map email from user object
           if (data.user.email) {
             setEmail(data.user.email);
-            console.log('Set email:', data.user.email);
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Set email:', data.user.email);
+            }
           }
           
           // Map invitation code from emailVerificationToken
           if (data.user.emailVerificationToken) {
             setInvitationCode(data.user.emailVerificationToken);
-            console.log('Set invitation code:', data.user.emailVerificationToken);
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Set invitation code:', data.user.emailVerificationToken);
+            }
           }
 
           // Map role from API to form option value
           const mappedRole = mapApiRoleToFormRole(data.user.role);
-          console.log('API role:', data.user.role, 'Mapped to form role:', mappedRole);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('API role:', data.user.role, 'Mapped to form role:', mappedRole);
+          }
 
           // Auto-populate form fields from user data
           const newFormData = {
@@ -131,7 +170,9 @@ function ClientContent() {
             agreeTerms: false,
           };
           
-          console.log('Setting form data:', newFormData);
+          if (process.env.NODE_ENV === 'development') {
+            console.log('Setting form data:', newFormData);
+          }
           setFormData(newFormData);
         }
 
@@ -184,12 +225,15 @@ function ClientContent() {
       toast.error('Please select a valid role');
       return;
     }
-    console.log("Account creation data:", {
-      ...formData,
-      email,
-      invitationCode,
-      role: apiRole,
-    });
+    if (process.env.NODE_ENV === 'development') {
+      console.log("Account creation data:", {
+        ...formData,
+        email,
+        invitationCode,
+        role: apiRole,
+      });
+    }
+    const fullPhoneNumber = `${countryCode}${formData.phone}`;
     router.push(
       `/signup?email=${encodeURIComponent(
         email
@@ -200,7 +244,7 @@ function ClientContent() {
       )}&lastName=${encodeURIComponent(formData.lastName)}&title=${encodeURIComponent(
         formData.title
       )}&company=${encodeURIComponent(formData.company)}&phone=${encodeURIComponent(
-        formData.phone
+        fullPhoneNumber
       )}&source=${encodeURIComponent(formData.source)}&role=${encodeURIComponent(apiRole)}`
     );
   };
@@ -343,8 +387,12 @@ function ClientContent() {
                       Phone
                     </label>
                     <div className="flex">
-                      <div className="">
-                        <select className="appearance-none bg-white border border-gray-300 rounded-l-md p-2 pr-8 text-gray-700">
+                      <div className="relative">
+                        <select 
+                          value={countryCode}
+                          onChange={(e) => setCountryCode(e.target.value)}
+                          className="appearance-none bg-white border border-gray-300 rounded-l-md p-2 pr-8 text-gray-700"
+                        >
                           <option value="+1">🇺🇸 +1</option>
                           <option value="+44">🇬🇧 +44</option>
                           <option value="+91">🇮🇳 +91</option>
@@ -367,6 +415,7 @@ function ClientContent() {
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
+                        placeholder="Enter phone number"
                         className="flex-1 p-2 border-t border-b border-r border-gray-300 rounded-r-md bg-white"
                       />
                     </div>
