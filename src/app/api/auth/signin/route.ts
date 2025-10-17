@@ -5,7 +5,7 @@ import { getApiUrl, getAuthHeaders } from '@/lib/config';
 const STATIC_CREDENTIALS = {
   email: 'user@4ami.com',
   password: 'Admin@123456',
-  role: 'USER',
+  role: 'CUSTOMER_USER',
   firstName: 'John',
   lastName: 'Doe'
 };
