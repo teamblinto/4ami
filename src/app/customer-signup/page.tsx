@@ -11,7 +11,7 @@ function ClientContent() {
   const [isVerifying, setIsVerifying] = useState(false);
   const [isCodeAutoPopulated, setIsCodeAutoPopulated] = useState(false);
   const [isEmailAutoPopulated, setIsEmailAutoPopulated] = useState(false);
-
+  const [role, setRole] = useState("");
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -19,7 +19,9 @@ function ClientContent() {
     // Get email and code from URL parameters
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
+    const roleParam = searchParams.get("role");
     const token = searchParams.get("token");
+    console.log(roleParam);
 
     if (emailParam) {
       setEmail(emailParam);
@@ -29,7 +31,9 @@ function ClientContent() {
       setInvitationCode(codeParam);
       setIsCodeAutoPopulated(true);
     }
-
+    if (roleParam) {
+      setRole(roleParam);
+    }
     // If only token is present (no code), use token as invitation code and skip verification
     if (!codeParam && token) {
       setInvitationCode(token);
@@ -46,6 +50,7 @@ function ClientContent() {
     // Auto-populate when email/code exist and no verification needed
     // Nothing else to do
   }, [searchParams]);
+ 
 
   const fetchVerificationData = async (token: string) => {
     setIsVerifying(true);
@@ -170,6 +175,11 @@ function ClientContent() {
                   // Add token if it exists
                   if (token) {
                     params.append('token', token);
+                  }
+                  
+                  // Add role if it exists
+                  if (role) {
+                    params.append('role', role);
                   }
                   
                   router.push(`/create-account?${params.toString()}`);
