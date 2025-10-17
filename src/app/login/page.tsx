@@ -32,7 +32,13 @@ export default function LoginPage() {
       const isJson = contentType && contentType.includes("application/json");
       const data = isJson ? await response.json() : { message: await response.text() };
 
-      console.log(data);
+      // Enhanced logging for debugging login issues
+      console.log("=== LOGIN DEBUG INFO ===");
+      console.log("Email:", email.trim());
+      console.log("Response Status:", response.status);
+      console.log("Response Data:", data);
+      console.log("Response Headers:", Object.fromEntries(response.headers.entries()));
+      console.log("=========================");
       if (response.ok) {
         // Store token and user data in localStorage
         if (data.token) {
