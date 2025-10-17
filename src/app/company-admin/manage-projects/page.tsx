@@ -154,7 +154,7 @@ export default function CompanyAdminManageProjectsPage() {
       </div>
 
       {/* Project Information Section */}
-      <div className="bg-white mt-6 px-4 py-5 rounded-lg shadow">
+      {/* <div className="bg-white mt-6 px-4 py-5 rounded-lg shadow">
         <h2 className="text-lg font-semibold text-gray-700 mb-4">
           Project Information
         </h2>
@@ -230,7 +230,7 @@ export default function CompanyAdminManageProjectsPage() {
             className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-white mt-6 rounded-lg shadow">
         {/* Header Section */}
@@ -241,11 +241,11 @@ export default function CompanyAdminManageProjectsPage() {
                 <Image src="/majesticons_plus-line.svg" alt="Add" width={16} height={16} />
                 Add New Project
               </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors">
+              <button className="px-4 py-2 border text-black border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors">
                 <Image src="/import.svg" alt="Import" width={16} height={16} />
                 Import Project Data
               </button>
-              <button className="px-4 py-2 border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors">
+              <button className="px-4 py-2 text-black border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors">
                 <Image src="/import.svg" alt="Export" width={16} height={16} />
                 Export Project Data
               </button>
@@ -288,13 +288,13 @@ export default function CompanyAdminManageProjectsPage() {
             <div className="relative">
               <button
                 onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-                className="px-4 py-2 border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors"
+                className="px-4 py-2 text-black border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors"
               >
                 Status {roleFilter !== "All" ? roleFilter : "All"}
                 <Image src="/mingcute_down-fill.svg" alt="Down" width={12} height={12} />
               </button>
               {showRoleDropdown && (
-                <div className="absolute left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
+                <div className="absolute text-black left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
                   {["All", "Active", "Completed", "Pending"].map((status) => (
                     <button
                       key={status}
@@ -314,10 +314,10 @@ export default function CompanyAdminManageProjectsPage() {
               <Image src="/majesticons_plus-line.svg" alt="Add" width={16} height={16} />
               Add Filter
             </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+            <button className="px-4 text-black py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
               Clear Filter
             </button>
-            <button className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
+            <button className="px-4 text-black py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
               Edit Column
             </button>
           </div>
