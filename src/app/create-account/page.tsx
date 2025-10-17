@@ -26,7 +26,6 @@ function ClientContent() {
   const router = useRouter();
 
   
-
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
