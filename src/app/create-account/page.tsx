@@ -9,6 +9,7 @@ function ClientContent() {
   const [email, setEmail] = useState("");
   const [invitationCode, setInvitationCode] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
+  const [role, setRole] = useState("");
   const [isAutoPopulated, setIsAutoPopulated] = useState(false);
   const [formData, setFormData] = useState({
     firstName: "",
@@ -24,13 +25,14 @@ function ClientContent() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-
+console.log(role);
   
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
     const token = searchParams.get("token");
     const roleParam = searchParams.get("role");
+    setRole(roleParam || "");
 
     // Console log all URL parameters (only in development)
     if (process.env.NODE_ENV === 'development') {
@@ -54,6 +56,12 @@ function ClientContent() {
           console.log("Setting role from URL param:", roleParam, "->", mappedRole);
         }
         setFormData(prev => ({ ...prev, role: mappedRole }));
+      } else {
+        // If no mapping found, use the roleParam directly
+        if (process.env.NODE_ENV === 'development') {
+          console.log("Using roleParam directly:", roleParam);
+        }
+        setFormData(prev => ({ ...prev, role: roleParam }));
       }
     }
 
@@ -83,7 +91,12 @@ function ClientContent() {
       'ADMIN': 'Admin',
       'CUSTOMER_ADMIN': 'Customer Admin',
       'CUSTOMER_USER': 'Company User',
-      'APPRAISER': 'Appraiser'
+      'APPRAISER': 'Appraiser',
+      // Handle direct form values as well
+      'Admin': 'Admin',
+      'Customer Admin': 'Customer Admin',
+      'Company User': 'Company User',
+      'Appraiser': 'Appraiser'
     };
     return roleMapping[apiRole] || '';
   };
@@ -455,15 +468,15 @@ function ClientContent() {
                       <select
                         id="role"
                         name="role"
-                        value={formData.role}
+                        value={role}
                         onChange={handleInputChange}
                         required
                         className="w-full appearance-none border border-gray-300 text-gray-700 py-2 px-3 rounded-md bg-white"
                       >
-                        <option value="">Select One</option>
-                        {/* <option value="Admin">Admin</option> */}
-                        <option value="Customer Admin">Customer Admin</option>
-                        <option value="Company User">Company User</option>
+                        {/* <option value="">Select One</option> */}
+                        <option>{role}</option>
+                        {/* <option value="Customer Admin">Customer Admin</option> */}
+                        {/* <option value="Company User">Company User</option> */}
                         {/* <option value="Appraiser">Appraiser</option> */}
                       </select>
                       <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
