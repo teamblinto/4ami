@@ -1565,6 +1565,14 @@ import Image from "next/image";
 
 const ResidualAnalysisPage = () => {
   const router = useRouter();
+  
+  // Phone number validation function
+  const validatePhoneNumber = (phone: string): boolean => {
+    // Remove all non-digit characters for validation
+    const cleanPhone = phone.replace(/\D/g, '');
+    // Check if it's a valid phone number (7-15 digits)
+    return cleanPhone.length >= 7 && cleanPhone.length <= 15;
+  };
   const [isSourceInfoOpen, setIsSourceInfoOpen] = useState(true);
   const [isClientInfoOpen, setIsClientInfoOpen] = useState(true);
   const [isTransactionInfoOpen, setIsTransactionInfoOpen] = useState(true);
@@ -1576,6 +1584,35 @@ const ResidualAnalysisPage = () => {
   const [communicationValue, setCommunicationValue] = useState("No");
   const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
   const [communicationValue2, setCommunicationValue2] = useState("No");
+  
+  // Phone validation states
+  const [phoneErrors, setPhoneErrors] = useState({
+    lesseePhone: "",
+    sourcePhone1: "",
+    sourcePhone2: ""
+  });
+  
+  // Phone validation handlers
+  const handlePhoneChange = (phoneType: string, value: string) => {
+    const isValid = validatePhoneNumber(value);
+    setPhoneErrors(prev => ({
+      ...prev,
+      [phoneType]: isValid || value === "" ? "" : "Please enter a valid phone number"
+    }));
+    
+    // Update the respective phone state
+    switch (phoneType) {
+      case 'lesseePhone':
+        setLesseePhone(value);
+        break;
+      case 'sourcePhone1':
+        setSourcePhone1(value);
+        break;
+      case 'sourcePhone2':
+        setSourcePhone2(value);
+        break;
+    }
+  };
 
   // Utilization Scenario state
   const [scenarios, setScenarios] = useState([
@@ -1599,7 +1636,7 @@ const ResidualAnalysisPage = () => {
     const y = d.getFullYear();
     const m = String(d.getMonth() + 1).padStart(2, "0");
     const day = String(d.getDate()).padStart(2, "0");
-    const rnd = Math.random().toString(36).slice(2, 6).toUpperCase();
+    const rnd = Math.floor(Math.random() * 10000).toString().padStart(4, "0");
     return `RA-${y}${m}${day}-${rnd}`;
   });
   const [startDate] = useState(() => new Date().toISOString().slice(0, 10));
@@ -1657,7 +1694,7 @@ const ResidualAnalysisPage = () => {
   // Functions for managing scenarios
   const addScenario = () => {
     const newScenario = {
-      id: scenarios.length + 1,
+      id: Math.max(...scenarios.map(s => s.id), 0) + 1,
       scenario: `Q${scenarios.length + 1}`,
       termsMonths: "",
       annualUtilization: "",
@@ -1677,7 +1714,13 @@ const ResidualAnalysisPage = () => {
 
   const deleteScenario = (id: number) => {
     if (scenarios.length > 1) {
-      setScenarios(scenarios.filter(scenario => scenario.id !== id));
+      const updatedScenarios = scenarios
+        .filter(scenario => scenario.id !== id)
+        .map((scenario, index) => ({
+          ...scenario,
+          scenario: `Q${index + 1}`
+        }));
+      setScenarios(updatedScenarios);
     }
   };
 
@@ -1689,6 +1732,13 @@ const ResidualAnalysisPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Check for phone validation errors
+    const hasPhoneErrors = Object.values(phoneErrors).some(error => error !== "");
+    if (hasPhoneErrors) {
+      alert("Please fix phone number validation errors before submitting.");
+      return;
+    }
 
     const firstScenario = scenarios[0];
     const proposedUtilization = firstScenario?.annualUtilization
@@ -2021,11 +2071,15 @@ const ResidualAnalysisPage = () => {
                           ...inputStyles,
                           borderTopLeftRadius: "0",
                           borderBottomLeftRadius: "0",
+                          borderColor: phoneErrors.lesseePhone ? "#dc2626" : "#CED4DA"
                         }}
                         value={lesseePhone}
-                        onChange={(e) => setLesseePhone(e.target.value)}
+                        onChange={(e) => handlePhoneChange('lesseePhone', e.target.value)}
                       />
                     </div>
+                    {phoneErrors.lesseePhone && (
+                      <p className="text-red-600 text-xs mt-1">{phoneErrors.lesseePhone}</p>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -2347,9 +2401,15 @@ const ResidualAnalysisPage = () => {
                       placeholder="+(123) 456-7890"
                       className="w-full"
                       value={sourcePhone1}
-                      onChange={(e) => setSourcePhone1(e.target.value)}
-                      style={inputStyles}
+                      onChange={(e) => handlePhoneChange('sourcePhone1', e.target.value)}
+                      style={{
+                        ...inputStyles,
+                        borderColor: phoneErrors.sourcePhone1 ? "#dc2626" : "#CED4DA"
+                      }}
                     />
+                    {phoneErrors.sourcePhone1 && (
+                      <p className="text-red-600 text-xs mt-1">{phoneErrors.sourcePhone1}</p>
+                    )}
                   </div>
                   <div>
                     <label
@@ -2365,9 +2425,15 @@ const ResidualAnalysisPage = () => {
                       placeholder="+(123) 555-6789"
                       className="w-full"
                       value={sourcePhone2}
-                      onChange={(e) => setSourcePhone2(e.target.value)}
-                      style={inputStyles}
+                      onChange={(e) => handlePhoneChange('sourcePhone2', e.target.value)}
+                      style={{
+                        ...inputStyles,
+                        borderColor: phoneErrors.sourcePhone2 ? "#dc2626" : "#CED4DA"
+                      }}
                     />
+                    {phoneErrors.sourcePhone2 && (
+                      <p className="text-red-600 text-xs mt-1">{phoneErrors.sourcePhone2}</p>
+                    )}
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -3064,7 +3130,7 @@ const ResidualAnalysisPage = () => {
 
 // Define a type for the payload
 interface ResidualAnalysisPayload {
-  projectTypeCode: string;
+  projectTypeCode: "residual_analysis";
   name: string;
   description: string;
   startDate?: string;

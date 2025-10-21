@@ -18,10 +18,9 @@ function ClientContent() {
   useEffect(() => {
     // Get email and code from URL parameters
     const emailParam = searchParams.get("email");
-    const codeParam = searchParams.get("code");
+    const codeParam = searchParams.get("invitationCode");
     const roleParam = searchParams.get("role");
     const token = searchParams.get("token");
-    console.log(roleParam);
 
     if (emailParam) {
       setEmail(emailParam);

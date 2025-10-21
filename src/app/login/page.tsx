@@ -41,8 +41,14 @@ export default function LoginPage() {
       console.log("=========================");
       if (response.ok) {
         // Store token and user data in localStorage
-        if (data.token) {
-          localStorage.setItem("authToken", data.token);
+        const token =
+          data?.token ||
+          data?.accessToken ||
+          data?.jwt ||
+          data?.authToken ||
+          (data?.data && (data.data.token || data.data.accessToken));
+        if (token) {
+          localStorage.setItem("authToken", token);
         }
 
         // Store user data including role
