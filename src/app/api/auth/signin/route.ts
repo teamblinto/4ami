@@ -18,8 +18,14 @@ export async function POST(request: NextRequest) {
 
     const data = await response.json();
     console.log('External API response data:', data);
-    
-    return NextResponse.json(data, { status: response.status });
+
+    // Forward Set-Cookie (if backend issues a session cookie) so browser stores it on our domain
+    const setCookie = response.headers.get('set-cookie');
+    const nextResponse = NextResponse.json(data, { status: response.status });
+    if (setCookie) {
+      nextResponse.headers.set('Set-Cookie', setCookie);
+    }
+    return nextResponse;
   } catch (error) {
     console.error('Proxy error:', error);
     return NextResponse.json(
