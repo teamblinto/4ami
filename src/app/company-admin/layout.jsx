@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-import ProtectedRoute from "../components/ProtectedRoute";
+// import ProtectedRoute from "../components/ProtectedRoute";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -82,7 +82,7 @@ export default function CompanyAdminLayout({
   }, [isDropdownOpen]);
 
   return (
-    <ProtectedRoute requiredRole="CUSTOMER_ADMIN">
+    // <ProtectedRoute requiredRole="CUSTOMER_ADMIN">
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
@@ -324,6 +324,6 @@ export default function CompanyAdminLayout({
           {children}
         </main>
       </div>
-    </ProtectedRoute>
+    // </ProtectedRoute>
   );
 }

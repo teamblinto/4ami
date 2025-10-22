@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-// import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export default function UserProjectDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -90,7 +89,7 @@ export default function UserProjectDropdown() {
           }}
         >
           {/* Category List */}
-          <div style={{ width: "218px" }}>
+          <div style={{ width: "218px", maxHeight: "409px", overflowY: "auto" }}>
             <ul className="text-sm text-[#343A40] font-normal  ">
               {items.map((item, idx) => (
                 <li
@@ -120,7 +119,7 @@ export default function UserProjectDropdown() {
 
           {/* Project List (conditionally shown) */}
           {showProjectList && (
-            <div style={{ width: "350px", borderLeft: "1px solid #eee" }}>
+            <div style={{ width: "350px", borderLeft: "1px solid #eee", maxHeight: "415px", overflowY: "auto" }}>
               <ul className="text-sm  text-[#343A40] font-normal ">
                 {printItems.map((item, idx) => (
                   <li key={idx}>
@@ -164,6 +163,7 @@ export default function UserProjectDropdown() {
             background: "#FFF",
             boxShadow: "2px 2px 15px 0 rgba(0, 0, 0, 0.10)",
             width: "218px",
+            maxHeight: "425px",
           }}
         >
           <ul className="text-sm  text-[#343A40] font-normal ">
