@@ -8,12 +8,12 @@ export default function UserProjectDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const [isPrintOpen, setIsPrintOpen] = useState(false);
   const [showProjectList, setShowProjectList] = useState(false);
-  const [selected, setSelected] = useState(["Residual Analysis"]);
+  const [selected, setSelected] = useState<string | null>(null);
   const [selectedPrintItems, setSelectedPrintItems] = useState<string[]>([]);
   const router = useRouter();
 
   const handleNext = () => {
-    if (selected.includes("Residual Analysis")) {
+    if (selected === "Residual Analysis") {
       router.push("/user-dashboard/residual-analysis");
     }
   };
@@ -46,9 +46,7 @@ export default function UserProjectDropdown() {
   ];
 
   const toggleItem = (item: string) => {
-    setSelected((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-    );
+    setSelected(selected === item ? null : item);
   };
 
   const togglePrintItem = (item: string) => {
@@ -98,7 +96,7 @@ export default function UserProjectDropdown() {
                     if (item === "Residual Analysis") {
                       setShowProjectList(true);
                     } else {
-                      setShowProjectList(false); // Hide project list for other categories
+                      setShowProjectList(false);
                     }
                   }}
                   className="flex items-center justify-between pl-4 pr-[10px] py-[10px] hover:bg-gray-100 cursor-pointer"
@@ -169,15 +167,15 @@ export default function UserProjectDropdown() {
           <ul className="text-sm  text-[#343A40] font-normal ">
             {items.map((item, idx) => (
               <li key={idx}>
-                <label className="flex items-center  pl-4 pr-[10px] py-[10px] hover:bg-gray-100 cursor-pointer">
+                <label className="flex items-center  pl-4 pr-[10px] py-[6px] hover:bg-gray-100 cursor-pointer">
                   <input
                     type="checkbox"
-                    checked={selected.includes(item)}
+                    checked={selected === item}
                     onChange={() => toggleItem(item)}
                     className="mr-[10px] cursor-pointer accent-[#ED272C]"
                     style={{
-                      width: "18px",
-                      height: "18px",
+                      width: "15px",
+                      height: "15px",
                       aspectRatio: "1/1",
                     }}
                   />
