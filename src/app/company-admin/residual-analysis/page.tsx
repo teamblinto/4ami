@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const ResidualAnalysisPage = () => {
   const router = useRouter();
-  
+
   // Phone number validation function
   const validatePhoneNumber = (phone: string): boolean => {
     // Remove all non-digit characters for validation
@@ -24,14 +24,14 @@ const ResidualAnalysisPage = () => {
   const [communicationValue, setCommunicationValue] = useState("No");
   const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
   const [communicationValue2, setCommunicationValue2] = useState("No");
-  
+
   // Phone validation states
   const [phoneErrors, setPhoneErrors] = useState({
     lesseePhone: "",
     sourcePhone1: "",
     sourcePhone2: ""
   });
-  
+
   // Phone validation handlers
   const handlePhoneChange = (phoneType: string, value: string) => {
     const isValid = validatePhoneNumber(value);
@@ -39,7 +39,7 @@ const ResidualAnalysisPage = () => {
       ...prev,
       [phoneType]: isValid || value === "" ? "" : "Please enter a valid phone number"
     }));
-    
+
     // Update the respective phone state
     switch (phoneType) {
       case 'lesseePhone':
@@ -165,14 +165,14 @@ const ResidualAnalysisPage = () => {
   };
 
   const updateScenario = (id: number, field: string, value: string) => {
-    setScenarios(scenarios.map(scenario => 
+    setScenarios(scenarios.map(scenario =>
       scenario.id === id ? { ...scenario, [field]: value } : scenario
     ));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Check for phone validation errors
     const hasPhoneErrors = Object.values(phoneErrors).some(error => error !== "");
     if (hasPhoneErrors) {
@@ -247,7 +247,7 @@ const ResidualAnalysisPage = () => {
         environment,
       },
       utilizationScenarios: scenarios.map((scenario, index) => ({
-     
+
         scenarioNo: index + 1,
         terms: scenario.termsMonths ? Number(scenario.termsMonths.replace(/[^0-9]/g, "")) : undefined,
         proposedUtilization: scenario.annualUtilization ? Number(scenario.annualUtilization.replace(/[^0-9.]/g, "")) : undefined,
@@ -258,7 +258,7 @@ const ResidualAnalysisPage = () => {
     try {
       const storedToken =
         (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
-        
+
       console.log('Retrieved token:', storedToken ? 'Token found' : 'No token found');
 
       const headers: Record<string, string> = {
@@ -434,11 +434,11 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Client Name*
+                      Client Name
                     </label>
                     <input
                       type="text"
-                      required
+
                       id="client-name"
                       placeholder="Your name"
                       className="w-full"
@@ -531,7 +531,7 @@ const ResidualAnalysisPage = () => {
                   </div>
 
                   <div>
-                     <div className="flex items-center  gap-2">
+                    <div className="flex items-center  gap-2">
                       <label
                         htmlFor="communication"
                         className="block mb-2"
@@ -539,7 +539,7 @@ const ResidualAnalysisPage = () => {
                       >
                         Communication
                       </label>
-                       <Image className="mb-[5px]" src="/communication.svg" alt="communication" width={12} height={12} />
+                      <Image className="mb-[5px]" src="/communication.svg" alt="communication" width={12} height={12} />
                     </div>
                     <div className="relative">
                       <button
@@ -646,11 +646,11 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Source No*
+                      Source No
                     </label>
                     <input
                       type="text"
-                      required
+
                       id="source-no"
                       placeholder="S-1002"
                       className="w-full"
@@ -665,11 +665,11 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Source Name*
+                      Source Name
                     </label>
                     <input
                       type="text"
-                      required
+
                       id="source-name"
                       placeholder="GreenTech Machinery"
                       className="w-full"
@@ -684,11 +684,11 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Source Type*
+                      Source Type
                     </label>
                     <select
                       id="source-type"
-                      required
+
                       className="w-full"
                       value={sourceType}
                       onChange={(e) => setSourceType(e.target.value)}
@@ -739,7 +739,7 @@ const ResidualAnalysisPage = () => {
                     />
                   </div>
                   <div>
-                  <div className="flex items-center  gap-2">
+                    <div className="flex items-center  gap-2">
                       <label
                         htmlFor="communication"
                         className="block mb-2"
@@ -747,7 +747,7 @@ const ResidualAnalysisPage = () => {
                       >
                         Communication
                       </label>
-                       <Image className="mb-[5px]" src="/communication.svg" alt="communication" width={12} height={12} />
+                      <Image className="mb-[5px]" src="/communication.svg" alt="communication" width={12} height={12} />
                     </div>
                     <div className="relative">
                       <button
@@ -828,7 +828,7 @@ const ResidualAnalysisPage = () => {
                     </label>
                     <input
                       type="number"
-                      required
+
                       id="phone-1"
                       placeholder="+(123) 456-7890"
                       className="w-full"
@@ -853,7 +853,7 @@ const ResidualAnalysisPage = () => {
                     </label>
                     <input
                       type="number"
-                      required
+
                       id="phone-2"
                       placeholder="+(123) 555-6789"
                       className="w-full"
@@ -876,7 +876,7 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Email
+                      Email*
                     </label>
                     <input
                       type="email"
@@ -1255,11 +1255,11 @@ const ResidualAnalysisPage = () => {
                     step="0.01"
                   />
                 </div>
-     
-      
-          
-          
-   
+
+
+
+
+
                 <div>
                   <label
                     htmlFor="structure"
@@ -1282,11 +1282,11 @@ const ResidualAnalysisPage = () => {
                     className="block mb-2"
                     style={labelStyles}
                   >
-                    Application<span>*</span>
+                    Application
                   </label>
                   <select
                     id="application"
-                    required
+
                     className="w-full"
                     style={inputStyles}
                     value={application}
@@ -1442,14 +1442,14 @@ const ResidualAnalysisPage = () => {
                             />
                           </td>
                           <td className="border border-gray-200 px-3 py-2">
-                              <input
+                            <input
                               type="number"
                               value={scenario.termsMonths}
                               onChange={(e) => updateScenario(scenario.id, 'termsMonths', e.target.value)}
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter Months"
-                              required
+
                               min="1"
                             />
                           </td>
@@ -1461,7 +1461,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter Utilization"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1474,7 +1474,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Input Unit Price"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1487,7 +1487,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Input Unit Price"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1500,7 +1500,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Input Unit Price"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1513,7 +1513,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Input Unit Price"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1526,7 +1526,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Input Unit Price"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1661,7 +1661,7 @@ interface ResidualAnalysisPayload {
     environment: string;
   };
   utilizationScenarios: Array<{
-   
+
     scenarioNo: number;
     terms?: number;
     proposedUtilization?: number;

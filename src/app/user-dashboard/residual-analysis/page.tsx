@@ -490,10 +490,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Client Name<span>*</span>
+                      Client Name
                     </label>
                     <input
-                      required={true}
+
                       type="text"
                       id="client-name"
                       placeholder="Your name"
@@ -509,10 +509,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Client email<span>*</span>
+                      Client email*
                     </label>
                     <input
-                      required={true}
+                      required
                       type="email"
                       id="client-email"
                       placeholder="yorkerho@gmail.com"
@@ -702,10 +702,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Source No<span>*</span>
+                      Source No
                     </label>
                     <input
-                      required={true}
+
                       type="text"
                       id="source-no"
                       placeholder="S-1002"
@@ -721,10 +721,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Source Name<span>*</span>
+                      Source Name
                     </label>
                     <input
-                      required={true}
+
                       type="text"
                       id="source-name"
                       placeholder="GreenTech Machinery"
@@ -740,10 +740,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Source Type<span>*</span>
+                      Source Type
                     </label>
                     <select
-                      required={true}
+
                       id="source-type"
                       className="w-full"
                       value={sourceType}
@@ -883,7 +883,7 @@ const ResidualAnalysisPage = () => {
                       Phone Number 1
                     </label>
                     <input
-                      required={true}
+
                       type="number"
                       id="phone-1"
                       placeholder="+(123) 456-7890"
@@ -908,7 +908,7 @@ const ResidualAnalysisPage = () => {
                       Phone Number 2
                     </label>
                     <input
-                      required={true}
+
                       type="number"
                       id="phone-2"
                       placeholder="+(123) 555-6789"
@@ -932,10 +932,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Email<span>*</span>
+                      Email*
                     </label>
                     <input
-                      required={true}
+                      required
                       type="email"
                       id="email"
                       placeholder="b.nolan@greentechmachinery.com"
@@ -1180,8 +1180,8 @@ const ResidualAnalysisPage = () => {
                     rows={3}
                     placeholder="Type here...."
                     className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
-                    // value={productRequirement}
-                    // onChange={(e) => setProductRequirement(e.target.value)}
+                  // value={productRequirement}
+                  // onChange={(e) => setProductRequirement(e.target.value)}
                   />
                 </div>
 
@@ -1372,10 +1372,10 @@ const ResidualAnalysisPage = () => {
                     className="block mb-2"
                     style={labelStyles}
                   >
-                    Application<span>*</span>
+                    Application
                   </label>
                   <select
-                    required={true}
+
                     id="application"
                     className="w-full"
                     style={inputStyles}
@@ -1656,7 +1656,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter term in months"
-                              required
+
                               min="1"
                             />
                           </td>
@@ -1668,7 +1668,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter annual utilization (hours, miles, cycles, etc.)"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1681,7 +1681,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter total funding amount"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1694,7 +1694,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter subsidy amount"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1707,7 +1707,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter warranty amount"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1720,7 +1720,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter PMs amount"
-                              required
+
                               min="0"
                               step="0.01"
                             />
@@ -1733,7 +1733,7 @@ const ResidualAnalysisPage = () => {
                               className="w-full border-none bg-transparent text-sm focus:outline-none text-gray-500"
                               style={{ fontFamily: "Inter" }}
                               placeholder="Enter unit price"
-                              required
+
                               min="0"
                               step="0.01"
                             />
