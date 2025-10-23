@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { getApiUrl, getAuthHeaders, config } from "@/lib/config";
+import { getAuthHeaders, config, getApiUrlForEnvironment } from "@/lib/config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(getApiUrl(config.endpoints.auth.signin), {
+      const response = await fetch(getApiUrlForEnvironment(config.endpoints.auth.signin), {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({

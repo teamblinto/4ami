@@ -12,10 +12,6 @@ export default function SendInvitationPage() {
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-black ">Send an Invitation</h1>
-        <p className="text-gray-500">Dashboard / Manage User / Send Invitation</p>
-      </div>
       <SendInvitationForm onInvitationSent={handleBack} />
     </div>
   );
