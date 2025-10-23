@@ -1,4 +1,4 @@
-  "use client";
+"use client";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -122,6 +122,9 @@ const ResidualAnalysisPage = () => {
   const [currentMeterReading, setCurrentMeterReading] = useState("");
   const [meterType, setMeterType] = useState("");
   const [environmentRanking, setEnvironmentRanking] = useState("New");
+  // const [productRequirement, setProductRequirement] = useState("");
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   // Financial fields
   const [subjectPrice, setSubjectPrice] = useState("");
@@ -181,6 +184,45 @@ const ResidualAnalysisPage = () => {
     ));
   };
 
+  // File upload handlers
+  const handleFileUpload = (files: FileList | null) => {
+    if (files) {
+      const newFiles = Array.from(files).filter(file => {
+        // Check file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+          alert(`File ${file.name} is too large. Maximum size is 5MB.`);
+          return false;
+        }
+        return true;
+      });
+      setUploadedFiles(prev => [...prev, ...newFiles]);
+    }
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    handleFileUpload(e.dataTransfer.files);
+  };
+
+  const handleFileInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileUpload(e.target.files);
+  };
+
+  const removeFile = (index: number) => {
+    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -238,6 +280,8 @@ const ResidualAnalysisPage = () => {
           meterType,
           proposedUtilization,
           environmentRanking,
+          // productRequirement,
+          // description: equipmentDescription,
         },
       ],
       financial: {
@@ -258,7 +302,6 @@ const ResidualAnalysisPage = () => {
         environment,
       },
       utilizationScenarios: scenarios.map((scenario, index) => ({
-        // equipmentId: equipmentId || "uuid-of-equipment",
         scenarioNo: index + 1,
         terms: scenario.termsMonths ? Number(scenario.termsMonths.replace(/[^0-9]/g, "")) : undefined,
         proposedUtilization: scenario.annualUtilization ? Number(scenario.annualUtilization.replace(/[^0-9.]/g, "")) : undefined,
@@ -950,168 +993,200 @@ const ResidualAnalysisPage = () => {
               </svg>
             </div>
             {isEquipmentDetailsOpen && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                <div>
-                  <label
-                    htmlFor="industry"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Industry<span>*</span>
-                  </label>
-                  <select id="industry" required={true} className="w-full" style={inputStyles} value={industry} onChange={(e) => setIndustry(e.target.value)}>
-                    <option value="">Select Industry</option>
-                    <option value="construction">Construction</option>
-                    <option value="mining">Mining</option>
-                    <option value="agriculture">Agriculture</option>
-                    <option value="transportation">Transportation</option>
-                  </select>
-                </div>
-                <div>
-                  <label
-                    htmlFor="asset-class"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Asset class<span>*</span>
-                  </label>
-                  <input
-                    required={true}
-                    type="text"
-                    id="asset-class"
-                    placeholder="Enter asset class"
-                    className="w-full"
-                    value={assetClass}
-                    onChange={(e) => setAssetClass(e.target.value)}
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="make"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Make<span>*</span>
-                  </label>
-                  <input
-                    required={true}
-                    type="text"
-                    id="make"
-                    placeholder="Enter make"
-                    className="w-full"
-                    value={make}
-                    onChange={(e) => setMake(e.target.value)}
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="model"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Model<span>*</span>
-                  </label>
-                  <input
-                    required={true}
-                    type="text"
-                    id="model"
-                    placeholder="Enter model"
-                    className="w-full"
-                    value={model}
-                    onChange={(e) => setModel(e.target.value)}
-                    style={inputStyles}
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="year"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Year<span  >*</span>
-                  </label>
-                  <input
-                    type="number"
-                    id="year"
-                    placeholder="Enter year"
-                    className="w-full"
-                    value={year}
-                    onChange={(e) => setYear(e.target.value)}
-                    style={inputStyles}
-                    required
-                    min="1900"
-                    max="2030"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="current-meter-reading"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Current Meter Reading
-                    <span  >*</span>
-                  </label>
-                  <input
-                    type="number"
-                    id="current-meter-reading"
-                    placeholder="Enter current meter reading"
-                    className="w-full"
-                    value={currentMeterReading}
-                    onChange={(e) => setCurrentMeterReading(e.target.value)}
-                    style={inputStyles}
-                    required
-                    min="0"
-                    step="0.01"
-                  />
-                </div>
-                <div>
-                  <label
-                    htmlFor="meter-type"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Meter Type<span>*</span>
-                  </label>
-                  <select
-                    required={true}
-                    id="meter-type"
-                    className="w-full"
-                    value={meterType}
-                    onChange={(e) => setMeterType(e.target.value)}
-                    style={inputStyles}
-                  >
-                    <option value="">select meter type</option>
-                    <option value="hours">Hours</option>
-                    <option value="miles">Miles</option>
-                    <option value="kilometers">Kilometers</option>
-                    <option value="cycles">Cycles</option>
-                  </select>
+              <div className="flex flex-col gap-4" >
+
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  <div>
+                    <label
+                      htmlFor="industry"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Industry<span>*</span>
+                    </label>
+                    <select id="industry" required={true} className="w-full" style={inputStyles} value={industry} onChange={(e) => setIndustry(e.target.value)}>
+                      <option value="">Select Industry</option>
+                      <option value="construction">Construction</option>
+                      <option value="mining">Mining</option>
+                      <option value="agriculture">Agriculture</option>
+                      <option value="transportation">Transportation</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="asset-class"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Asset class<span>*</span>
+                    </label>
+                    <input
+                      required={true}
+                      type="text"
+                      id="asset-class"
+                      placeholder="Enter asset class"
+                      className="w-full"
+                      value={assetClass}
+                      onChange={(e) => setAssetClass(e.target.value)}
+                      style={inputStyles}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="make"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Make<span>*</span>
+                    </label>
+                    <input
+                      required={true}
+                      type="text"
+                      id="make"
+                      placeholder="Enter make"
+                      className="w-full"
+                      value={make}
+                      onChange={(e) => setMake(e.target.value)}
+                      style={inputStyles}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="model"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Model<span>*</span>
+                    </label>
+                    <input
+                      required={true}
+                      type="text"
+                      id="model"
+                      placeholder="Enter model"
+                      className="w-full"
+                      value={model}
+                      onChange={(e) => setModel(e.target.value)}
+                      style={inputStyles}
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="year"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Year<span  >*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="year"
+                      placeholder="Enter year"
+                      className="w-full"
+                      value={year}
+                      onChange={(e) => setYear(e.target.value)}
+                      style={inputStyles}
+                      required
+                      min="1900"
+                      max="2030"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="current-meter-reading"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Current Meter Reading
+                      <span  >*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="current-meter-reading"
+                      placeholder="Enter current meter reading"
+                      className="w-full"
+                      value={currentMeterReading}
+                      onChange={(e) => setCurrentMeterReading(e.target.value)}
+                      style={inputStyles}
+                      required
+                      min="0"
+                      step="0.01"
+                    />
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="meter-type"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Meter Type<span>*</span>
+                    </label>
+                    <select
+                      required={true}
+                      id="meter-type"
+                      className="w-full"
+                      value={meterType}
+                      onChange={(e) => setMeterType(e.target.value)}
+                      style={inputStyles}
+                    >
+                      <option value="">select meter type</option>
+                      <option value="hours">Hours</option>
+                      <option value="miles">Miles</option>
+                      <option value="kilometers">Kilometers</option>
+                      <option value="cycles">Cycles</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label
+                      htmlFor="environment-ranking"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Environment Ranking<span  >*</span>
+                    </label>
+                    <select
+                      id="environment-ranking"
+                      className="w-full"
+                      value={environmentRanking}
+                      onChange={(e) => setEnvironmentRanking(e.target.value)}
+                      style={inputStyles}
+                    >
+                      <option value="New">New</option>
+                      <option value="Good">Good</option>
+                      <option value="Fair">Fair</option>
+                      <option value="Poor">Poor</option>
+                    </select>
+                  </div>
+
                 </div>
 
-                <div>
+                <div className="w-full" >
                   <label
-                    htmlFor="environment-ranking"
+                    htmlFor="product-requirement"
                     className="block mb-2"
                     style={labelStyles}
                   >
-                    Environment Ranking<span  >*</span>
+                    Note
                   </label>
-                  <select
-                    id="environment-ranking"
-                    className="w-full"
-                    value={environmentRanking}
-                    onChange={(e) => setEnvironmentRanking(e.target.value)}
-                    style={inputStyles}
-                  >
-                    <option value="New">New</option>
-                    <option value="Good">Good</option>
-                    <option value="Fair">Fair</option>
-                    <option value="Poor">Poor</option>
-                  </select>
+                  <textarea
+                    id="product-requirement"
+                    rows={3}
+                    placeholder="Type here...."
+                    className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
+                    // value={productRequirement}
+                    // onChange={(e) => setProductRequirement(e.target.value)}
+                  />
                 </div>
+
+
+
               </div>
             )}
           </div>
@@ -1335,6 +1410,123 @@ const ResidualAnalysisPage = () => {
                     <option value="outdoor">Outdoor</option>
                     <option value="mixed">Mixed</option>
                   </select>
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* File Upload Section */}
+          <div className="mb-6 bg-white px-4 py-5 rounded-lg">
+            <h2 className="text-lg font-semibold text-gray-700 mb-4">
+              File Upload
+            </h2>
+            <div
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${isDragOver
+                ? 'border-red-500 bg-red-50'
+                : 'border-gray-300 hover:border-gray-400'
+                }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              {/* Upload Illustration */}
+              <div className="flex justify-center mb-6">
+                <div className="relative">
+                  {/* Main cloud with arrow */}
+                  <div className="w-20 h-16 bg-red-500 rounded-full flex items-center justify-center relative">
+                    <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+
+                  {/* Folder icon */}
+                  <div className="absolute -top-2 -left-2 w-6 h-6 bg-red-400 rounded-sm flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" />
+                    </svg>
+                  </div>
+
+                  {/* Document icon */}
+                  <div className="absolute -top-1 -left-1 w-4 h-4 bg-white rounded-sm flex items-center justify-center">
+                    <svg className="w-3 h-3 text-gray-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+
+                  {/* Clock icon */}
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+
+                  {/* Plant icon */}
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-400 rounded-full flex items-center justify-center">
+                    <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M3 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm0 4a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+
+              <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                Drag and Drop Your File Here!
+              </h3>
+              <p className="text-gray-600 mb-2">
+                Upload pictures, release confirmation, bill of lading, etc
+              </p>
+              <p className="text-gray-500 text-sm mb-6">
+                A file maximum size should be 5MB
+              </p>
+
+              <button
+                type="button"
+                onClick={() => document.getElementById('file-input')?.click()}
+                className="inline-flex items-center px-6 py-3 bg-red-600 text-white font-medium rounded-lg hover:bg-red-700 transition-colors"
+              >
+                <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                  <path fillRule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+                Import a File
+              </button>
+
+              <input
+                id="file-input"
+                type="file"
+                multiple
+                className="hidden"
+                onChange={handleFileInputChange}
+                accept="image/*,.pdf,.doc,.docx,.txt"
+              />
+            </div>
+
+            {/* Uploaded Files List */}
+            {uploadedFiles.length > 0 && (
+              <div className="mt-6">
+                <h4 className="text-sm font-medium text-gray-700 mb-3">Uploaded Files:</h4>
+                <div className="space-y-2">
+                  {uploadedFiles.map((file, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div className="flex items-center">
+                        <svg className="w-5 h-5 text-gray-400 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4 4a2 2 0 012-2h4.586A2 2 0 0112 2.586L15.414 6A2 2 0 0116 7.414V16a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 6a1 1 0 011-1h6a1 1 0 110 2H7a1 1 0 01-1-1zm1 3a1 1 0 100 2h6a1 1 0 100-2H7z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-sm text-gray-700">{file.name}</span>
+                        <span className="text-xs text-gray-500 ml-2">
+                          ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeFile(index)}
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}
@@ -1657,6 +1849,7 @@ interface ResidualAnalysisPayload {
     meterType: string;
     proposedUtilization?: number;
     environmentRanking: string;
+    // description: string;
   }>;
   financial: {
     subjectPrice?: number;
