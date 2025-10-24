@@ -6,6 +6,10 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  // Handle font loading issues during build
+  experimental: {
+    optimizePackageImports: ['@next/font'],
+  },
   /* config options here */
 };
 
