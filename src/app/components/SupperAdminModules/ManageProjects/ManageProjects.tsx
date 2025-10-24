@@ -1,35 +1,65 @@
 "use client";
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
-const projectsData = [
-  { serviceName: 'Residual Analysis', description: 'Asset residual value', status: 'Active' },
-  { serviceName: 'Appraisal/Valuation', description: 'Asset worth assessment', status: 'Active' },
-  { serviceName: 'Insurance Quotation', description: 'Policy cost estimate', status: 'Active' },
-  { serviceName: 'Residual Insurance', description: 'Coverage for residuals', status: 'Active' },
-  { serviceName: 'Maintenance Provision', description: 'Ongoing maintenance', status: 'Active' },
-  { serviceName: 'Return Provisions', description: 'Asset return options', status: 'Approved' },
-  { serviceName: 'Transportation Quotation', description: 'Transport cost estimate', status: 'Active' },
-  { serviceName: 'Cost-Benefit Analysis', description: 'Financial comparison', status: 'Cancelled' },
-  { serviceName: 'Extended Warranty Quotation', description: 'Extended service plan', status: 'Active' },
-  { serviceName: 'Residual Insurance Quotation', description: 'Coverage estimate', status: 'Active' },
-];
+interface Project {
+  id: string;
+  projectNumber: string;
+  name: string;
+  description: string;
+  status: string;
+  submitDate: string;
+  startDate: string;
+  endDate: string | null;
+  metadata: {
+    category: string;
+    priority: string;
+  };
+  companyId: string;
+  projectTypeId: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  company: {
+    id: string;
+    companyName: string;
+  };
+  assets: unknown[];
+  reports: unknown[];
+}
+
+interface ProjectsResponse {
+  projects: Project[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 const getStatusClass = (status: string) => {
   switch (status) {
-    case 'Active':
+    case 'pending':
+      return 'text-yellow-600';
+    case 'active':
       return 'text-red-600';
-    case 'Approved':
-      return 'text-gray-900';
-    case 'Cancelled':
+    case 'approved':
+      return 'text-green-600';
+    case 'cancelled':
       return 'text-gray-400';
+    case 'completed':
+      return 'text-blue-600';
     default:
       return 'text-gray-700';
   }
 };
 
 const getActionClass = (status: string) => {
-  if (status === 'Approved' || status === 'Cancelled') {
+  if (status === 'approved' || status === 'cancelled' || status === 'completed') {
     return 'bg-gray-200 text-gray-800';
   }
   return 'bg-red-500 text-white';
@@ -37,6 +67,65 @@ const getActionClass = (status: string) => {
 
 export default function ManageProjects() {
   const router = useRouter();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [totalItems, setTotalItems] = useState(0);
+
+  const fetchProjects = async (page: number = 1, limit: number = 10) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const authToken = localStorage.getItem('authToken');
+      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+     
+      
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result: ProjectsResponse = await response.json();
+      console.log('API Response:', result);
+      console.log('Projects array:', result.projects);
+      setProjects(result.projects || []);
+      setTotalItems(result.total || 0);
+      setCurrentPage(result.page || 1);
+    } catch (err) {
+      console.error('Error fetching projects:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch projects');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects(currentPage, limit);
+  }, [currentPage, limit]);
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    fetchProjects(newPage, limit);
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setCurrentPage(1);
+    fetchProjects(1, newLimit);
+  };
+
+  const totalPages = Math.ceil(totalItems / limit);
+  const startItem = (currentPage - 1) * limit + 1;
+  const endItem = Math.min(currentPage * limit, totalItems);
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -75,10 +164,14 @@ export default function ManageProjects() {
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           Rows per page:
-          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2">
-            <option>10</option>
-            <option>20</option>
-            <option>50</option>
+          <select 
+            className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2"
+            value={limit}
+            onChange={(e) => handleLimitChange(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
           </select>
         </div>
       </div>
@@ -111,56 +204,121 @@ export default function ManageProjects() {
             </tr>
           </thead>
           <tbody>
-            {projectsData.map((project, index) => {
-              const isStriped = index % 2 === 0;
-              return (
-                <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
-                    <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{project.serviceName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description}</td>
-                  <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>{project.status}</td>
-                  <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
-                    <button
-                      onClick={() => {
-                        if (project.status === 'Approved' || project.status === 'Cancelled') {
-                          router.push('/dashboard/manage-projects/project-report');
-                        }
-                      }}
-                      className={`px-4 py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
-                    >
-                      {project.status === 'Approved' || project.status === 'Cancelled' ? 'View Report' : 'Review'}
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+            {loading ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  <div className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Loading projects...
+                  </div>
+                </td>
+              </tr>
+            ) : error ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-red-500">
+                  Error: {error}
+                </td>
+              </tr>
+            ) : projects.length === 0 ? (
+              <tr>
+                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                  No projects found
+                </td>
+              </tr>
+            ) : (
+              projects.map((project, index) => {
+                const isStriped = index % 2 === 0;
+                return (
+                  <tr key={project.id || index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                      <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{project.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description || 'No description'}</td>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>{project.status}</td>
+                    <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
+                      <button
+                        onClick={() => {
+                          if (project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed') {
+                            router.push('/dashboard/manage-projects/project-report');
+                          }
+                        }}
+                        className={`px-4 py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                      >
+                        {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
 
       <div className="flex justify-between items-center mt-4">
-        <div className="text-sm text-gray-700">1-10 of 20 items</div>
+        <div className="text-sm text-gray-700">
+          {totalItems > 0 ? `${startItem}-${endItem} of ${totalItems} items` : '0 items'}
+        </div>
         <div className="flex items-center space-x-2">
-          <button className="border border-gray-300 rounded-md pt-3 pb-3 pl-3 pr-3 hover:bg-gray-50 text-gray-700">
+          <button 
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+            className="border border-gray-300 rounded-md pt-3 pb-3 pl-3 pr-3 hover:bg-gray-50 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <button className="border border-gray-300 rounded-md pt-2 pb-2 pl-4 pr-4 bg-red-500 text-white hover:bg-red-600">1</button>
-          <button className="border border-gray-300 rounded-md pt-2 pb-2 pl-4 pr-4 hover:bg-gray-50 text-gray-700">2</button>
-          <button className="border border-gray-300 rounded-md pt-3 pb-3 pl-3 pr-3 hover:bg-gray-50 text-gray-700">
+          
+          {/* Generate page numbers */}
+          {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+            const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+            if (pageNum > totalPages) return null;
+            
+            return (
+              <button
+                key={pageNum}
+                onClick={() => handlePageChange(pageNum)}
+                className={`border border-gray-300 rounded-md pt-2 pb-2 pl-4 pr-4 ${
+                  pageNum === currentPage 
+                    ? 'bg-red-500 text-white hover:bg-red-600' 
+                    : 'hover:bg-gray-50 text-gray-700'
+                }`}
+              >
+                {pageNum}
+              </button>
+            );
+          })}
+          
+          <button 
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+            className="border border-gray-300 rounded-md pt-3 pb-3 pl-3 pr-3 hover:bg-gray-50 text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
             </svg>
           </button>
+          
           <input 
             type="number" 
-            placeholder="10" 
+            placeholder={currentPage.toString()}
             className="w-16 px-2 text-black py-2 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
             min="1"
-            max="10"
+            max={totalPages}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                const target = e.target as HTMLInputElement;
+                const page = parseInt(target.value);
+                if (page >= 1 && page <= totalPages) {
+                  handlePageChange(page);
+                }
+              }
+            }}
           />
           <span className="text-sm text-gray-600">/Page</span>
         </div>
