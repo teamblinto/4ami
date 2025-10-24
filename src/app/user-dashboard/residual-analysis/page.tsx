@@ -244,7 +244,7 @@ const ResidualAnalysisPage = () => {
       description: projectNote,
       startDate: startDate && startDate.trim() ? startDate : undefined,
       endDate: submittedDate && submittedDate.trim() ? submittedDate : undefined,
-      status: "draft",
+      // status: "draft",
       metadata: {
         priority: "high",
         category: "infrastructure",
@@ -1814,7 +1814,7 @@ interface ResidualAnalysisPayload {
   description: string;
   startDate?: string;
   endDate?: string;
-  status: string;
+  // status: string;
   metadata: {
     priority: string;
     category: string;
