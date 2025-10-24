@@ -122,7 +122,7 @@ const ResidualAnalysisPage = () => {
   const [currentMeterReading, setCurrentMeterReading] = useState("");
   const [meterType, setMeterType] = useState("");
   const [environmentRanking, setEnvironmentRanking] = useState("New");
-  // const [productRequirement, setProductRequirement] = useState("");
+  const [productRequirement, setProductRequirement] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
 
@@ -280,7 +280,7 @@ const ResidualAnalysisPage = () => {
           meterType,
           proposedUtilization,
           environmentRanking,
-          // productRequirement,
+          note: productRequirement,
           // description: equipmentDescription,
         },
       ],
@@ -1180,8 +1180,8 @@ const ResidualAnalysisPage = () => {
                     rows={3}
                     placeholder="Type here...."
                     className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
-                  // value={productRequirement}
-                  // onChange={(e) => setProductRequirement(e.target.value)}
+                    value={productRequirement}
+                    onChange={(e) => setProductRequirement(e.target.value)}
                   />
                 </div>
 
@@ -1849,7 +1849,7 @@ interface ResidualAnalysisPayload {
     meterType: string;
     proposedUtilization?: number;
     environmentRanking: string;
-    // description: string;
+    note?: string | null;
   }>;
   financial: {
     subjectPrice?: number;
