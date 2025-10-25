@@ -45,8 +45,8 @@ jobs:
         
     - name: Deploy to Elastic Beanstalk
       run: |
-        eb init 4ami-frontend --platform node.js --region us-east-1 --non-interactive
-        eb deploy 4ami-prod --non-interactive
+        eb init 4ami-frontend --platform node.js --region us-east-1
+        eb deploy 4ami-prod
         
     - name: Health Check
       run: |
