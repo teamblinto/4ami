@@ -4,7 +4,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
-import rateLimit from 'rate-limiter-flexible';
+import rateLimit from 'express-rate-limit';
 
 // Import routes
 import authRoutes from './routes/auth';
@@ -19,10 +19,10 @@ const app = express();
 const prisma = new PrismaClient();
 
 // Rate limiting
-const rateLimiter = new rateLimit.RateLimiterMemory({
-  keyPrefix: 'middleware',
-  points: 100, // Number of requests
-  duration: 60, // Per 60 seconds
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+  message: 'Too many requests from this IP, please try again later.'
 });
 
 // Middleware
@@ -36,14 +36,7 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Rate limiting middleware
-app.use(async (req, res, next) => {
-  try {
-    await rateLimiter.consume(req.ip);
-    next();
-  } catch (rejRes) {
-    res.status(429).json({ message: 'Too many requests' });
-  }
-});
+app.use(limiter);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
