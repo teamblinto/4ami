@@ -46,10 +46,10 @@ jobs:
     - name: Deploy to Elastic Beanstalk
       run: |
         eb init 4ami-frontend --platform node.js --region us-east-1
-        eb deploy 4ami-prod --timeout 20
+        eb create 4ami-frontend-prod --instance-type t3.small --platform-version "Node.js 18" --region us-east-1 || eb deploy 4ami-frontend-prod --timeout 20
         
     - name: Health Check
       run: |
         echo "Deployment completed. Checking health..."
         sleep 30
-        curl -f https://4ami-prod.eba-dmm3ynh8.us-east-1.elasticbeanstalk.com || echo "Health check failed, but deployment may still be in progress"
+        curl -f https://4ami-frontend-prod.eba-dmm3ynh8.us-east-1.elasticbeanstalk.com || echo "Health check failed, but deployment may still be in progress"
