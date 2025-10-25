@@ -47,13 +47,22 @@ jobs:
       run: |
         pip install awsebcli
         
+    - name: Update Dockerrun.aws.json with ECR image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        ECR_REPOSITORY: 4ami-frontend
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        # Update Dockerrun.aws.json with the actual ECR image URI
+        sed -i "s|782296987722.dkr.ecr.us-east-1.amazonaws.com/4ami-frontend:latest|$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|g" Dockerrun.aws.json
+        
     - name: Deploy to Elastic Beanstalk
       run: |
         # Create or update EB environment with Docker platform
         eb init 4ami-frontend --platform docker --region us-east-1
         
-        # Deploy using ECR image
-        eb deploy 4ami-prod --source $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+        # Deploy using Dockerrun.aws.json
+        eb deploy 4ami-prod
         
     - name: Health Check
       run: |
