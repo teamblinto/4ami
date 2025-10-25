@@ -21,6 +21,10 @@ jobs:
         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         aws-region: us-east-1
         
+    - name: Create ECR Repository
+      run: |
+        aws ecr create-repository --repository-name 4ami-frontend --region us-east-1 || echo "Repository already exists"
+        
     - name: Login to Amazon ECR
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v2
@@ -38,10 +42,6 @@ jobs:
         # Push the image to ECR
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
-        
-    - name: Create ECR Repository
-      run: |
-        aws ecr create-repository --repository-name 4ami-frontend --region us-east-1 || echo "Repository already exists"
         
     - name: Deploy to Elastic Beanstalk
       run: |
