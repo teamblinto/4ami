@@ -20,24 +20,20 @@ jobs:
         node-version: '22.17.1'
         cache: 'npm'
 
-    - name: Install pnpm
-      uses: pnpm/action-setup@v4
-      with:
-        version: 8
-
     - name: Install dependencies
       run: |
-        npm install -g pnpm
-        pnpm install --frozen-lockfile
+        # Remove pnpm lockfile if it exists to avoid conflicts
+        rm -f pnpm-lock.yaml
+        npm install
 
     - name: Run linting
-      run: pnpm run lint
+      run: npm run lint
 
     - name: Type check
       run: npx tsc --noEmit
 
     - name: Build application
-      run: pnpm run build
+      run: npm run build
       env:
         NODE_ENV: production
         NEXT_TELEMETRY_DISABLED: 1
