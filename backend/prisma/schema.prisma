@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String   @id @default(uuid())
+  email       String   @unique
+  passwordHash String
+  firstName   String?
+  lastName    String?
+  role        Role     @default(USER)
+  companyId   String?
+  isVerified  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relations
+  company     Company? @relation(fields: [companyId], references: [id])
+  projects    Project[]
+  invitations UserInvitation[]
+
+  @@map("users")
+}
+
+model Company {
+  id        String   @id @default(uuid())
+  name      String
+  domain    String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  users     User[]
+  projects  Project[]
+
+  @@map("companies")
+}
+
+model Project {
+  id          String      @id @default(uuid())
+  name        String
+  description String?
+  companyId   String
+  createdById String
+  status      ProjectStatus @default(ACTIVE)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  // Relations
+  company     Company @relation(fields: [companyId], references: [id])
+  createdBy   User    @relation(fields: [createdById], references: [id])
+
+  @@map("projects")
+}
+
+model UserInvitation {
+  id        String   @id @default(uuid())
+  email     String
+  companyId String
+  invitedById String
+  token     String   @unique
+  expiresAt DateTime
+  isUsed    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  // Relations
+  company     Company @relation(fields: [companyId], references: [id])
+  invitedBy  User    @relation(fields: [invitedById], references: [id])
+
+  @@map("user_invitations")
+}
+
+enum Role {
+  SUPER_ADMIN
+  COMPANY_ADMIN
+  USER
+}
+
+enum ProjectStatus {
+  ACTIVE
+  INACTIVE
+  COMPLETED
+}
