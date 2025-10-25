@@ -5,7 +5,7 @@ A comprehensive Next.js application for asset management, user administration, a
 ## 🚀 **Live Deployment**
 
 - **Production URL**: [https://your-app.amplifyapp.com](https://your-app.amplifyapp.com) (AWS Amplify)
-- **Backend API**: [https://4ami-backend-prod.eba-5euwtfrt.us-east-1.elasticbeanstalk.com](https://4ami-backend-prod.eba-5euwtfrt.us-east-1.elasticbeanstalk.com)
+- **Backend API**: [https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com](https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com)
 - **Status**: ✅ Deployed and Running
 
 ## 📋 **Project Overview**
@@ -29,12 +29,69 @@ The 4AMI Frontend is a modern web application built with Next.js 15, providing:
 - **Deployment**: AWS Amplify
 - **CI/CD**: GitHub Actions
 
+## 🔗 **Frontend-Backend Integration**
+
+### **Architecture Overview**
+
+```
+┌─────────────────┐    HTTPS     ┌─────────────────┐    HTTPS     ┌─────────────────┐
+│   Frontend      │ ──────────► │   Backend API   │ ──────────► │   AWS Database  │
+│   (Amplify)     │             │  (Elastic       │             │   (RDS + Redis) │
+│                 │             │   Beanstalk)    │             │                 │
+└─────────────────┘             └─────────────────┘             └─────────────────┘
+```
+
+### **API Integration**
+
+**Base URL**: `https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1`
+
+**Authentication Flow**:
+```typescript
+// Frontend API calls to backend
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+// Login request
+const loginResponse = await fetch(`${API_BASE_URL}/auth/signin`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ email, password })
+});
+```
+
+**Key API Endpoints**:
+
+| Endpoint | Method | Purpose | Frontend Usage |
+|----------|--------|---------|----------------|
+| `/auth/signin` | POST | User login | Login page |
+| `/auth/customer-admin-signup` | POST | Admin registration | Signup page |
+| `/users` | GET | Get all users | User management |
+| `/users/invite` | POST | Invite users | User invitation |
+| `/companies/register` | POST | Company registration | Company setup |
+| `/projects` | POST | Create project | Project creation |
+| `/health` | GET | Health check | System monitoring |
+
+### **Environment Configuration**
+
+**Production Environment Variables**:
+```bash
+NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
+NEXT_PUBLIC_FRONTEND_URL=https://your-app.amplifyapp.com
+NODE_ENV=production
+```
+
+**Local Development Environment**:
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://localhost:3001/api/v1
+NODE_ENV=development
+```
+
 ## 🚀 **Quick Start**
 
 ### **Prerequisites**
 - Node.js 18+ 
 - npm or yarn
 - Git
+- Backend running locally or access to production backend
 
 ### **Local Development**
 
@@ -56,8 +113,12 @@ The 4AMI Frontend is a modern web application built with Next.js 15, providing:
    
    Update `.env.local`:
    ```bash
-   NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-prod.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
+   # For local development
+   NEXT_PUBLIC_API_BASE_URL=http://localhost:3001/api/v1
    NODE_ENV=development
+   
+   # For production backend testing
+   # NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
    ```
 
 4. **Start development server**
@@ -68,6 +129,59 @@ The 4AMI Frontend is a modern web application built with Next.js 15, providing:
 5. **Access the application**
    - Open [http://localhost:3000](http://localhost:3000)
    - Admin Login: `admin@4ami.com` / `Admin@123456`
+
+## 🧪 **Testing & Validation**
+
+### **API Connectivity Testing**
+
+**1. Health Check**
+```bash
+# Test backend health
+curl https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/health
+
+# Expected response: {"status": "ok", "timestamp": "..."}
+```
+
+**2. Authentication Testing**
+```bash
+# Test login endpoint
+curl -X POST https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@4ami.com","password":"Admin@123456"}'
+
+# Expected response: JWT token and user data
+```
+
+**3. Frontend-Backend Integration Test**
+```javascript
+// Test in browser console
+fetch('/api/health')
+  .then(response => response.json())
+  .then(data => console.log('Backend connected:', data))
+  .catch(error => console.error('Backend connection failed:', error));
+```
+
+### **Data Persistence Testing**
+
+**1. User Registration Test**
+```bash
+# Register new user
+curl -X POST https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1/auth/customer-admin-signup \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"Test123456","companyName":"Test Company"}'
+```
+
+**2. Database Verification**
+- Check AWS RDS PostgreSQL database
+- Verify user data is stored in `users` table
+- Confirm company data in `companies` table
+
+**3. Session Testing**
+```javascript
+// Test session persistence
+localStorage.getItem('authToken');
+sessionStorage.getItem('userData');
+```
 
 ## 🔧 **Available Scripts**
 
@@ -89,6 +203,9 @@ npm run test:watch   # Run tests in watch mode
 src/
 ├── app/                    # Next.js App Router
 │   ├── api/               # API Routes (Backend Proxies)
+│   │   ├── auth/          # Authentication endpoints
+│   │   ├── users/         # User management
+│   │   └── companies/     # Company management
 │   ├── components/        # Reusable components
 │   ├── dashboard/         # Dashboard pages
 │   ├── user-dashboard/    # User-specific dashboards
@@ -99,47 +216,34 @@ src/
 │   ├── config.ts         # API configuration
 │   └── emailjs-config.ts # Email service config
 └── contexts/             # React contexts
+    └── SidebarContext.tsx # UI state management
 ```
 
-## 🔗 **API Integration**
-
-The frontend connects to the backend API through:
-
-- **Authentication**: `/api/auth/*`
-- **User Management**: `/api/users/*`
-- **Company Management**: `/api/companies/*`
-- **Project Management**: `/api/projects/*`
-- **Health Check**: `/api/health`
-
-### **Backend API Endpoints**
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/auth/signin` | POST | User login |
-| `/api/auth/customer-admin-signup` | POST | Customer admin registration |
-| `/api/users` | GET | Get all users |
-| `/api/users/invite` | POST | Invite new users |
-| `/api/companies/register` | POST | Register company |
-| `/api/projects` | POST | Create project |
-| `/api/health` | GET | Health check |
-
-## 🌐 **Deployment**
+## 🌐 **AWS Integration**
 
 ### **AWS Amplify Deployment**
 
-The application is automatically deployed to AWS Amplify:
+The frontend is automatically deployed to AWS Amplify:
 
 1. **Automatic Deployment**: Push to `main` branch triggers deployment
 2. **Environment Variables**: Configured in Amplify Console
 3. **Custom Domain**: Supports custom domain configuration
 4. **SSL Certificate**: Automatically provisioned
 
+### **Backend Integration**
+
+**Production Backend**: AWS Elastic Beanstalk with Docker
+- **URL**: `https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com`
+- **Database**: AWS RDS PostgreSQL
+- **Cache**: AWS ElastiCache Redis
+- **Health Check**: `/api/health`
+
 ### **Environment Variables**
 
 Required environment variables for production:
 
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-prod.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
+NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
 NEXT_PUBLIC_FRONTEND_URL=https://your-app.amplifyapp.com
 NODE_ENV=production
 ```
@@ -219,16 +323,20 @@ docker-compose -f docker-compose.prod.yml logs -f
 
 ### **Common Issues**
 
-1. **Build Failures**
+1. **Backend Connection Issues**
+   ```bash
+   # Check backend health
+   curl https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/health
+   
+   # Check CORS configuration
+   # Verify environment variables
+   ```
+
+2. **Build Failures**
    ```bash
    npm install
    npm run build
    ```
-
-2. **API Connection Issues**
-   - Verify backend URL in environment variables
-   - Check CORS configuration
-   - Ensure backend is running
 
 3. **Environment Variable Issues**
    - Verify `NEXT_PUBLIC_` prefix for client-side variables
@@ -248,6 +356,9 @@ npx tsc --noEmit
 
 # Linting
 npm run lint
+
+# API testing
+curl -X GET http://localhost:3001/api/health
 ```
 
 ## 🤝 **Contributing**
