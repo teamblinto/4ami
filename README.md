@@ -1,5 +1,10 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## 🚀 Deployment Status
+- **CI/CD**: Automated deployment to AWS Elastic Beanstalk via GitHub Actions
+- **Trigger**: Push to `main` branch
+- **Last Test**: $(date)
+
 ## Getting Started
 
 
