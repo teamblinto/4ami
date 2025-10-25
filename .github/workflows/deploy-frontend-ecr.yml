@@ -58,11 +58,11 @@ jobs:
         
     - name: Deploy to Elastic Beanstalk
       run: |
-        # Create or update EB environment with Docker platform
-        eb init 4ami-frontend --platform docker --region us-east-1
+        # Create or update EB environment with Node.js platform
+        eb init 4ami-frontend --platform node.js --region us-east-1
         
-        # Deploy using Dockerrun.aws.json
-        eb deploy 4ami-prod
+        # Deploy using standard Node.js deployment
+        eb deploy 4ami-prod --timeout 20
         
     - name: Health Check
       run: |
