@@ -43,6 +43,10 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         
+    - name: Install EB CLI
+      run: |
+        pip install awsebcli
+        
     - name: Deploy to Elastic Beanstalk
       run: |
         # Create or update EB environment with Docker platform
