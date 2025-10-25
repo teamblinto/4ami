@@ -46,7 +46,7 @@ jobs:
     - name: Deploy to Elastic Beanstalk
       run: |
         eb init 4ami-frontend --platform node.js --region us-east-1
-        eb create 4ami-frontend-prod --instance-type t3.small --platform-version "Node.js 18" --region us-east-1 || eb deploy 4ami-frontend-prod --timeout 20
+        eb create 4ami-frontend-prod --instance-type t3.small --region us-east-1 || eb deploy 4ami-frontend-prod --timeout 20
         
     - name: Health Check
       run: |
