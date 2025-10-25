@@ -1,0 +1,62 @@
+// Environment configuration
+export const config = {
+  // Backend API Base URL
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://4ami.morshadunnur.me/api/v1",
+  
+  
+  // API Endpoints
+  endpoints: {
+    auth: {
+      signin: '/auth/signin',
+      customerAdminSignup: '/auth/customer-admin-signup',
+      verifyEmail: '/auth/verify-email',
+    },
+    users: {
+      invite: '/users/invite',
+    },
+    companies: {
+      register: '/companies/register',
+    }
+  }
+};
+
+// Helper function to get full API URL
+export const getApiUrl = (endpoint: string): string => {
+  return `${config.API_BASE_URL}${endpoint}`;
+};
+
+// Helper function to get auth headers
+export const getAuthHeaders = (authToken?: string) => {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  
+  // Only include ngrok header when targeting an ngrok URL to avoid CORS issues elsewhere
+  try {
+    if (config.API_BASE_URL.includes('ngrok')) {
+      headers['ngrok-skip-browser-warning'] = 'true';
+    }
+  } catch {}
+
+  if (authToken) {
+    headers['Authorization'] = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`;
+  }
+  
+  return headers;
+};
+
+// Helper function to check if we're in development mode
+export const isDevelopment = () => {
+  return process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined;
+};
+
+// Helper function to get the appropriate API URL based on environment
+export const getApiUrlForEnvironment = (endpoint: string): string => {
+  // In development, we might want to use local API routes to avoid CORS issues
+  if (isDevelopment() && !config.API_BASE_URL.includes('ngrok')) {
+    // Use local API routes as proxy to avoid CORS issues
+    return `/api/proxy${endpoint}`;
+  }
+  
+  return getApiUrl(endpoint);
+};
