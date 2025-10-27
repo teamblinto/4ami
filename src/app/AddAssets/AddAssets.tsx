@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 interface AddAssetsProps {
   onBack?: () => void;
@@ -9,17 +10,19 @@ interface AddAssetsProps {
 
 export default function AddAssets({ onBack }: AddAssetsProps) {
   const [formData, setFormData] = useState({
-    industry: 'Construction',
-    subjectAssetType: 'Excavator',
-    make: 'Volvo',
-    model: 'A40G',
-    length: '',
-    width: '',
-    height: '',
-    weight: '',
-    specialTransportationConsideration: '',
-    yearOfManufacture: '2003'
+    name: '',
+    description: '',
+    type: 'equipment',
+    value: '',
+    residualValue: '',
+    status: '',
+    brand: '',
+    model: '',
+    notes: '',
+    projectId: ''
   });
+
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -29,37 +32,96 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setLoading(true);
     
-    // Show loading toast
-    const loadingToast = toast.loading('Creating asset...');
-    
-    // Simulate API call
-    setTimeout(() => {
-      toast.dismiss(loadingToast);
+    try {
+      const authToken = localStorage.getItem('authToken');
+      console.log('Auth token found:', authToken ? 'Yes' : 'No');
+      console.log('Auth token value:', authToken);
+      
+      if (!authToken) {
+        throw new Error('Authentication token not found. Please log in again.');
+      }
+
+      // Prepare the data according to the API structure
+      const assetData = {
+        name: formData.name,
+        description: formData.description,
+        type: formData.type,
+        value: parseFloat(formData.value) || 0,
+        residualValue: parseFloat(formData.residualValue) || 0,
+        status: formData.status,
+        properties: {
+          brand: formData.brand,
+          model: formData.model
+        },
+        metadata: {
+          notes: formData.notes
+        },
+        projectId: formData.projectId
+      };
+
+      console.log('Submitting asset data:', assetData);
+
+      const headers = getAuthHeaders(authToken);
+      console.log('Request headers:', headers);
+
+      const response = await fetch(getApiUrl('/assets'), {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify(assetData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to create asset');
+      }
+
+      const result = await response.json();
+      console.log('Asset created successfully:', result);
+      
       toast.success('Asset created successfully!');
+      
+      // Reset form
+      setFormData({
+        name: '',
+        description: '',
+        type: 'equipment',
+        value: '',
+        residualValue: '',
+        status: '',
+        brand: '',
+        model: '',
+        notes: '',
+        projectId: ''
+      });
       
       // After successful submission, go back to the list
       if (onBack) {
         onBack();
       }
-    }, 2000);
+    } catch (error) {
+      console.error('Error creating asset:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create asset');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDiscardChanges = () => {
     setFormData({
-      industry: 'Construction',
-      subjectAssetType: 'Excavator',
-      make: 'Volvo',
-      model: 'A40G',
-      length: '',
-      width: '',
-      height: '',
-      weight: '',
-      specialTransportationConsideration: '',
-      yearOfManufacture: '2003'
+      name: '',
+      description: '',
+      type: 'equipment',
+      value: '',
+      residualValue: '',
+      status: '',
+      brand: '',
+      model: '',
+      notes: '',
+      projectId: ''
     });
     toast.success('Changes discarded successfully!');
   };
@@ -85,115 +147,156 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-6">
-              {/* Industry */}
+              {/* Asset Name */}
               <div>
-                <label htmlFor="industry" className="block text-sm font-medium text-[#343A40] mb-2">
-                  Industry
+                <label htmlFor="name" className="block text-sm font-medium text-[#343A40] mb-2">
+                  Asset Name *
                 </label>
-                <select
-                  id="industry"
-                  name="industry"
-                  value={formData.industry}
+                <input
+                  type="text"
+                  id="name"
+                  name="name"
+                  value={formData.name}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none  placeholder:text-[#343A40]"
-                >
-                  <option value="Construction">Construction</option>
-                  <option value="Manufacturing">Manufacturing</option>
-                  <option value="Agriculture">Agriculture</option>
-                  <option value="Transportation">Transportation</option>
-                </select>
+                  required
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  placeholder="e.g., Laptop Computer"
+                />
               </div>
 
-              {/* Make */}
+              {/* Description */}
               <div>
-                <label htmlFor="make" className="block text-sm font-medium text-gray-700 mb-2">
-                  Make
+                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+                  Description *
+                </label>
+                <input
+                  type="text"
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  required
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  placeholder="e.g., Dell Latitude 5520"
+                />
+              </div>
+
+              {/* Asset Type */}
+              <div>
+                <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
+                  Asset Type *
                 </label>
                 <select
-                  id="make"
-                  name="make"
-                  value={formData.make}
+                  id="type"
+                  name="type"
+                  value={formData.type}
                   onChange={handleInputChange}
+                  required
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
                 >
-                  <option value="Volvo">Volvo</option>
-                  <option value="Caterpillar">Caterpillar</option>
-                  <option value="John Deere">John Deere</option>
-                  <option value="Siemens">Siemens</option>
+                  <option value="equipment">Equipment</option>
+                  <option value="vehicle">Vehicle</option>
+                  <option value="furniture">Furniture</option>
+                  <option value="technology">Technology</option>
+                  <option value="machinery">Machinery</option>
                 </select>
               </div>
 
-              {/* Dimensions Row */}
+              {/* Value and Residual Value Row */}
               <div className="grid grid-cols-2 gap-4">
-                {/* Length */}
+                {/* Value */}
                 <div>
-                  <label htmlFor="length" className="block text-sm font-medium text-gray-700 mb-2">
-                    Length <span className="text-gray-400">(meter unit)</span>
+                  <label htmlFor="value" className="block text-sm font-medium text-gray-700 mb-2">
+                    Value ($) *
                   </label>
                   <input
-                    type="text"
-                    id="length"
-                    name="length"
-                    value={formData.length}
+                    type="number"
+                    id="value"
+                    name="value"
+                    value={formData.value}
                     onChange={handleInputChange}
+                    required
+                    min="0"
+                    step="0.01"
                     className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                    placeholder=""
+                    placeholder="1500"
                   />
                 </div>
 
-                {/* Width */}
+                {/* Residual Value */}
                 <div>
-                  <label htmlFor="width" className="block text-sm font-medium text-gray-700 mb-2">
-                    Width <span className="text-gray-400">(meter unit)</span>
+                  <label htmlFor="residualValue" className="block text-sm font-medium text-gray-700 mb-2">
+                    Residual Value ($) *
                   </label>
                   <input
-                    type="text"
-                    id="width"
-                    name="width"
-                    value={formData.width}
+                    type="number"
+                    id="residualValue"
+                    name="residualValue"
+                    value={formData.residualValue}
                     onChange={handleInputChange}
+                    required
+                    min="0"
+                    step="0.01"
                     className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                    placeholder=""
+                    placeholder="300"
                   />
                 </div>
               </div>
 
-              {/*   */}
+              {/* Project ID */}
               <div>
-                <label htmlFor="specialTransportationConsideration" className="block text-sm font-medium text-gray-700 mb-2">
-                  Special Transportation Consideration <span className="text-gray-400">(Optional)</span>
+                <label htmlFor="projectId" className="block text-sm font-medium text-gray-700 mb-2">
+                  Project ID *
                 </label>
-                <textarea
-                  id="specialTransportationConsideration"
-                  name="specialTransportationConsideration"
-                  value={formData.specialTransportationConsideration}
+                <input
+                  type="text"
+                  id="projectId"
+                  name="projectId"
+                  value={formData.projectId}
                   onChange={handleInputChange}
-                  rows={3}
+                  required
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                  placeholder=""
+                  placeholder="123e4567-e89b-12d3-a456-426614174000"
                 />
               </div>
             </div>
 
             {/* Right Column */}
             <div className="space-y-6">
-              {/* Subject Asset Type */}
+              {/* Status */}
               <div>
-                <label htmlFor="subjectAssetType" className="block text-sm font-medium text-gray-700 mb-2">
-                  Subject Asset Type
+                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
+                  Status
                 </label>
                 <select
-                  id="subjectAssetType"
-                  name="subjectAssetType"
-                  value={formData.subjectAssetType}
+                  id="status"
+                  name="status"
+                  value={formData.status}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
                 >
-                  <option value="Excavator">Excavator</option>
-                  <option value="Bulldozer">Bulldozer</option>
-                  <option value="Crane">Crane</option>
-                  <option value="Forklift">Forklift</option>
+                  <option value="">Select Status</option>
+                  <option value="active">Active</option>
+                  <option value="inactive">Inactive</option>
+                  <option value="maintenance">Maintenance</option>
+                  <option value="retired">Retired</option>
                 </select>
+              </div>
+
+              {/* Brand */}
+              <div>
+                <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-2">
+                  Brand
+                </label>
+                <input
+                  type="text"
+                  id="brand"
+                  name="brand"
+                  value={formData.brand}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  placeholder="e.g., Dell"
+                />
               </div>
 
               {/* Model */}
@@ -208,56 +311,23 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   value={formData.model}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  placeholder="e.g., Latitude 5520"
                 />
               </div>
 
-              {/* Dimensions Row */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Height */}
-                <div>
-                  <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
-                    Height <span className="text-gray-400">(meter unit)</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="height"
-                    name="height"
-                    value={formData.height}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                    placeholder=""
-                  />
-                </div>
-
-                {/* Weight */}
-                <div>
-                  <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
-                    Weight <span className="text-gray-400">(pound unit)</span>
-                  </label>
-                  <input
-                    type="text"
-                    id="weight"
-                    name="weight"
-                    value={formData.weight}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                    placeholder=""
-                  />
-                </div>
-              </div>
-
-              {/* Year of Manufacture */}
+              {/* Notes */}
               <div>
-                <label htmlFor="yearOfManufacture" className="block text-sm font-medium text-gray-700 mb-2">
-                  Year of Manufacture
+                <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
+                  Notes <span className="text-gray-400">(Optional)</span>
                 </label>
-                <input
-                  type="text"
-                  id="yearOfManufacture"
-                  name="yearOfManufacture"
-                  value={formData.yearOfManufacture}
+                <textarea
+                  id="notes"
+                  name="notes"
+                  value={formData.notes}
                   onChange={handleInputChange}
+                  rows={3}
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  placeholder="e.g., Company laptop"
                 />
               </div>
             </div>
@@ -267,9 +337,10 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
           <div className="flex space-x-4 mt-8">
             <button
               type="submit"
-              className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-md font-medium cursor-pointer"
+              disabled={loading}
+              className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-md font-medium cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Create
+              {loading ? 'Creating...' : 'Create'}
             </button>
             <button
               type="button"

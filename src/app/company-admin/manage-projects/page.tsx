@@ -182,10 +182,6 @@ export default function CompanyAdminManageProjectsPage() {
                 <Image src="/import.svg" alt="Import" width={16} height={16} />
                 Import Project Data
               </button>
-              <button className="px-4 py-2 text-black border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors">
-                <Image src="/import.svg" alt="Export" width={16} height={16} />
-                Export Project Data
-              </button>
             </div>
             <div className="flex items-center gap-2">
               <span className="text-sm text-[#6C757D]">Rows per page:</span>

@@ -1,12 +1,34 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import CountUp from 'react-countup';
+import { getApiUrl, getAuthHeaders, config } from '@/lib/config';
+
+// --- INTERFACES ---
+interface ApiUserData {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: string;
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface ApiResponse {
+  data?: ApiUserData[];
+  users?: ApiUserData[];
+  total?: number;
+  page?: number;
+  limit?: number;
+}
 
 // --- MOCK DATA ---
-const statsData = [
+const getStatsData = (userCount: number) => [
   {
     title: "Pending Requests",
     value: "10",
@@ -16,7 +38,7 @@ const statsData = [
   },
   {
     title: "Users",
-    value: "52",
+    value: userCount.toString(),
     change: "↑ 12.5% from last month",
     changeColor: "text-[#01AF76]",
     icon: "/Dashboard-Icons/survey_2512242 1 (1).svg",
@@ -37,26 +59,44 @@ const statsData = [
   },
 ];
 
-const projectsData = [
-  {
-    id: "P101",
-    name: "Residual Analysis",
-    time: "12 June - 25 June",
-    status: "Completed",
-  },
-  {
-    id: "P102",
-    name: "Comparative Analysis",
-    time: "11 June - 22 June",
-    status: "Completed",
-  },
-  {
-    id: "P103",
-    name: "Transportation Quotation",
-    time: "25 July - 12 August",
-    status: "In Process",
-  },
-];
+// Project interfaces
+interface Project {
+  id: string;
+  projectNumber: string;
+  name: string;
+  description: string;
+  status: string;
+  submitDate: string;
+  startDate: string;
+  endDate: string | null;
+  metadata: {
+    category: string;
+    priority: string;
+  };
+  companyId: string;
+  projectTypeId: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  company: {
+    id: string;
+    companyName: string;
+  };
+  assets: unknown[];
+  reports: unknown[];
+}
+
+interface ProjectsResponse {
+  projects: Project[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 const activityData = [
   {
@@ -120,9 +160,20 @@ interface QuickAction {
 }
 
 const getStatusClass = (status: string) => {
-  return status === "Completed"
-    ? " bg-[#FEF0F0] text-[#ED272C] "
-    : "  bg-[#EDEDED] text-[#4B4F58]";
+  switch (status.toLowerCase()) {
+    case 'completed':
+      return "bg-[#FEF0F0] text-[#ED272C]";
+    case 'pending':
+      return "bg-[#FFF7E6] text-[#FF8800]";
+    case 'active':
+      return "bg-[#E6F7FF] text-[#1890FF]";
+    case 'approved':
+      return "bg-[#F6FFED] text-[#52C41A]";
+    case 'cancelled':
+      return "bg-[#F5F5F5] text-[#8C8C8C]";
+    default:
+      return "bg-[#EDEDED] text-[#4B4F58]";
+  }
 };
 
 // --- SUB-COMPONENTS ---
@@ -133,7 +184,9 @@ const StatCard = ({
   change,
   changeColor,
   icon,
-}: StatCardProps) => (
+  isAnimated = false,
+  endValue = 0,
+}: StatCardProps & { isAnimated?: boolean; endValue?: number }) => (
   <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg relative">
     <div className="flex flex-col gap-1">
       <div className="text-sm font-medium text-[#6C757D] flex items-center">
@@ -151,7 +204,19 @@ const StatCard = ({
           </span>
         )}
       </div>
-      <div className="text-2xl font-bold text-[#080607]">{value}</div>
+      <div className="text-2xl font-bold text-[#080607]">
+        {isAnimated ? (
+          <CountUp
+            end={endValue}
+            duration={2.5}
+            separator=","
+            enableScrollSpy
+            scrollSpyOnce
+          />
+        ) : (
+          value
+        )}
+      </div>
       <div className={`text-xs font-regular ${changeColor}`}>{change}</div>
     </div>
     <div className={`absolute top-3 right-[18px]`}>
@@ -166,108 +231,177 @@ const StatCard = ({
   </div>
 );
 
-const ProjectsTable = () => (
-  <div className="bg-white p-4 rounded-lg ">
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-lg text-[#080607] font-semibold">Projects</h3>
-      <Link href="#" className="text-[#ED272C]  text-sm font-medium">
-        View All
-      </Link>
-    </div>
-    <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
-      <div className="flex items-center gap-2 flex-wrap">
-        <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-          <option value="all">Project ID All</option>
-        </select>
-        <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-          <option value="all">Status All</option>
-        </select>
-        <button className="h-8  px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
-          <span className="text-[10px]">
-            <Image
-              src="/filter.svg"
-              alt=""
-              width={10}
-              height={10}
-              style={{ width: "auto", height: "auto" }}
-            />
-          </span>
-          Add Filter{" "}
-          <span>
-            <Image
-              src="/arrow-filter.svg"
-              alt=""
-              width={10}
-              height={10}
-              style={{ width: "auto", height: "auto" }}
-            />
-          </span>
-        </button>
-        <button className="h-8 px-3 border items-center border-gray-300 rounded-md text-xs bg-white text-red-600">
-          Clear Filter
-        </button>
+const ProjectsTable = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const authToken = localStorage.getItem('authToken');
+      const url = getApiUrl(`/projects?page=1&limit=3`); // Limit to 3 for dashboard
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result: ProjectsResponse = await response.json();
+      console.log('Dashboard Projects API Response:', result);
+      setProjects(result.projects || []);
+    } catch (err) {
+      console.error('Error fetching dashboard projects:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch projects');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const formatDateRange = (startDate: string, endDate: string | null) => {
+    const start = new Date(startDate).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    });
+    const end = endDate ? new Date(endDate).toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric'
+    }) : 'Ongoing';
+    return `${start} - ${end}`;
+  };
+
+  return (
+    <div className="bg-white p-4 rounded-lg ">
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg text-[#080607] font-semibold">Projects</h3>
+        <Link href="/dashboard/manage-projects" className="text-[#ED272C]  text-sm font-medium">
+          View All
+        </Link>
       </div>
-      {/* <div className="flex items-center gap-2 text-sm text-gray-600">
-                <span className="text-gray-500">Rows per page:</span>
-                <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
-                    <option>10</option>
-                    <option>20</option>
-                    <option>50</option>
-                </select>
-            </div> */}
-    </div>
-    <div className="overflow-x-auto">
-      <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD] ">
-        <thead>
-          <tr className="bg-white">
-            <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">
-              Project ID
-            </th>
-            <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
-              Project
-            </th>
-            <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">
-              Time (Start to End)
-            </th>
-            <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
-              Status
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {projectsData.map((project, index) => {
-            const isStriped = index % 2 === 0;
-            return (
-              <tr
-                key={project.id}
-                className={isStriped ? "bg-gray-50" : "bg-white"}
-              >
-                <td className="px-6 py-4 text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r">
-                  {project.id}
-                </td>
-                <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD]  border-r">
-                  {project.name}
-                </td>
-                <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD] border-r">
-                  {project.time}
-                </td>
-                <td className="px-6 py-4 border-b border-[#D0D5DD] border-r">
-                  <span
-                    className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(
-                      project.status
-                    )}`}
-                  >
-                    {project.status}
-                  </span>
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+        <div className="flex items-center gap-2 flex-wrap">
+          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+            <option value="all">Project ID All</option>
+          </select>
+          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
+            <option value="all">Status All</option>
+          </select>
+          <button className="h-8  px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px]">
+            <span className="text-[10px]">
+              <Image
+                src="/filter.svg"
+                alt=""
+                width={10}
+                height={10}
+                style={{ width: "auto", height: "auto" }}
+              />
+            </span>
+            Add Filter{" "}
+            <span>
+              <Image
+                src="/arrow-filter.svg"
+                alt=""
+                width={10}
+                height={10}
+                style={{ width: "auto", height: "auto" }}
+              />
+            </span>
+          </button>
+          <button className="h-8 px-3 border items-center border-gray-300 rounded-md text-xs bg-white text-red-600">
+            Clear Filter
+          </button>
+        </div>
+      </div>
+      <div className="overflow-x-auto">
+        <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD] ">
+          <thead>
+            <tr className="bg-white">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">
+                Project ID
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
+                Project
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">
+                Time (Start to End)
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
+                Status
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                  <div className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Loading projects...
+                  </div>
                 </td>
               </tr>
-            );
-          })}
-        </tbody>
-      </table>
+            ) : error ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-8 text-center text-red-500">
+                  Error: {error}
+                </td>
+              </tr>
+            ) : projects.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                  No projects found
+                </td>
+              </tr>
+            ) : (
+              projects.map((project, index) => {
+                const isStriped = index % 2 === 0;
+                return (
+                  <tr
+                    key={project.id}
+                    className={isStriped ? "bg-gray-50" : "bg-white"}
+                  >
+                    <td className="px-6 py-4 text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r">
+                      {project.projectNumber || project.id}
+                    </td>
+                    <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD]  border-r">
+                      {project.name}
+                    </td>
+                    <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD] border-r">
+                      {formatDateRange(project.startDate, project.endDate)}
+                    </td>
+                    <td className="px-6 py-4 border-b border-[#D0D5DD] border-r">
+                      <span
+                        className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(
+                          project.status
+                        )}`}
+                      >
+                        {project.status}
+                      </span>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-);
+  );
+};
+
 
 const RecentActivity = () => (
   <div className="lg:col-span-2 bg-white p-4 rounded-lg">
@@ -313,6 +447,7 @@ const RecentActivity = () => (
       </table>
     </div>
   </div>
+  
 );
 
 const QuickActions = () => {
@@ -354,9 +489,8 @@ const QuickActions = () => {
               </div>
               <div className="text-left">
                 <div
-                  className={`font-semibold text-[#080607] ${
-                    action.title === "Add New asset" ? "text-red-500" : ""
-                  }`}
+                  className={`font-semibold text-[#080607] ${action.title === "Add New asset" ? "text-red-500" : ""
+                    }`}
                 >
                   {action.title}
                 </div>
@@ -375,6 +509,50 @@ const QuickActions = () => {
 // --- MAIN COMPONENT ---
 
 export default function DashboardContent() {
+  const [userCount, setUserCount] = useState<number>(0);
+  const [userCountLoading, setUserCountLoading] = useState(true);
+  const [, setUserCountError] = useState<string | null>(null);
+
+  // Fetch user count
+  const fetchUserCount = async () => {
+    try {
+      setUserCountLoading(true);
+      setUserCountError(null);
+
+      const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+      const url = `${config.API_BASE_URL}/users?page=1&limit=1`; // Only need total count
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result: ApiResponse = await response.json();
+      console.log('User count API Response:', result);
+
+      // Handle different possible response structures
+      const total = result.total || result.data?.length || result.users?.length || 0;
+      setUserCount(total);
+    } catch (err) {
+      console.error('Error fetching user count:', err);
+      setUserCountError(err instanceof Error ? err.message : 'Failed to fetch user count');
+      // Set fallback value
+      setUserCount(0);
+    } finally {
+      setUserCountLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUserCount();
+  }, []);
+
+  const statsData = getStatsData(userCount);
+
   return (
     <div className="space-y-6">
       <div>
@@ -386,11 +564,18 @@ export default function DashboardContent() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {statsData.map((stat) => (
-          <StatCard key={stat.title} {...stat} />
+          <StatCard
+            key={stat.title}
+            {...stat}
+            value={stat.title === "Users" && userCountLoading ? "..." : stat.value}
+            isAnimated={stat.title === "Users" && !userCountLoading}
+            endValue={stat.title === "Users" ? userCount : 0}
+          />
         ))}
       </div>
 
       <ProjectsTable />
+
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <RecentActivity />
