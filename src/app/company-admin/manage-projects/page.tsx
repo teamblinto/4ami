@@ -1,111 +1,51 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 interface Project {
   id: string;
-  projectName: string;
-  location: string;
+  projectNumber: string;
+  name: string;
+  description: string;
   status: string;
+  submitDate: string;
   startDate: string;
-  endDate: string;
-  budget: string;
+  endDate: string | null;
+  metadata: {
+    category: string;
+    priority: string;
+  };
+  companyId: string;
+  projectTypeId: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  company: {
+    id: string;
+    companyName: string;
+  };
+  assets: unknown[];
+  reports: unknown[];
+}
+
+interface ProjectsResponse {
+  projects: Project[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export default function CompanyAdminManageProjectsPage() {
-  const [projects, setProjects] = useState<Project[]>([
-    {
-      id: "1",
-      projectName: "Building Construction",
-      location: "New York",
-      status: "Active",
-      startDate: "2024-01-15",
-      endDate: "2024-12-31",
-      budget: "$500,000",
-    },
-    {
-      id: "2",
-      projectName: "Road Development",
-      location: "Los Angeles",
-      status: "Active",
-      startDate: "2024-02-01",
-      endDate: "2024-11-30",
-      budget: "$750,000",
-    },
-    {
-      id: "3",
-      projectName: "Bridge Repair",
-      location: "Chicago",
-      status: "Completed",
-      startDate: "2023-06-01",
-      endDate: "2024-03-31",
-      budget: "$300,000",
-    },
-    {
-      id: "4",
-      projectName: "Park Renovation",
-      location: "Houston",
-      status: "Active",
-      startDate: "2024-03-15",
-      endDate: "2024-09-30",
-      budget: "$150,000",
-    },
-    {
-      id: "5",
-      projectName: "School Building",
-      location: "Phoenix",
-      status: "Pending",
-      startDate: "2024-05-01",
-      endDate: "2025-04-30",
-      budget: "$1,200,000",
-    },
-    {
-      id: "6",
-      projectName: "Mall Construction",
-      location: "Philadelphia",
-      status: "Active",
-      startDate: "2024-01-01",
-      endDate: "2024-12-31",
-      budget: "$2,500,000",
-    },
-    {
-      id: "7",
-      projectName: "Office Complex",
-      location: "San Antonio",
-      status: "Active",
-      startDate: "2024-04-01",
-      endDate: "2025-03-31",
-      budget: "$1,800,000",
-    },
-    {
-      id: "8",
-      projectName: "Hospital Wing",
-      location: "San Diego",
-      status: "Completed",
-      startDate: "2023-01-01",
-      endDate: "2024-01-31",
-      budget: "$3,000,000",
-    },
-    {
-      id: "9",
-      projectName: "Parking Structure",
-      location: "Dallas",
-      status: "Active",
-      startDate: "2024-02-15",
-      endDate: "2024-08-31",
-      budget: "$400,000",
-    },
-    {
-      id: "10",
-      projectName: "Warehouse Facility",
-      location: "San Jose",
-      status: "Pending",
-      startDate: "2024-06-01",
-      endDate: "2024-12-31",
-      budget: "$900,000",
-    },
-  ]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -113,17 +53,85 @@ export default function CompanyAdminManageProjectsPage() {
   const [roleFilter, setRoleFilter] = useState("All");
   const [showRoleDropdown, setShowRoleDropdown] = useState(false);
   const [showRowsDropdown, setShowRowsDropdown] = useState(false);
+  const [totalItems, setTotalItems] = useState(0);
+
+  // Fetch projects for company admin
+  const fetchProjects = async (page: number = 1, limit: number = 10) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const authToken = localStorage.getItem('authToken');
+      
+      // Check all localStorage keys to see what's available
+      console.log('All localStorage keys:', Object.keys(localStorage));
+      console.log('Auth token:', authToken);
+      
+      // Get user data from localStorage (the app uses 'userData' key)
+      const userDataString = localStorage.getItem('userData');
+      let userProfile: Record<string, unknown> = {};
+      
+      if (userDataString) {
+        try {
+          userProfile = JSON.parse(userDataString);
+          console.log('User Data:', userProfile);
+          console.log('Available keys:', Object.keys(userProfile));
+        } catch (e) {
+          console.error('Failed to parse userData:', e);
+        }
+      } else {
+        console.log('No userData found in localStorage');
+      }
+      
+      // Since the user data doesn't have companyId, we'll use the user's ID
+      // The backend should filter projects by the authenticated user's company
+      const userId = userProfile.id as string;
+      
+      if (!userId) {
+        console.error('User ID not found. Available profile data:', userProfile);
+        throw new Error('User ID not found in user profile. Please ensure you are logged in.');
+      }
+      
+      // Try different API approaches - the backend should filter by authenticated user's company
+      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      console.log('Fetching projects from:', url);
+      console.log('User ID:', userId);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result: ProjectsResponse = await response.json();
+      console.log('Company Admin Projects Response:', result);
+      setProjects(result.projects || []);
+      setTotalItems(result.total || 0);
+      setCurrentPage(result.page || 1);
+    } catch (err) {
+      console.error('Error fetching company projects:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch projects');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects(currentPage, rowsPerPage);
+  }, [currentPage, rowsPerPage]);
 
   // Calculate pagination
-  const indexOfLastProject = currentPage * rowsPerPage;
-  const indexOfFirstProject = indexOfLastProject - rowsPerPage;
-  const currentProjects = projects.slice(indexOfFirstProject, indexOfLastProject);
-  const totalPages = Math.ceil(projects.length / rowsPerPage);
+  const totalPages = Math.ceil(totalItems / rowsPerPage);
+  const startItem = (currentPage - 1) * rowsPerPage + 1;
+  const endItem = Math.min(currentPage * rowsPerPage, totalItems);
 
   // Handle select all
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.checked) {
-      setSelectedProjects(currentProjects.map((project) => project.id));
+      setSelectedProjects(projects.map((project) => project.id));
     } else {
       setSelectedProjects([]);
     }
@@ -138,10 +146,17 @@ export default function CompanyAdminManageProjectsPage() {
     }
   };
 
-  // Handle delete
-  const handleDelete = (projectId: string) => {
-    setProjects(projects.filter((project) => project.id !== projectId));
-    setSelectedProjects(selectedProjects.filter((id) => id !== projectId));
+  // Handle page change
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    fetchProjects(newPage, rowsPerPage);
+  };
+
+  // Handle rows per page change
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setCurrentPage(1);
+    fetchProjects(1, newRowsPerPage);
   };
 
   return (
@@ -153,84 +168,6 @@ export default function CompanyAdminManageProjectsPage() {
         </p>
       </div>
 
-      {/* Project Information Section */}
-      {/* <div className="bg-white mt-6 px-4 py-5 rounded-lg shadow">
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">
-          Project Information
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label
-              htmlFor="project-id"
-              className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
-            >
-              Project ID
-            </label>
-            <input
-              type="text"
-              id="project-id"
-              defaultValue="P1013492"
-              className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="start-date"
-              className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
-            >
-              Start Date
-            </label>
-            <input
-              type="text"
-              id="start-date"
-              defaultValue="21/08/2025"
-              className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="submitted-date"
-              className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
-            >
-              Submitted Date
-            </label>
-            <input
-              type="text"
-              id="submitted-date"
-              placeholder="N/A"
-              className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
-            />
-          </div>
-        </div>
-        <div className="mt-4">
-          <label
-            htmlFor="project-name"
-            className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
-          >
-            Project Name
-          </label>
-          <input
-            type="text"
-            id="project-name"
-            defaultValue="Burleson Sand Volvo A40G Water Truck"
-            className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
-          />
-        </div>
-        <div className="mt-4">
-          <label
-            htmlFor="project-note"
-            className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
-          >
-            Project Note
-          </label>
-          <textarea
-            id="project-note"
-            rows={4}
-            placeholder="Type here...."
-            className="w-full px-3 py-2 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent resize-none"
-          />
-        </div>
-      </div> */}
 
       <div className="bg-white mt-6 rounded-lg shadow">
         {/* Header Section */}
@@ -266,8 +203,7 @@ export default function CompanyAdminManageProjectsPage() {
                       <button
                         key={rows}
                         onClick={() => {
-                          setRowsPerPage(rows);
-                          setCurrentPage(1);
+                          handleRowsPerPageChange(rows);
                           setShowRowsDropdown(false);
                         }}
                         className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
@@ -331,7 +267,7 @@ export default function CompanyAdminManageProjectsPage() {
                 <th className="px-6 py-3 text-left">
                   <input
                     type="checkbox"
-                    checked={selectedProjects.length === currentProjects.length && currentProjects.length > 0}
+                    checked={selectedProjects.length === projects.length && projects.length > 0}
                     onChange={handleSelectAll}
                     className="rounded border-gray-300"
                   />
@@ -344,7 +280,7 @@ export default function CompanyAdminManageProjectsPage() {
                 </th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
                   <div className="flex items-center gap-1">
-                    Location
+                    Description
                     <Image src="/Sort.svg" alt="Sort" width={12} height={12} />
                   </div>
                 </th>
@@ -372,46 +308,78 @@ export default function CompanyAdminManageProjectsPage() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {currentProjects.map((project) => (
-                <tr key={project.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <input
-                      type="checkbox"
-                      checked={selectedProjects.includes(project.id)}
-                      onChange={() => handleSelectProject(project.id)}
-                      className="rounded border-gray-300"
-                    />
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#343A40]">
-                    {project.projectName}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#343A40]">
-                    {project.location}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#343A40]">
-                    {project.status}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#343A40]">
-                    {project.startDate}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-[#343A40]">
-                    {project.endDate}
-                  </td>
-                  <td className="px-6 py-4 text-sm">
-                    <div className="flex gap-2">
-                      <button className="p-1 hover:bg-gray-100 rounded">
-                        <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(project.id)}
-                        className="p-1 hover:bg-gray-100 rounded"
-                      >
-                        <Image src="/bin.svg" alt="Delete" width={16} height={16} />
-                      </button>
+              {loading ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                    <div className="flex items-center justify-center">
+                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                      Loading projects...
                     </div>
                   </td>
                 </tr>
-              ))}
+              ) : error ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-red-500">
+                    Error: {error}
+                  </td>
+                </tr>
+              ) : projects.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
+                    No projects found
+                  </td>
+                </tr>
+              ) : (
+                projects.map((project) => (
+                  <tr key={project.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <input
+                        type="checkbox"
+                        checked={selectedProjects.includes(project.id)}
+                        onChange={() => handleSelectProject(project.id)}
+                        className="rounded border-gray-300"
+                      />
+                    </td>
+                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                      {project.name}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                      {project.description || 'No description'}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                      <span className={`px-2 py-1 rounded-full text-xs ${
+                        project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                        project.status === 'active' ? 'bg-red-100 text-red-800' :
+                        project.status === 'approved' ? 'bg-green-100 text-green-800' :
+                        project.status === 'cancelled' ? 'bg-gray-100 text-gray-800' :
+                        project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
+                        'bg-gray-100 text-gray-800'
+                      }`}>
+                        {project.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                      {new Date(project.startDate).toLocaleDateString()}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                      {project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <div className="flex gap-2">
+                        <button className="p-1 hover:bg-gray-100 rounded">
+                          <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
+                        </button>
+                        <button className="p-1 hover:bg-gray-100 rounded">
+                          <Image src="/bin.svg" alt="Delete" width={16} height={16} />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
@@ -420,39 +388,57 @@ export default function CompanyAdminManageProjectsPage() {
         <div className="px-6 py-4 border-t border-gray-200">
           <div className="flex justify-between items-center">
             <div className="text-sm text-[#6C757D]">
-              1-{Math.min(rowsPerPage, projects.length)} of {projects.length} items
+              {totalItems > 0 ? `${startItem}-${endItem} of ${totalItems} items` : '0 items'}
             </div>
             <div className="flex gap-2">
               <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
                 className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 &lt;
               </button>
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => i + 1).map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-1 border rounded-md ${
-                    currentPage === page
-                      ? "bg-[#DC3545] text-white border-[#DC3545]"
-                      : "border-gray-300 hover:bg-gray-50"
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
+                if (pageNum > totalPages) return null;
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-1 border rounded-md ${
+                      currentPage === pageNum
+                        ? "bg-[#DC3545] text-white border-[#DC3545]"
+                        : "border-gray-300 hover:bg-gray-50"
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
               <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
                 className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 &gt;
               </button>
-              <button className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50">
-                {totalPages}
-              </button>
+              <input 
+                type="number" 
+                placeholder={currentPage.toString()}
+                className="w-16 px-2 text-black py-1 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
+                min="1"
+                max={totalPages}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    const target = e.target as HTMLInputElement;
+                    const page = parseInt(target.value);
+                    if (page >= 1 && page <= totalPages) {
+                      handlePageChange(page);
+                    }
+                  }
+                }}
+              />
               <span className="px-3 py-1 text-sm text-[#6C757D]">/page</span>
             </div>
           </div>
