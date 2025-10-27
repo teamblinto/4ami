@@ -1,31 +1,117 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
+
+interface Project {
+  id: string;
+  projectNumber: string;
+  name: string;
+  description: string;
+  status: string;
+  submitDate: string;
+  startDate: string;
+  endDate: string | null;
+  metadata: {
+    category: string;
+    priority: string;
+  };
+  companyId: string;
+  projectTypeId: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  company: {
+    id: string;
+    companyName: string;
+  };
+  assets: unknown[];
+  reports: unknown[];
+}
+
+interface ProjectsResponse {
+  projects: Project[];
+  total: number;
+  page: number;
+  limit: number;
+}
 
 const ProjectsPage = () => {
   const [selectedRows, setSelectedRows] = useState<number[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [totalItems, setTotalItems] = useState(0);
 
-  // Sample data matching the image
-  const projectsData = [
-    { id: "P1231", assetType: "Water Truck", startDate: "10 May, 2025", endDate: "10 May, 2025", status: "Pending" },
-    { id: "P1001", assetType: "Dump Truck", startDate: "18 April, 2025", endDate: "18 April, 2025", status: "Completed" },
-    { id: "P1120", assetType: "Aerial Lift", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P2285", assetType: "Bulldozer", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P8030", assetType: "Forklift", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P2202", assetType: "Glow Lights", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P5000", assetType: "Transformer", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P5002", assetType: "Excavator", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P8005", assetType: "Forklift", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-    { id: "P8328", assetType: "Wind Turbine", startDate: "15 April, 2025", endDate: "15 April, 2025", status: "Completed" },
-  ];
+  // Fetch projects for user dashboard
+  const fetchProjects = async (page: number = 1, limit: number = 10) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const authToken = localStorage.getItem('authToken');
+      
+      // Get user data from localStorage
+      const userDataString = localStorage.getItem('userData');
+      let userProfile: Record<string, unknown> = {};
+      
+      if (userDataString) {
+        try {
+          userProfile = JSON.parse(userDataString);
+          console.log('User Data:', userProfile);
+        } catch (e) {
+          console.error('Failed to parse userData:', e);
+        }
+      }
+      
+      const userId = userProfile.id as string;
+      
+      if (!userId) {
+        throw new Error('User ID not found in user profile. Please ensure you are logged in.');
+      }
+      
+      // The backend should filter projects by the authenticated user
+      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      console.log('Fetching user projects from:', url);
+      console.log('User ID:', userId);
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
 
-  const totalItems = 120;
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result: ProjectsResponse = await response.json();
+      console.log('User Projects Response:', result);
+      setProjects(result.projects || []);
+      setTotalItems(result.total || 0);
+      setCurrentPage(result.page || 1);
+    } catch (err) {
+      console.error('Error fetching user projects:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch projects');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects(currentPage, rowsPerPage);
+  }, [currentPage, rowsPerPage]);
+
   const totalPages = Math.ceil(totalItems / rowsPerPage);
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedRows(projectsData.map((_, index) => index));
+      setSelectedRows(projects.map((_, index) => index));
     } else {
       setSelectedRows([]);
     }
@@ -37,6 +123,17 @@ const ProjectsPage = () => {
     } else {
       setSelectedRows([...selectedRows, index]);
     }
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+    fetchProjects(newPage, rowsPerPage);
+  };
+
+  const handleRowsPerPageChange = (newRowsPerPage: number) => {
+    setRowsPerPage(newRowsPerPage);
+    setCurrentPage(1);
+    fetchProjects(1, newRowsPerPage);
   };
 
   return (
@@ -115,7 +212,7 @@ const ProjectsPage = () => {
                 <span className="text-sm text-gray-600">Rows per page:</span>
                 <select 
                   value={rowsPerPage} 
-                  onChange={(e) => setRowsPerPage(Number(e.target.value))}
+                  onChange={(e) => handleRowsPerPageChange(Number(e.target.value))}
                   className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-1 focus:ring-red-500 text-black"
                 >
                   <option value={10}>10</option>
@@ -137,7 +234,7 @@ const ProjectsPage = () => {
                   <th className="px-6 py-3 text-left">
                     <input
                       type="checkbox"
-                      checked={selectedRows.length === projectsData.length}
+                      checked={selectedRows.length === projects.length && projects.length > 0}
                       onChange={(e) => handleSelectAll(e.target.checked)}
                       className="rounded border-gray-300 text-red-600 focus:ring-red-500"
                     />
@@ -191,53 +288,84 @@ const ProjectsPage = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {projectsData.map((project, index) => (
-                  <tr key={project.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <input
-                        type="checkbox"
-                        checked={selectedRows.includes(index)}
-                        onChange={() => handleSelectRow(index)}
-                        className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                      />
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {project.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {project.assetType}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {project.startDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {project.endDate}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`text-sm font-medium ${
-                        project.status === 'Pending' ? 'text-gray-900' : 'text-red-600'
-                      }`}>
-                        {project.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {project.status === 'Pending' ? (
-                        '-'
-                      ) : (
-                        <button className="text-red-600 hover:text-red-800 font-medium">
-                          View Report
-                        </button>
-                      )}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <button className="text-gray-400 hover:text-red-600">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                {loading ? (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                      </button>
+                        Loading projects...
+                      </div>
                     </td>
                   </tr>
-                ))}
+                ) : error ? (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-8 text-center text-red-500">
+                      Error: {error}
+                    </td>
+                  </tr>
+                ) : projects.length === 0 ? (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-8 text-center text-gray-500">
+                      No projects found
+                    </td>
+                  </tr>
+                ) : (
+                  projects.map((project, index) => (
+                    <tr key={project.id} className="hover:bg-gray-50">
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <input
+                          type="checkbox"
+                          checked={selectedRows.includes(index)}
+                          onChange={() => handleSelectRow(index)}
+                          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
+                        />
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        {project.projectNumber || project.id}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {project.metadata?.category || 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {new Date(project.startDate).toLocaleDateString()}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <span className={`text-sm font-medium ${
+                          project.status === 'pending' ? 'text-yellow-600' :
+                          project.status === 'active' ? 'text-red-600' :
+                          project.status === 'approved' ? 'text-green-600' :
+                          project.status === 'cancelled' ? 'text-gray-400' :
+                          project.status === 'completed' ? 'text-blue-600' :
+                          'text-gray-700'
+                        }`}>
+                          {project.status}
+                        </span>
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {project.status === 'pending' ? (
+                          '-'
+                        ) : (
+                          <button className="text-red-600 hover:text-red-800 font-medium">
+                            View Report
+                          </button>
+                        )}
+                      </td>
+                      <td className="px-6 py-4 whitespace-nowrap">
+                        <button className="text-gray-400 hover:text-red-600">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
               </tbody>
             </table>
           </div>
@@ -247,12 +375,12 @@ const ProjectsPage = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mt-6">
           <div className="flex items-center justify-between">
             <div className="text-sm text-gray-700">
-              {((currentPage - 1) * rowsPerPage) + 1}-{Math.min(currentPage * rowsPerPage, totalItems)} of {totalItems} items
+              {totalItems > 0 ? `${((currentPage - 1) * rowsPerPage) + 1}-${Math.min(currentPage * rowsPerPage, totalItems)} of ${totalItems} items` : '0 items'}
             </div>
             
             <div className="flex items-center gap-2">
               <button
-                onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
                 disabled={currentPage === 1}
                 className="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -261,22 +389,27 @@ const ProjectsPage = () => {
                 </svg>
               </button>
               
-              {[1, 2, 3, 4].map((page) => (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  className={`px-3 py-2 text-sm rounded-md ${
-                    currentPage === page
-                      ? 'bg-red-600 text-white'
-                      : 'border border-gray-300 hover:bg-gray-50 text-black'
-                  }`}
-                >
-                  {page}
-                </button>
-              ))}
+              {Array.from({ length: Math.min(4, totalPages) }, (_, i) => {
+                const pageNum = Math.max(1, Math.min(totalPages - 3, currentPage - 1)) + i;
+                if (pageNum > totalPages) return null;
+                
+                return (
+                  <button
+                    key={pageNum}
+                    onClick={() => handlePageChange(pageNum)}
+                    className={`px-3 py-2 text-sm rounded-md ${
+                      currentPage === pageNum
+                        ? 'bg-red-600 text-white'
+                        : 'border border-gray-300 hover:bg-gray-50 text-black'
+                    }`}
+                  >
+                    {pageNum}
+                  </button>
+                );
+              })}
               
               <button
-                onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
+                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
                 disabled={currentPage === totalPages}
                 className="px-3 py-2 border border-gray-300 rounded-md text-sm hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
               >
@@ -287,7 +420,7 @@ const ProjectsPage = () => {
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">10 /Page</span>
+              <span className="text-sm text-gray-600">{rowsPerPage} /Page</span>
               <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
