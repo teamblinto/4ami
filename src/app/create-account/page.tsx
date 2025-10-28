@@ -27,22 +27,24 @@ function ClientContent() {
   const router = useRouter();
 console.log(role);
   
+  // Keep only the enum-like role token (e.g., CUSTOMER_USER) and strip email signatures/extras
+  const sanitizeRoleParam = (value: string): string => {
+    const match = value.match(/[A-Z_]+/);
+    return match ? match[0] : value.split(/[\s,\n]+/)[0]?.trim() || "";
+  };
+  
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
     const token = searchParams.get("token");
-    const roleParam = searchParams.get("role");
-    setRole(roleParam || "");
+    const rawRoleParam = searchParams.get("role");
+    const roleParam = sanitizeRoleParam(rawRoleParam || "");
+    setRole(roleParam);
 
     // Console log all URL parameters (only in development)
     if (process.env.NODE_ENV === 'development') {
-      console.log("=== URL Parameters ===");
-      console.log("email:", emailParam);
-      console.log("code:", codeParam);
-      console.log("token:", token);
-      console.log("role:", roleParam);
       console.log("All search params:", Object.fromEntries(searchParams.entries()));
-      console.log("=====================");
+
     }
 
     if (emailParam) setEmail(emailParam);

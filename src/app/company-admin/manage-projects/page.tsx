@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 interface Project {
@@ -43,17 +44,14 @@ interface ProjectsResponse {
 }
 
 export default function CompanyAdminManageProjectsPage() {
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [roleFilter, setRoleFilter] = useState("All");
-  const [showRoleDropdown, setShowRoleDropdown] = useState(false);
-  const [showRowsDropdown, setShowRowsDropdown] = useState(false);
   const [totalItems, setTotalItems] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // Fetch projects for company admin
   const fetchProjects = async (page: number = 1, limit: number = 10) => {
@@ -120,232 +118,170 @@ export default function CompanyAdminManageProjectsPage() {
   };
 
   useEffect(() => {
-    fetchProjects(currentPage, rowsPerPage);
-  }, [currentPage, rowsPerPage]);
-
-  // Calculate pagination
-  const totalPages = Math.ceil(totalItems / rowsPerPage);
-  const startItem = (currentPage - 1) * rowsPerPage + 1;
-  const endItem = Math.min(currentPage * rowsPerPage, totalItems);
-
-  // Handle select all
-  const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      setSelectedProjects(projects.map((project) => project.id));
-    } else {
-      setSelectedProjects([]);
-    }
-  };
-
-  // Handle individual select
-  const handleSelectProject = (projectId: string) => {
-    if (selectedProjects.includes(projectId)) {
-      setSelectedProjects(selectedProjects.filter((id) => id !== projectId));
-    } else {
-      setSelectedProjects([...selectedProjects, projectId]);
-    }
-  };
+    fetchProjects(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
-    fetchProjects(newPage, rowsPerPage);
   };
 
-  // Handle rows per page change
-  const handleRowsPerPageChange = (newRowsPerPage: number) => {
-    setRowsPerPage(newRowsPerPage);
-    setCurrentPage(1);
-    fetchProjects(1, newRowsPerPage);
+  // Handle items per page change
+  const handleItemsPerPageChange = (newLimit: number) => {
+    setItemsPerPage(newLimit);
+    setCurrentPage(1); // Reset to first page when changing items per page
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-lg text-gray-600">Loading projects...</div>
+      </div>
+    );
+  }
 
   return (
     <div>
-      <div>
-        <h1 className="font-medium text-[#343A40] text-2xl">Manage Projects</h1>
-        <p className="text-[#6C757D] mt-2 font-normal">
-          Dashboard / Manage Projects
-        </p>
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h1 className="font-medium text-[#343A40] text-2xl">Manage Projects</h1>
+          <p className="text-[#6C757D] mt-2 font-normal">
+            Company Admin / Manage Projects
+          </p>
+        </div>
       </div>
 
-
-      <div className="bg-white mt-6 rounded-lg shadow">
-        {/* Header Section */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex justify-between items-center">
-            <div className="flex gap-3">
-              <button className="px-4 py-2 bg-[#DC3545] text-white rounded-md flex items-center gap-2 hover:bg-[#c82333] transition-colors">
-                <Image src="/majesticons_plus-line.svg" alt="Add" width={16} height={16} />
-                Add New Project
-              </button>
-              <button className="px-4 py-2 border text-black border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors">
-                <Image src="/import.svg" alt="Import" width={16} height={16} />
-                Import Project Data
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm text-[#6C757D]">Rows per page:</span>
-              <div className="relative">
-                <button
-                  onClick={() => setShowRowsDropdown(!showRowsDropdown)}
-                  className="px-3 py-1 border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors"
-                >
-                  {rowsPerPage}
-                  <Image src="/mingcute_down-fill.svg" alt="Down" width={12} height={12} />
-                </button>
-                {showRowsDropdown && (
-                  <div className="absolute right-0 mt-2 w-20 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                    {[10, 25, 50, 100].map((rows) => (
-                      <button
-                        key={rows}
-                        onClick={() => {
-                          handleRowsPerPageChange(rows);
-                          setShowRowsDropdown(false);
-                        }}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                      >
-                        {rows}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Section */}
-        <div className="px-6 py-4 border-b border-gray-200">
-          <div className="flex gap-3">
-            <div className="relative">
-              <button
-                onClick={() => setShowRoleDropdown(!showRoleDropdown)}
-                className="px-4 py-2 text-black border border-gray-300 rounded-md flex items-center gap-2 hover:bg-gray-50 transition-colors"
+      {/* Filters and Search */}
+      <div className="flex justify-between items-center mb-4">
+        <div className="flex space-x-2">
+          <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 cursor-pointer">
+            <option>Status All</option>
+            <option>Active</option>
+            <option>Completed</option>
+            <option>Pending</option>
+          </select>
+          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 flex items-center gap-[5px] cursor-pointer">
+            <span className="text-[10px]">
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-                Status {roleFilter !== "All" ? roleFilter : "All"}
-                <Image src="/mingcute_down-fill.svg" alt="Down" width={12} height={12} />
-              </button>
-              {showRoleDropdown && (
-                <div className="absolute text-black left-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
-                  {["All", "Active", "Completed", "Pending"].map((status) => (
-                    <button
-                      key={status}
-                      onClick={() => {
-                        setRoleFilter(status);
-                        setShowRoleDropdown(false);
-                      }}
-                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-sm"
-                    >
-                      {status}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
-            <button className="px-4 py-2 text-[#DC3545] border border-[#DC3545] rounded-md flex items-center gap-2 hover:bg-red-50 transition-colors">
-              <Image src="/majesticons_plus-line.svg" alt="Add" width={16} height={16} />
-              Add Filter
-            </button>
-            <button className="px-4 text-black py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-              Clear Filter
-            </button>
-            <button className="px-4 text-black py-2 border border-gray-300 rounded-md hover:bg-gray-50 transition-colors">
-              Edit Column
-            </button>
-          </div>
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+                />
+              </svg>
+            </span>
+            Add Filter
+            <span>
+              <svg
+                className="w-3 h-3"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </span>
+          </button>
+          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">
+            Clear Filter
+          </button>
+          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">
+            Edit Column
+          </button>
         </div>
+        <div className="text-sm text-gray-500 flex items-center">
+          Rows per page:
+          <select 
+            className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2 cursor-pointer"
+            value={itemsPerPage}
+            onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
+          >
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+            <option value={50}>50</option>
+          </select>
+        </div>
+      </div>
 
-        {/* Table Section */}
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gray-50">
+      {/* Projects Table */}
+      <div className="bg-white overflow-x-auto">
+        {projects.length === 0 && !loading ? (
+          <div className="text-center py-12">
+            <div className="text-gray-500 text-lg mb-2">No projects found</div>
+            <div className="text-gray-400 text-sm">
+              {error ? 'Unable to load projects from the server.' : 'Start by creating your first project.'}
+            </div>
+            {!error && (
+              <button 
+                className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
+              >
+                Create First Project
+              </button>
+            )}
+          </div>
+        ) : (
+          <table className="min-w-full border-collapse">
+            <thead className="bg-white">
               <tr>
-                <th className="px-6 py-3 text-left">
-                  <input
-                    type="checkbox"
-                    checked={selectedProjects.length === projects.length && projects.length > 0}
-                    onChange={handleSelectAll}
-                    className="rounded border-gray-300"
-                  />
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                  Select
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
-                  <div className="flex items-center gap-1">
-                    Project Name
-                    <Image src="/Sort.svg" alt="Sort" width={12} height={12} />
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                  <div className="flex items-center justify-between">
+                    <span>Project ID</span>
+                    <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                   </div>
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
-                  <div className="flex items-center gap-1">
-                    Description
-                    <Image src="/Sort.svg" alt="Sort" width={12} height={12} />
-                  </div>
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                  Description
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
-                  <div className="flex items-center gap-1">
-                    Status
-                    <Image src="/Sort.svg" alt="Sort" width={12} height={12} />
-                  </div>
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                  Status
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
-                  <div className="flex items-center gap-1">
-                    Start Date
-                    <Image src="/Sort.svg" alt="Sort" width={12} height={12} />
-                  </div>
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                  Start Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
-                  <div className="flex items-center gap-1">
-                    End Date
-                    <Image src="/Sort.svg" alt="Sort" width={12} height={12} />
-                  </div>
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Submit Date
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-[#6C757D] uppercase tracking-wider">
+                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                   Action
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {loading ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                    <div className="flex items-center justify-center">
-                      <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
-                      Loading projects...
-                    </div>
-                  </td>
-                </tr>
-              ) : error ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-red-500">
-                    Error: {error}
-                  </td>
-                </tr>
-              ) : projects.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="px-6 py-8 text-center text-gray-500">
-                    No projects found
-                  </td>
-                </tr>
-              ) : (
-                projects.map((project) => (
-                  <tr key={project.id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4">
+            <tbody>
+              {projects.map((project, index) => {
+                const isStriped = index % 2 === 0;
+                console.log(project);
+                return (
+                  <tr
+                    key={project.id}
+                    className={isStriped ? "bg-gray-50" : "bg-white"}
+                  >
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input
                         type="checkbox"
-                        checked={selectedProjects.includes(project.id)}
-                        onChange={() => handleSelectProject(project.id)}
-                        className="rounded border-gray-300"
+                        className="rounded border-gray-300 w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#343A40]">
-                      {project.name}
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                      {project.projectNumber}
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {project.description || 'No description'}
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         project.status === 'active' ? 'bg-red-100 text-red-800' :
@@ -357,87 +293,129 @@ export default function CompanyAdminManageProjectsPage() {
                         {project.status}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#343A40]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {new Date(project.startDate).toLocaleDateString()}
                     </td>
-                    <td className="px-6 py-4 text-sm text-[#343A40]">
-                      {project.endDate ? new Date(project.endDate).toLocaleDateString() : 'N/A'}
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                      {project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}
                     </td>
-                    <td className="px-6 py-4 text-sm">
-                      <div className="flex gap-2">
-                        <button className="p-1 hover:bg-gray-100 rounded">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
+                      <div className="flex items-center gap-2">
+                        <button 
+                          onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
+                          className="px-3 py-1 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 cursor-pointer"
+                        >
+                          View Report
+                        </button>
+                        <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer hover:bg-gray-50">
                           <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
                         </button>
-                        <button className="p-1 hover:bg-gray-100 rounded">
+                        <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer hover:bg-gray-50">
                           <Image src="/bin.svg" alt="Delete" width={16} height={16} />
                         </button>
                       </div>
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Pagination Section */}
-        <div className="px-6 py-4 border-t border-gray-200">
-          <div className="flex justify-between items-center">
-            <div className="text-sm text-[#6C757D]">
-              {totalItems > 0 ? `${startItem}-${endItem} of ${totalItems} items` : '0 items'}
-            </div>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                &lt;
-              </button>
-              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                const pageNum = Math.max(1, Math.min(totalPages - 4, currentPage - 2)) + i;
-                if (pageNum > totalPages) return null;
-                
-                return (
-                  <button
-                    key={pageNum}
-                    onClick={() => handlePageChange(pageNum)}
-                    className={`px-3 py-1 border rounded-md ${
-                      currentPage === pageNum
-                        ? "bg-[#DC3545] text-white border-[#DC3545]"
-                        : "border-gray-300 hover:bg-gray-50"
-                    }`}
-                  >
-                    {pageNum}
-                  </button>
                 );
               })}
-              <button
-                onClick={() => handlePageChange(Math.min(totalPages, currentPage + 1))}
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 border border-gray-300 rounded-md hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                &gt;
-              </button>
-              <input 
-                type="number" 
-                placeholder={currentPage.toString()}
-                className="w-16 px-2 text-black py-1 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
-                min="1"
-                max={totalPages}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    const target = e.target as HTMLInputElement;
-                    const page = parseInt(target.value);
-                    if (page >= 1 && page <= totalPages) {
-                      handlePageChange(page);
-                    }
-                  }
-                }}
-              />
-              <span className="px-3 py-1 text-sm text-[#6C757D]">/page</span>
-            </div>
+            </tbody>
+          </table>
+        )}
+      </div>
+
+      {error && (
+        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
+          <div className="text-red-800 text-sm">
+            {error}
           </div>
+          <div className="text-red-600 text-xs mt-2">
+            Please check your connection and try again. If the problem persists, contact your administrator.
+          </div>
+          <button 
+            onClick={() => fetchProjects(currentPage, itemsPerPage)}
+            className="mt-3 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 text-sm"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-4">
+        <div className="text-sm text-[#343A40]">
+          {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
+        </div>
+        <div className="flex items-center space-x-2">
+          <button 
+            className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer disabled:opacity-50"
+            disabled={currentPage === 1}
+            onClick={() => handlePageChange(currentPage - 1)}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button 
+            className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
+              currentPage === 1 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+            }`}
+            onClick={() => handlePageChange(1)}
+          >
+            1
+          </button>
+          {totalItems > itemsPerPage && (
+            <button 
+              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
+                currentPage === 2 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+              }`}
+              onClick={() => handlePageChange(2)}
+            >
+              2
+            </button>
+          )}
+          {totalItems > itemsPerPage * 2 && (
+            <button 
+              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
+                currentPage === 3 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+              }`}
+              onClick={() => handlePageChange(3)}
+            >
+              3
+            </button>
+          )}
+          {totalItems > itemsPerPage * 3 && (
+            <button 
+              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
+                currentPage === 4 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+              }`}
+              onClick={() => handlePageChange(4)}
+            >
+              4
+            </button>
+          )}
+          <button 
+            className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer disabled:opacity-50"
+            disabled={currentPage * itemsPerPage >= totalItems}
+            onClick={() => handlePageChange(currentPage + 1)}
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+          <input
+            placeholder={itemsPerPage.toString()} 
+            className="w-16 px-2 text-black py-2 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
+            min="1"
+            max={Math.ceil(totalItems / itemsPerPage)}
+            value={currentPage}
+            onChange={(e) => {
+              const page = parseInt(e.target.value);
+              if (page >= 1 && page <= Math.ceil(totalItems / itemsPerPage)) {
+                handlePageChange(page);
+              }
+            }}
+          />
+          <div className="text-sm text-[#343A40] ml-2">/Page</div>
         </div>
       </div>
     </div>

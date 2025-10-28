@@ -493,6 +493,7 @@ export default function CompanyAdminManageUsersPage() {
               if (page >= 1 && page <= Math.ceil(totalItems / itemsPerPage)) {
                 handlePageChange(page);
               }
+            
             }}
           />
           <div className="text-sm text-[#343A40] ml-2">/Page</div>
