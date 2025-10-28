@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-// import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -82,7 +82,7 @@ export default function CompanyAdminLayout({
   }, [isDropdownOpen]);
 
   return (
-    // <ProtectedRoute requiredRole="CUSTOMER_ADMIN">
+    <ProtectedRoute requiredRole="CUSTOMER_ADMIN">
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
@@ -135,8 +135,8 @@ export default function CompanyAdminLayout({
                   <Link
                     href="/company-admin"
                     className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin")
-                        ? "text-[#FFFFFF] bg-[#ED272C]"
-                        : "text-gray-700 hover:bg-gray-100"
+                      ? "text-[#FFFFFF] bg-[#ED272C]"
+                      : "text-gray-700 hover:bg-gray-100"
                       }`}
                   >
                     {isActive("/company-admin") ? (
@@ -155,8 +155,8 @@ export default function CompanyAdminLayout({
                   <Link
                     href="/company-admin/manage-projects"
                     className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-projects")
-                        ? "bg-[#ED272C] text-[#FFFFFF]"
-                        : "text-[#080607] hover:bg-gray-100"
+                      ? "bg-[#ED272C] text-[#FFFFFF]"
+                      : "text-[#080607] hover:bg-gray-100"
                       }`}
                   >
                     {isActive("/company-admin/manage-projects") ? (
@@ -175,8 +175,8 @@ export default function CompanyAdminLayout({
                   <Link
                     href="/company-admin/manage-users"
                     className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-users")
-                        ? "bg-[#ED272C] text-[#FFFFFF]"
-                        : "text-[#080607] hover:bg-gray-100"
+                      ? "bg-[#ED272C] text-[#FFFFFF]"
+                      : "text-[#080607] hover:bg-gray-100"
                       }`}
                   >
                     {isActive("/company-admin/manage-users") ? (
@@ -195,8 +195,8 @@ export default function CompanyAdminLayout({
                   <Link
                     href="/company-admin/manage-profile"
                     className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-profile")
-                        ? "bg-[#ED272C] text-[#FFFFFF]"
-                        : "text-gray-700 hover:bg-gray-100"
+                      ? "bg-[#ED272C] text-[#FFFFFF]"
+                      : "text-gray-700 hover:bg-gray-100"
                       }`}
                   >
                     {isActive("/company-admin/manage-profile") ? (
@@ -324,6 +324,6 @@ export default function CompanyAdminLayout({
           {children}
         </main>
       </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 }
