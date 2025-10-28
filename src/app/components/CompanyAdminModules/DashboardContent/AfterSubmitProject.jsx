@@ -1,16 +1,77 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import CountUp from 'react-countup';
 import ProjectDropdown from "./ProjectDropdown";
 import AfterSubmitProjectTable from "./AfterSubmitProjectTable";
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export default function CompanyAdminContent() {
+  const [totalProjects, setTotalProjects] = useState(0);
+  const [onGoingProjects, setOnGoingProjects] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch projects data
+  const fetchProjects = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      const response = await fetch(getApiUrl('/projects'), {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const projects = data.projects || data.data || [];
+        setTotalProjects(projects.length);
+        
+        // Count ongoing projects (active status)
+        const ongoingCount = projects.filter((project) => 
+          project.status === 'active' || project.status === 'in_progress'
+        ).length;
+        setOnGoingProjects(ongoingCount);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
+
+  // Fetch users data
+  const fetchUsers = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      const response = await fetch(getApiUrl('/users'), {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const users = data.users || data.data || [];
+        setTotalUsers(users.length);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchProjects(), fetchUsers()]);
+      setLoading(false);
+    };
+    
+    fetchData();
+  }, []);
+
   const statsData = [
-    { title: "Total Projects", value: "0", icon: "/sv1.svg" },
-    { title: "On Going Projects", value: "0", icon: "/sv2.svg" },
-    { title: "Total Users", value: "0", icon: "/sv3.svg", hasDropdown: true },
-    { title: "Token Left", value: "10", icon: "/sv4.svg" },
+    { title: "Total Projects", value: totalProjects, icon: "/sv1.svg" },
+    { title: "On Going Projects", value: onGoingProjects, icon: "/sv2.svg" },
+    { title: "Total Users", value: totalUsers, icon: "/sv3.svg", hasDropdown: true },
+    { title: "Token Left", value: 10, icon: "/sv4.svg" },
   ];
 
   return (
@@ -46,7 +107,17 @@ export default function CompanyAdminContent() {
                   )}
                 </div>
                 <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {stat.value}
+                  {stat.title === "Total Projects" || stat.title === "Total Users" ? (
+                    <CountUp
+                      end={Number(stat.value)}
+                      duration={2.5}
+                      separator=","
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  ) : (
+                    stat.value
+                  )}
                 </p>
               </div>
               <div>

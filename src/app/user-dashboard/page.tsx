@@ -1,15 +1,56 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import CountUp from 'react-countup';
 import UserProjectDropdown from "./UserProjectDropdown";
 import UserAfterSubmitProjectTable from "./UserAfterSubmitProjectTable";
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export default function UserDashboardPage() {
+  const [totalProjects, setTotalProjects] = useState(0);
+  const [inProgressProjects, setInProgressProjects] = useState(0);
+  const [, setLoading] = useState(true);
+
+  // Fetch projects data
+  const fetchProjects = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+      const response = await fetch(getApiUrl('/projects'), {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const projects = data.projects || data.data || [];
+        setTotalProjects(projects.length);
+        
+        // Count in progress projects
+        const inProgressCount = projects.filter((project: { status: string }) => 
+          project.status === 'active' || project.status === 'in_progress' || project.status === 'pending'
+        ).length;
+        setInProgressProjects(inProgressCount);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await fetchProjects();
+      setLoading(false);
+    };
+    
+    fetchData();
+  }, []);
+
   const statsData = [
-    { title: "Total Projects", value: "0", icon: "/sv1.svg" },
-    { title: "In Progress", value: "0", icon: "/sv2.svg" },
-    { title: "Token Left", value: "10", icon: "/sv4.svg" },
+    { title: "Total Projects", value: totalProjects, icon: "/sv1.svg" },
+    { title: "In Progress", value: inProgressProjects, icon: "/sv2.svg" },
+    { title: "Token Left", value: 10, icon: "/sv4.svg" },
   ];
 
   return (
@@ -39,7 +80,17 @@ export default function UserDashboardPage() {
                   {stat.title}
                 </p>
                 <p className="text-2xl font-medium text-[#080607] mt-2">
-                  {stat.value}
+                  {stat.title === "Total Projects" ? (
+                    <CountUp
+                      end={Number(stat.value)}
+                      duration={2.5}
+                      separator=","
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  ) : (
+                    stat.value
+                  )}
                 </p>
               </div>
               <div>
