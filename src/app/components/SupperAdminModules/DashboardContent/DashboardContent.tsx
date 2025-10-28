@@ -563,15 +563,29 @@ export default function DashboardContent() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {statsData.map((stat) => (
-          <StatCard
-            key={stat.title}
-            {...stat}
-            value={stat.title === "Users" && userCountLoading ? "..." : stat.value}
-            isAnimated={stat.title === "Users" && !userCountLoading}
-            endValue={stat.title === "Users" ? userCount : 0}
-          />
-        ))}
+        {statsData.map((stat) => {
+          const numericValue = Number(stat.value);
+          const isNumeric = !Number.isNaN(numericValue);
+
+          const valueForCard =
+            stat.title === "Users" && userCountLoading ? "..." : stat.value;
+
+          const isAnimated =
+            (stat.title === "Users" && !userCountLoading) ||
+            (stat.title !== "Users" && isNumeric);
+
+          const endValue = stat.title === "Users" ? userCount : (isNumeric ? numericValue : 0);
+
+          return (
+            <StatCard
+              key={stat.title}
+              {...stat}
+              value={valueForCard}
+              isAnimated={isAnimated}
+              endValue={endValue}
+            />
+          );
+        })}
       </div>
 
       <ProjectsTable />

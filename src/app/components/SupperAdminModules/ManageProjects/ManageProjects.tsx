@@ -242,11 +242,9 @@ export default function ManageProjects() {
                     <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
                       <button
                         onClick={() => {
-                          if (project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed') {
-                            router.push('/dashboard/manage-projects/project-report');
-                          }
+                          router.push('/dashboard/manage-projects/project-report');
                         }}
-                        className={`px-4 py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                        className={`px-4 cursor-pointer py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
                       >
                         {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
                       </button>
