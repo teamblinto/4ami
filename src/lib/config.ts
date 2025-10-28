@@ -49,14 +49,3 @@ export const getAuthHeaders = (authToken?: string) => {
 export const isDevelopment = () => {
   return process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined;
 };
-
-// Helper function to get the appropriate API URL based on environment
-export const getApiUrlForEnvironment = (endpoint: string): string => {
-  // In development, we might want to use local API routes to avoid CORS issues
-  if (isDevelopment() && !config.API_BASE_URL.includes('ngrok')) {
-    // Use local API routes as proxy to avoid CORS issues
-    return `/api/proxy${endpoint}`;
-  }
-  
-  return getApiUrl(endpoint);
-};

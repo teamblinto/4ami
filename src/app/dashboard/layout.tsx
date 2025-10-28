@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-// import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
@@ -41,16 +41,16 @@ export default function DashboardLayout({
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
 
-    toast.success('Logged out successfully',{
+    toast.success('Logged out successfully', {
       position: 'top-center',
       icon: null,
       style: {
         background: 'black',
         color: 'white',
         borderRadius: '4px',
-        
+
       }
-    } );
+    });
 
     router.push("/login");
   };
@@ -78,13 +78,12 @@ export default function DashboardLayout({
   }, [isDropdownOpen]);
 
   return (
-    // <ProtectedRoute requiredRole="ADMIN">
+    <ProtectedRoute requiredRole="ADMIN">
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white  flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
-            isSidebarCollapsed ? "collapsed" : ""
-          }`}
+          className={`bg-white  flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${isSidebarCollapsed ? "collapsed" : ""
+            }`}
           style={{
             width: isSidebarCollapsed ? "64px" : "230px",
             minWidth: isSidebarCollapsed ? "64px" : "230px",
@@ -93,9 +92,8 @@ export default function DashboardLayout({
         >
           <div>
             <div
-              className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${
-                isSidebarCollapsed ? "justify-center" : "justify-between"
-              }`}
+              className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"
+                }`}
             >
               {!isSidebarCollapsed && (
                 <div className="flex items-center">
@@ -141,11 +139,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard")
                         ? "text-[#FFFFFF] bg-[#ED272C]"
                         : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard") ? (
                       <Image
@@ -172,11 +169,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard/manage-projects"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard/manage-projects")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/manage-projects")
                         ? "bg-[#ED272C] text-[#FFFFFF]"
                         : "text-[#080607] hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard/manage-projects") ? (
                       <Image
@@ -203,11 +199,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard/manage-users"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard/manage-users")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/manage-users")
                         ? "bg-[#ED272C] text-[#FFFFFF]"
                         : "text-[#080607] hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard/manage-users") ? (
                       <Image
@@ -234,11 +229,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard/manage-assets"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard/manage-assets")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/manage-assets")
                         ? "bg-[#ED272C] text-[#FFFFFF]"
                         : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard/manage-assets") ? (
                       <Image
@@ -457,6 +451,6 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 }
