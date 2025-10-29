@@ -1,6 +1,6 @@
 "use client";
 
-import AddAssets from "../../../AddAssets/AddAssets";
+import AddAssets from "../../../components/SupperAdminModules/ManageAssets/AddAssets/AddAssets";
 
 export default function AddAssetPage() {
 
