@@ -35,10 +35,9 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
-    const specialChars = '!@#$%^&*';
 
     // Combine all character sets for better security
-    const allChars = uppercaseChars + lowercaseChars + numbers + specialChars;
+    const allChars = uppercaseChars + lowercaseChars + numbers;
 
     let result = '';
     const codeLength = 12; // Increased length for better security
@@ -47,7 +46,6 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     result += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
     result += lowercaseChars.charAt(Math.floor(Math.random() * lowercaseChars.length));
     result += numbers.charAt(Math.floor(Math.random() * numbers.length));
-    result += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
 
     // Fill the remaining length with random characters from all sets
     for (let i = 4; i < codeLength; i++) {
