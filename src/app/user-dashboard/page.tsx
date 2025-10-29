@@ -10,7 +10,7 @@ import { getApiUrl, getAuthHeaders } from '@/lib/config';
 export default function UserDashboardPage() {
   const [totalProjects, setTotalProjects] = useState(0);
   const [inProgressProjects, setInProgressProjects] = useState(0);
-  const [, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // Fetch projects data
   const fetchProjects = async () => {
@@ -107,32 +107,31 @@ export default function UserDashboardPage() {
         ))}
       </div>
 
-      {/* Projects Section */}
+      {/* Projects Section (conditional) */}
       <div className="mb-6 mt-6">
-        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
-          Projects
-        </h2>
-        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[75px] pb-[75px] gap-[21px]">
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            <Image
-              src="/majesticons_plus-line.svg"
-              alt="majesticons_plus-line"
-              width={80}
-              height={80}
-              style={{ width: "auto", height: "auto" }}
-            />
-            <p className="text-[#6C757D] text-[14px] font-medium text-center mt-3">
-              Start by creating your first project
-            </p>
+        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">Projects</h2>
+        {loading ? (
+          <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[60px] pb-[60px]">
+            <div className="text-[#6C757D] text-[14px]">Loading projects...</div>
           </div>
-        </div>
-      </div>
-
-      <div>
-        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">
-          Projects
-        </h2>
-        <UserAfterSubmitProjectTable />
+        ) : totalProjects === 0 ? (
+          <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt:[75px] pb-[75px] gap-[21px]">
+            <div className="flex flex-col pt-14 items-center justify-center w-full h-full">
+              <Image
+                src="/majesticons_plus-line.svg"
+                alt="majesticons_plus-line"
+                width={80}
+                height={80}
+                style={{ width: "auto", height: "auto" }}
+              />
+              <p className="text-[#6C757D] text-[14px] font-medium text-center mt-3">
+                Start by creating your first project
+              </p>
+            </div>
+          </div>
+        ) : (
+          <UserAfterSubmitProjectTable />
+        )}
       </div>
 
       {/* Bottom Sections */}
