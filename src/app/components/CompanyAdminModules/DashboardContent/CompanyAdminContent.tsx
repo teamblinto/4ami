@@ -11,17 +11,17 @@ export default function CompanyAdminContent() {
   const [totalProjects, setTotalProjects] = useState(0);
   const [onGoingProjects, setOnGoingProjects] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
-  const [, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   // Fetch projects data for this company admin
   const fetchProjects = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-      
+
       // Get user data to ensure we're filtering by company
       const userDataString = localStorage.getItem('userData');
       let userProfile: Record<string, unknown> = {};
-      
+
       if (userDataString) {
         try {
           userProfile = JSON.parse(userDataString);
@@ -29,13 +29,13 @@ export default function CompanyAdminContent() {
           console.error('Failed to parse userData:', e);
         }
       }
-      
+
       const userId = userProfile.id as string;
       if (!userId) {
         console.error('User ID not found in user profile');
         return;
       }
-      
+
       // The backend should automatically filter projects by the authenticated user's company
       const response = await fetch(getApiUrl('/projects'), {
         method: 'GET',
@@ -45,17 +45,17 @@ export default function CompanyAdminContent() {
       if (response.ok) {
         const data = await response.json();
         const projects = data.projects || data.data || [];
-        
+
         // Filter projects created by this company admin (if needed)
         // The backend should already filter by company, but we can add additional filtering here
-        const companyProjects = projects.filter((project: { createdById?: string; companyId?: string }) => 
+        const companyProjects = projects.filter((project: { createdById?: string; companyId?: string }) =>
           project.createdById === userId || project.companyId === userProfile.companyId
         );
-        
+
         setTotalProjects(companyProjects.length);
-        
+
         // Count ongoing projects (active status)
-        const ongoingCount = companyProjects.filter((project: { status: string }) => 
+        const ongoingCount = companyProjects.filter((project: { status: string }) =>
           project.status === 'active' || project.status === 'in_progress'
         ).length;
         setOnGoingProjects(ongoingCount);
@@ -69,11 +69,11 @@ export default function CompanyAdminContent() {
   const fetchUsers = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-      
+
       // Get user data to ensure we're filtering by company
       const userDataString = localStorage.getItem('userData');
       let userProfile: Record<string, unknown> = {};
-      
+
       if (userDataString) {
         try {
           userProfile = JSON.parse(userDataString);
@@ -81,7 +81,7 @@ export default function CompanyAdminContent() {
           console.error('Failed to parse userData:', e);
         }
       }
-      
+
       const response = await fetch(getApiUrl('/users'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
@@ -90,22 +90,22 @@ export default function CompanyAdminContent() {
       if (response.ok) {
         const data = await response.json();
         const users = data.users || data.data || [];
-        
+
         // Filter users by role (Customer User role only) and by company
         // The backend should already filter by company, but we can add additional filtering here
         const filteredUsers = users.filter((user: { role?: string; companyId?: string; invitedBy?: string }) => {
           const userRole = user.role?.toLowerCase();
-          const isCustomerUser = userRole === 'customer user' || 
-                                 userRole === 'customer_user' || 
-                                 userRole === 'customer' ||
-                                 userRole === 'user';
-          
+          const isCustomerUser = userRole === 'customer user' ||
+            userRole === 'customer_user' ||
+            userRole === 'customer' ||
+            userRole === 'user';
+
           // Additional company filtering if needed
           const isFromSameCompany = !userProfile.companyId || user.companyId === userProfile.companyId;
-          
+
           return isCustomerUser && isFromSameCompany;
         });
-        
+
         setTotalUsers(filteredUsers.length);
       }
     } catch (error) {
@@ -119,7 +119,7 @@ export default function CompanyAdminContent() {
       await Promise.all([fetchProjects(), fetchUsers()]);
       setLoading(false);
     };
-    
+
     fetchData();
   }, [setLoading]);
 
@@ -198,8 +198,30 @@ export default function CompanyAdminContent() {
         ))}
       </div>
 
+      {loading ? (
+        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[60px] pb-[60px]">
+          <div className="text-[#6C757D] text-[14px]">Loading projects...</div>
+        </div>
+      ) : totalProjects === 0 ? (
+        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col  self-stretch pt:[75px] pb:[75px] gap:[21px]">
+          <h1 className="text-lg font-semibold text-start p-4 mb-4 text-[#080607] ">Projects</h1>
+          <div className="flex flex-col pb-14  items-center justify-center w-full h-full">
 
-      <AfterSubmitProjectTable />
+            <Image
+              src="/majesticons_plus-line.svg"
+              alt="majesticons_plus-line"
+              width={80}
+              height={80}
+              style={{ width: "auto", height: "auto" }}
+            />
+            <p className="text-[#6C757D] text-[14px] font-medium text-center mt-3">
+              Start by creating your first project
+            </p>
+          </div>
+        </div>
+      ) : (
+        <AfterSubmitProjectTable />
+      )}
 
       {/* Bottom Sections */}
 

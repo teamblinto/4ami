@@ -25,9 +25,9 @@ export default function UserDashboardPage() {
         const data = await response.json();
         const projects = data.projects || data.data || [];
         setTotalProjects(projects.length);
-        
+
         // Count in progress projects
-        const inProgressCount = projects.filter((project: { status: string }) => 
+        const inProgressCount = projects.filter((project: { status: string }) =>
           project.status === 'active' || project.status === 'in_progress' || project.status === 'pending'
         ).length;
         setInProgressProjects(inProgressCount);
@@ -43,7 +43,7 @@ export default function UserDashboardPage() {
       await fetchProjects();
       setLoading(false);
     };
-    
+
     fetchData();
   }, []);
 
@@ -109,14 +109,15 @@ export default function UserDashboardPage() {
 
       {/* Projects Section (conditional) */}
       <div className="mb-6 mt-6">
-        <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">Projects</h2>
+
         {loading ? (
           <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[60px] pb-[60px]">
             <div className="text-[#6C757D] text-[14px]">Loading projects...</div>
           </div>
         ) : totalProjects === 0 ? (
-          <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt:[75px] pb-[75px] gap-[21px]">
-            <div className="flex flex-col pt-14 items-center justify-center w-full h-full">
+          <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col  self-stretch pt:[75px] pb-[75px] gap-[21px]">
+            <h2 className="text-lg font-semibold  text-[#080607] p-4 mb-6 text-start">Projects</h2>
+            <div className="flex flex-col  items-center justify-center w-full h-full">
               <Image
                 src="/majesticons_plus-line.svg"
                 alt="majesticons_plus-line"
