@@ -251,7 +251,7 @@ const ResidualAnalysisPage = () => {
       },
       client: {
         clientName,
-        clientEmail,
+        clientEmail: clientEmail && clientEmail.trim() ? clientEmail.trim() : undefined,
         lesseePhone,
         countryCode: clientCountryCode,
         website: clientWebsite,
@@ -266,7 +266,7 @@ const ResidualAnalysisPage = () => {
         communication: communicationValue2 === "Yes",
         phoneNumber1: sourcePhone1,
         phoneNumber2: sourcePhone2,
-        email: sourceEmail,
+        email: sourceEmail && sourceEmail.trim() ? sourceEmail.trim() : undefined,
         website: sourceWebsite,
       },
       equipments: [
@@ -506,10 +506,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Client email*
+                      Client email
                     </label>
                     <input
-                      required
+                 
                       type="email"
                       id="client-email"
                       placeholder="yorkerho@gmail.com"
@@ -929,10 +929,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Email*
+                      Email
                     </label>
                     <input
-                      required
+                  
                       type="email"
                       id="email"
                       placeholder="b.nolan@greentechmachinery.com"

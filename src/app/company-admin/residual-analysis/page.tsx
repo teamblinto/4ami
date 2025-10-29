@@ -240,7 +240,7 @@ const ResidualAnalysisPage = () => {
       },
       client: {
         clientName,
-        clientEmail,
+        clientEmail: clientEmail && clientEmail.trim() ? clientEmail.trim() : undefined,
         lesseePhone,
         countryCode: clientCountryCode,
         website: clientWebsite,
@@ -255,7 +255,7 @@ const ResidualAnalysisPage = () => {
         communication: communicationValue2 === "Yes",
         phoneNumber1: sourcePhone1,
         phoneNumber2: sourcePhone2,
-        email: sourceEmail,
+        email: sourceEmail && sourceEmail.trim() ? sourceEmail.trim() : undefined,
         website: sourceWebsite,
       },
       equipments: [
@@ -496,11 +496,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Client email*
+                      Client email
                     </label>
                     <input
                       type="email"
-                      required
                       id="client-email"
                       placeholder="yorkerho@gmail.com"
                       className="w-full"
@@ -519,7 +518,6 @@ const ResidualAnalysisPage = () => {
                     </label>
                     <div className="flex">
                       <select
-                        required
                         className="rounded-l-md"
                         style={{
                           ...inputStyles,
@@ -919,11 +917,10 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Email*
+                      Email
                     </label>
                     <input
                       type="email"
-                      required
                       id="email"
                       placeholder="b.nolan@greentechmachinery.com"
                       className="w-full"
@@ -990,7 +987,7 @@ const ResidualAnalysisPage = () => {
                     >
                       Industry<span>*</span>
                     </label>
-                    <select id="industry" className="w-full" style={inputStyles} value={industry} onChange={(e) => setIndustry(e.target.value)} required>
+                    <select id="industry" className="w-full" style={inputStyles} value={industry} onChange={(e) => setIndustry(e.target.value)}>
                       <option value="">Select Industry</option>
                       <option value="construction">Construction</option>
                       <option value="mining">Mining</option>
