@@ -92,8 +92,6 @@ export default function CompanyAdminManageProjectsPage() {
       
       // Try different API approaches - the backend should filter by authenticated user's company
       const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
-      console.log('Fetching projects from:', url);
-      console.log('User ID:', userId);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -263,7 +261,7 @@ export default function CompanyAdminManageProjectsPage() {
             <tbody>
               {projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
-                console.log(project);
+            
                 return (
                   <tr
                     key={project.id}

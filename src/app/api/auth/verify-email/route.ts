@@ -26,10 +26,6 @@ export async function GET(request: NextRequest) {
       headers: getAuthHeaders(),
     });
 
-    // console.log('External API response status:', response);
-    // console.log('External API response headers:', Object.fromEntries(response.headers.entries()));
-      console.log(response)
-
     // Check if response is JSON
     const contentType = response.headers.get('content-type');
     if (!contentType || !contentType.includes('application/json')) {

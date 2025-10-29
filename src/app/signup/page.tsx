@@ -149,7 +149,6 @@ function ClientContent() {
                     throw new Error(result.message || `HTTP error! status: ${response.status}`);
                   }
 
-                  console.log('Signup API Success:', result);
                   toast.success('Account created successfully!');
 
                   // Redirect to success page
