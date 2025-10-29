@@ -57,7 +57,6 @@ function ClientContent() {
       console.log('Fetching verification data for token:', token);
       const response = await fetch(`/api/auth/verify-email?token=${token}`);
       
-      console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
       // Check if response is JSON

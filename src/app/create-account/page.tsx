@@ -25,7 +25,6 @@ function ClientContent() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-console.log(role);
   
   // Keep only the enum-like role token (e.g., CUSTOMER_USER) and strip email signatures/extras
   const sanitizeRoleParam = (value: string): string => {

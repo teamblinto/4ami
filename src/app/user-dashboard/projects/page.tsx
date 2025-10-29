@@ -66,7 +66,6 @@ const ProjectsPage = () => {
       if (userDataString) {
         try {
           userProfile = JSON.parse(userDataString);
-          console.log('User Data:', userProfile);
         } catch (e) {
           console.error('Failed to parse userData:', e);
         }
@@ -80,8 +79,8 @@ const ProjectsPage = () => {
 
       // The backend should filter projects by the authenticated user
       const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
-      console.log('Fetching user projects from:', url);
-      console.log('User ID:', userId);
+     
+      
 
       const response = await fetch(url, {
         method: 'GET',
@@ -93,7 +92,7 @@ const ProjectsPage = () => {
       }
 
       const result: ProjectsResponse = await response.json();
-      console.log('User Projects Response:', result);
+ 
       setProjects(result.projects || []);
       setTotalItems(result.total || 0);
       setCurrentPage(result.page || 1);
@@ -249,7 +248,7 @@ const ProjectsPage = () => {
             <tbody>
               {projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
-                console.log(project);
+       
                 return (
                   <tr
                     key={project.id}

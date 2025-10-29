@@ -313,7 +313,7 @@ const ResidualAnalysisPage = () => {
       const storedToken =
         (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
 
-      console.log('Retrieved token:', storedToken ? 'Token found' : 'No token found');
+    
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -322,9 +322,6 @@ const ResidualAnalysisPage = () => {
       if (storedToken) {
         headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
       }
-
-      console.log('Request headers:', headers);
-      console.log('Payload being sent:', payload);
 
       const response = await fetch('/api/projects', {
         method: 'POST',

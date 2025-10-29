@@ -88,12 +88,6 @@ export default function CompanyAdminManageUsersPage() {
         if (response.status === 401) {
           throw new Error('Unauthorized - Please login again');
         } else if (response.status === 403) {
-          // Try alternative approach: maybe company admin needs different endpoint
-          console.log('403 Forbidden - This endpoint might be restricted to super admins only.');
-          console.log('Possible solutions:');
-          console.log('1. Check if you need a different endpoint for company admins');
-          console.log('2. Verify your user role has permission to view users');
-          console.log('3. Check if the auth token is valid and has the right permissions');
           throw new Error('Forbidden - You do not have permission to view all users. This endpoint might be restricted to super admins only.');
         } else if (response.status === 404) {
           throw new Error('Users endpoint not found - Please check if the /users API is available');
