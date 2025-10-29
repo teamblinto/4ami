@@ -61,7 +61,8 @@ export default function AfterSubmitProjectTable() {
   }, []);
 
   return (
-    <div className="w-full">
+    <div className="w-full bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] p-4">
+      <h1 className="text-lg font-semibold mb-4 text-[#080607] ">Projects</h1>
       {/* Filter Bar */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <select className="border border-gray-300 text-black rounded-lg px-4 py-2 text-sm">
@@ -138,26 +139,22 @@ export default function AfterSubmitProjectTable() {
                 <th className="px-4 py-4 border border-gray-200">
                   <div className="flex items-center justify-between">
                     <span>Project ID</span>
-                    <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer" />
                   </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
                   <div className="flex items-center justify-between">
                     <span>Project Name</span>
-                    <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer" />
 
                   </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
                   <div className="flex items-center justify-between">
                     <span>Submit Date</span>
-                    <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer" />
                   </div>
                 </th>
                 <th className="px-4 py-4 border border-gray-200">
                   <div className="flex items-center justify-between">
                     <span>Status</span>
-                    <img src="/Sort.svg" alt="" className="w-5 h-5 cursor-pointer" />
                   </div>
                 </th>
               </tr>
@@ -193,7 +190,7 @@ export default function AfterSubmitProjectTable() {
 
       {/* Footer Link */}
       <div className="mt-3 text-right">
-        
+
         <Link href="/company-admin/manage-projects" className="text-[#ED272C]  text-sm font-medium">
           View All Projects
         </Link>
