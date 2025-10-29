@@ -44,7 +44,7 @@ export default function FilterDropdown() {
     <div className="relative text-left" ref={containerRef}>
       {/* Trigger */}
       <div className="flex justify-between items-center text-gray-700">
-        <span className="flex-1">Time (Start to End)</span>
+        <span className="flex-1">Submit Date</span>
         <Image
           aria-expanded={isOpen}
           onClick={() => setIsOpen((v) => !v)}
