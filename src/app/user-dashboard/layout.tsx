@@ -82,7 +82,7 @@ export default function UserDashboardLayout({
       <div className="flex min-h-screen  bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
+          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${
             isSidebarCollapsed ? 'collapsed' : ''
           }`}
           style={{ 
@@ -144,7 +144,7 @@ export default function UserDashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Dashboard</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Dashboard</span>
                     )}
                   </Link>
                 </li>
@@ -165,7 +165,7 @@ export default function UserDashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Projects</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Projects</span>
                     )}
                   </Link>
                 </li>
@@ -186,7 +186,7 @@ export default function UserDashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Profile</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Profile</span>
                     )}
                   </Link>
                 </li>
