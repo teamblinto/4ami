@@ -207,7 +207,7 @@ export default function ProjectReportPage() {
 
 
         {activeTab === 'summary' && (
-          <div className=" rounded-lg mx-auto w-[800px] p-6">
+          <div className=" rounded-lg mx-auto w-[950px] p-6">
             <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Residual Value Analysis</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
@@ -407,20 +407,20 @@ export default function ProjectReportPage() {
         {/* Utilization Tab Content */}
         {activeTab === 'utilization' && (
           <>
-            <div className=" rounded-lg w-[800px] mx-auto p-6">
-              <h2 className="text-xl font-semibold text-gray-900 text-center mb-6">Equipment Utilization vs Residual Values</h2>
+            <div className=" rounded-lg w-[950px] mx-auto p-6">
+              <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Equipment Utilization vs Residual Values</h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={utilizationData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+                  <LineChart data={utilizationData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
 
-                    <XAxis dataKey="hoursYear" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ value: 'Hours per Year', position: 'insideBottom', offset: -2, fill: '#6b7280', fontSize: 12 }} />
-                    <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'insideLeft', offset: -5, fill: '#6b7280' }} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[10, 14]}
-                      label={{ value: 'Effective Age', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} />
+                    <XAxis dataKey="hoursYear" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={6} label={{ value: 'Hours per Year', position: 'insideBottom', offset: -2, fill: '#6b7280', fontSize: 12 }} />
+                    <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={10} width={60} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'left', offset: 15, fontSize: 12, fill: '#6b7280' }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={12} width={80} domain={[10, 14]}
+                      label={{ value: 'Effective Age', angle: 90, position: 'right', offset: 28, fontSize: 12, fill: '#ef4444' }} />
                       
                     <Tooltip formatter={(val: number | string, name: string) => name === 'Residual %' ? [`${val}%`, name] : [val, name]} labelFormatter={(l) => `Hours/Year: ${l}`} />
-                    <Legend verticalAlign="bottom" height={36} />
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80 }} />
 
                     <Line yAxisId="left" type="monotone" dataKey="residual" name="Residual %" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
                     <Line yAxisId="right" type="monotone" dataKey="effectiveAge" name="Effective Age" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
@@ -470,16 +470,16 @@ export default function ProjectReportPage() {
 
         {/* Depreciation Tab Content */}
         {activeTab === 'depreciation' && (
-          <div className="rounded-lg w-[800px] mx-auto p-6">
-            <h2 className="text-xl font-semibold text-gray-900 text-center mb-6">Depreciation Methods Comparison</h2>
+          <div className="rounded-lg w-[950px]  mx-auto p-6">
+            <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Depreciation Methods Comparison</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={depreciationData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                <LineChart data={depreciationData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                  <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(v) => `$${v.toLocaleString()}`} domain={[0, 500000]} />
+                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={6} />
+                  <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={10} width={60} tickFormatter={(v) => `$${v.toLocaleString()}`} domain={[0, 500000]} />
                   <Tooltip formatter={(val: number | string) => `$${Number(val).toLocaleString()}`} />
-                  <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value === 'sl' ? 'Straight-Line Methods' : value === 'ddb' ? 'Double Declining Balance' : value === 'syd' ? 'Sum-of-Years-Digits' : 'MACRS'}</span>} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80 }} formatter={(value) => <span className="text-sm text-gray-700">{value === 'sl' ? 'Straight-Line Methods' : value === 'ddb' ? 'Double Declining Balance' : value === 'syd' ? 'Sum-of-Years-Digits' : 'MACRS'}</span>} />
 
                   <Line type="monotone" dataKey="sl" name="Straight-Line Methods" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
                   <Line type="monotone" dataKey="ddb" name="Double Declining Balance" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
@@ -493,23 +493,23 @@ export default function ProjectReportPage() {
 
         {/* Inflation Tab Content */}
         {activeTab === 'inflation' && (
-          <div className="rounded-lg w-[800px] mx-auto p-6">
+          <div className="rounded-lg w-[950px] mx-auto p-6">
             <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Inflation Analysis (Last 10 Years)</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={inflationData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+                <LineChart data={inflationData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 8]}
-                    label={{ value: 'Residual %', angle: -90, position: 'center', offset: -5, fill: '#6b7280' }} />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }}
+                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={6} />
+                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={10} width={60} domain={[0, 8]}
+                    label={{ value: 'Residual %', angle: -90, position: 'left', offset: 15, fontSize: 12, fill: '#6b7280' }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={12} width={80}
                     domain={[5.6, 7.4]}
-                    label={{ value: 'Residuals Value ($)', angle: 90, position: 'center', offset: -5, fill: '#ef4444' }} />
+                    label={{ value: 'Residual Value ($)', angle: 90, position: 'right', offset: 28, fontSize: 12, fill: '#ef4444' }} />
                   <Tooltip formatter={(val: number | string, name: string) => {
                     if (name.includes('Value')) return [`$${Number(val).toLocaleString()}k`, name];
                     return [`${val}%`, name];
                   }} />
-                  <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80  }} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
 
                   <Line yAxisId="left" type="monotone" dataKey="residualHigh" name="Residual % (High)" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
                   <Line yAxisId="left" type="monotone" dataKey="residualLow" name="Residual % (Low)" stroke="#ef4444" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
