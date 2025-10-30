@@ -82,7 +82,7 @@ export default function DashboardLayout({
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white  flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${isSidebarCollapsed ? "collapsed" : ""
+          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? "collapsed" : ""
             }`}
           style={{
             width: isSidebarCollapsed ? "64px" : "230px",
@@ -128,7 +128,7 @@ export default function DashboardLayout({
                 </button>
 
                 {/* Hover tooltip */}
-                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-600 whitespace-nowrap z-50 pointer-events-none">
                   {isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
                 </div>
               </div>
@@ -161,7 +161,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Dashboard</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Dashboard</span>
                     )}
                   </Link>
                 </li>
@@ -191,7 +191,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Projects</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Projects</span>
                     )}
                   </Link>
                 </li>
@@ -221,7 +221,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Users</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Users</span>
                     )}
                   </Link>
                 </li>
@@ -251,7 +251,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Assets</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Assets</span>
                     )}
                   </Link>
                 </li>

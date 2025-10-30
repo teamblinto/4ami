@@ -86,7 +86,7 @@ export default function CompanyAdminLayout({
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${isSidebarCollapsed ? 'collapsed' : ''
+          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? 'collapsed' : ''
             }`}
           style={{
             width: isSidebarCollapsed ? '64px' : '230px',
@@ -146,7 +146,7 @@ export default function CompanyAdminLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Dashboard</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Dashboard</span>
                     )}
                   </Link>
                 </li>
@@ -166,7 +166,7 @@ export default function CompanyAdminLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Projects</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Projects</span>
                     )}
                   </Link>
                 </li>
@@ -186,7 +186,7 @@ export default function CompanyAdminLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Users</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Users</span>
                     )}
                   </Link>
                 </li>
@@ -206,7 +206,7 @@ export default function CompanyAdminLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Profile</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Profile</span>
                     )}
                   </Link>
                 </li>
