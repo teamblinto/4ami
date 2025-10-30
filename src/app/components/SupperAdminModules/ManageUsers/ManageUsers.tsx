@@ -262,7 +262,7 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
                 </th>
                 <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                   <div className="flex items-center justify-between">
-                    <span>companyName</span>
+                    <span>Company Name</span>
                     <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                   </div>
                 </th>
