@@ -202,34 +202,61 @@ export default function ProjectReportPage() {
       {/* Main Content */}
       <div className="space-y-6">
         {/* Summary Tab Content */}
+
+
+
+
         {activeTab === 'summary' && (
           <div className=" rounded-lg mx-auto w-[800px] p-6">
             <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Residual Value Analysis</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={analysisData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+
+                 <LineChart data={analysisData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}  >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="termMonth" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[15, 90]} label={{ value: 'Residual %', angle: -90, position: 'center', offset: 20, fill: '#6b7280' }} />
-                  <YAxis yAxisId="rght" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ position: 'center', value: 'Residuals Value ($)', angle: 90, offset: 20, fill: '#ef4444' }} tickFormatter={(v) => `$${v.toLocaleString()}`} />
+                  <XAxis dataKey="termMonth" tick={{ fill: '#6b7280', fontSize: 12, }} tickMargin={6} />
+                  <YAxis
+                    yAxisId="left"
+                    tick={{ fill: '#6b7280', fontSize: 12 }}
+                    tickMargin={10}
+                    width={60}
+                    domain={[15, 95]}
+                    label={{ value: 'Residual %', angle: -90, position: 'left', offset: 15,fontSize: 12,fill: '#6b7280' }}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    tick={{ fill: '#6b7280', fontSize: 12 }}
+                    tickMargin={12}
+                    width={80}
+                    domain={[150000, 400000]}
+                    label={{ value: 'Residual Value ($)', angle: 90, position: 'right', offset: 28, fontSize: 12,fill: '#ef4444' }}
+                    tickFormatter={(v) => `$${v.toLocaleString()}`}
+                  />
                   <Tooltip formatter={(val: number | string, name: string) => {
                     if (name.includes('Value')) return [`$${Number(val).toLocaleString()}`, name];
                     return [`${val}%`, name];
                   }} />
-                  <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80  }} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
 
                   {/* Residual % lines (left axis) */}
-                  <Line yAxisId="left" type="monotone" dataKey="residualHigh" name="Residual % (High)" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
-                  <Line yAxisId="left" type="monotone" dataKey="residualLow" name="Residual % (Low)" stroke="#ef4444" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="left" type="monotone" dataKey="residualHigh" fontSize={12} name="Residual % (High)" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="left" type="monotone" dataKey="residualLow" fontSize={12} name="Residual % (Low)" stroke="#ef4444" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+
 
                   {/* Residual value lines (right axis) */}
-                  <Line yAxisId="right" type="monotone" dataKey="valueHigh" name="Residual Value (High)" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
-                  <Line yAxisId="right" type="monotone" dataKey="valueLow" name="Residual Value (Low)" stroke="#111827" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="right" type="monotone" dataKey="valueHigh" fontSize={12} name="Residual Value (High)" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="right" type="monotone" dataKey="valueLow" fontSize={12} name="Residual Value (Low)" stroke="#111827" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
                 </LineChart>
+
+
               </ResponsiveContainer>
             </div>
           </div>
         )}
+
+
+
 
         {/* Overview Tab Content */}
         {activeTab === 'overview' && (
@@ -333,6 +360,8 @@ export default function ProjectReportPage() {
             </div>
           </div>
         )}
+
+        
   
         {/* Market Data Tab Content */}
         {activeTab === 'market-data' && (
@@ -384,10 +413,12 @@ export default function ProjectReportPage() {
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={utilizationData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+
                     <XAxis dataKey="hoursYear" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ value: 'Hours per Year', position: 'insideBottom', offset: -2, fill: '#6b7280', fontSize: 12 }} />
                     <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'insideLeft', offset: -5, fill: '#6b7280' }} />
                     <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[10, 14]}
                       label={{ value: 'Effective Age', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} />
+                      
                     <Tooltip formatter={(val: number | string, name: string) => name === 'Residual %' ? [`${val}%`, name] : [val, name]} labelFormatter={(l) => `Hours/Year: ${l}`} />
                     <Legend verticalAlign="bottom" height={36} />
 
@@ -519,15 +550,15 @@ export default function ProjectReportPage() {
               <table className="min-w-full table-fixed border-collapse">
                 <thead>
                   <tr>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Term Month</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (High)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (Low)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (High)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (Low)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual %</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual Value</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap">Adjusted <span className="inline-block w-14 text-right tabular-nums">({formatSignedPercent(haircutPct)})</span></th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap w-28">Action</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Term Month</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (High)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (Low)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (High)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (Low)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual %</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual Value</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap">Adjusted <span className="inline-block w-14 text-right tabular-nums">({formatSignedPercent(haircutPct)})</span></th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap w-28">Action</th>
                   </tr>
                 </thead>
                 <tbody>
