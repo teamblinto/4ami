@@ -404,7 +404,7 @@ export default function ProjectReportPage() {
                     <label className="flex items-center space-x-2 text-sm text-[#343A40] py-1">
                       <input
                         type="checkbox"
-                        className="w-4 h-4"
+                        className="w-4 h-4 accent-[#ED272C]"
                         checked={reportSelections.pdf}
                         onChange={(e) => setReportSelections((s) => ({ ...s, pdf: e.target.checked }))}
                       />
@@ -413,7 +413,7 @@ export default function ProjectReportPage() {
                     <label className="flex items-center space-x-2 text-sm text-[#343A40] py-1">
                       <input
                         type="checkbox"
-                        className="w-4 h-4"
+                        className="w-4 h-4 accent-[#ED272C]"
                         checked={reportSelections.excel}
                         onChange={(e) => setReportSelections((s) => ({ ...s, excel: e.target.checked }))}
                       />

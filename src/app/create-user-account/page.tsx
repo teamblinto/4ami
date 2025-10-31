@@ -269,7 +269,7 @@ function CreateUserAccountContent() {
                       checked={formData.agreeTerms}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 mr-2 h-4 w-4"
+                      className="mt-1 mr-2 h-4 w-4 accent-[#ED272C]"
                     />
                     <span className="text-sm text-gray-600">
                       I acknowledge that I have read and agree to the{" "}
