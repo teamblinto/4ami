@@ -279,19 +279,19 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
                 return (
                   <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
-                      <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
+                      <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{user.companyName}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.firstName}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.lastName}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.role}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
+                    <td className="px-6  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{user.companyName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.firstName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.lastName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.role}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD]">
+                      <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                       </button>
-                      <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/bin.svg" alt="Delete" width={16} height={16} />
+                      <button className="p-2 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <Image src="/bin.svg" alt="Delete" width={12} height={12} />
                       </button>
                     </td>
                   </tr>

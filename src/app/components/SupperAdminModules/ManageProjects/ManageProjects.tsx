@@ -234,12 +234,12 @@ export default function ManageProjects() {
                 return (
                   <tr key={project.id || index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
-                      <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
+                      <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{project.name}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description || 'No description'}</td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>{project.status}</td>
-                    <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6  whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{project.name}</td>
+                    <td className="px-6  whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description || 'No description'}</td>
+                    <td className={`px-6 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>{project.status}</td>
+                    <td className="px-6  whitespace-nowrap border border-[#D0D5DD]">
                       <button
                         onClick={() => {
                           router.push('/dashboard/manage-projects/project-report');
