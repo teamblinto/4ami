@@ -368,31 +368,33 @@ export default function CompanyAdminManageUsersPage() {
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 w-4 h-4 cursor-pointer"
+                        className="rounded border-gray-300 accent-[#ED272C] w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
                       {user.companyName}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.firstName}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.lastName}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.role}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.email}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
-                      </button>
-                      <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/bin.svg" alt="Delete" width={16} height={16} />
-                      </button>
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD]">
+                      <div className="flex items-center justify-center gap-2">
+                        <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                          <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
+                        </button>
+                        <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                          <Image src="/bin.svg" alt="Delete" width={12} height={12} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );

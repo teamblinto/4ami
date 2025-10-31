@@ -254,25 +254,25 @@ const ProjectsPage = () => {
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
                   >
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 w-4 h-4 cursor-pointer"
+                        className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
                       {project.projectNumber || project.id}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {project.metadata?.category || 'N/A'}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {new Date(project.startDate).toLocaleDateString()}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       <span className={`px-2 py-1 rounded-full text-xs ${project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           project.status === 'active' ? 'bg-red-100 text-red-800' :
                             project.status === 'approved' ? 'bg-green-100 text-green-800' :
@@ -284,7 +284,7 @@ const ProjectsPage = () => {
                       </span>
                     </td>
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center gap-4">
                         <button
                           onClick={() => router.push(`/user-dashboard/projects/project-report?projectId=${project.id}`)}
                           className="px-3 py-1 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 cursor-pointer"
