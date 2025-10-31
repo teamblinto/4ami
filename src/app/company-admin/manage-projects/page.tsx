@@ -267,19 +267,19 @@ export default function CompanyAdminManageProjectsPage() {
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
                   >
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 w-4 h-4 cursor-pointer"
+                        className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
                       {project.projectNumber}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {project.description || 'No description'}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         project.status === 'active' ? 'bg-red-100 text-red-800' :
@@ -298,7 +298,7 @@ export default function CompanyAdminManageProjectsPage() {
                       {project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}
                     </td>
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center justify-center gap-4">
                         <button 
                           onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
                           className="px-3 py-1 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 cursor-pointer"
@@ -306,10 +306,10 @@ export default function CompanyAdminManageProjectsPage() {
                           View Report
                         </button>
                         <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer hover:bg-gray-50">
-                          <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
+                          <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                         </button>
                         <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer hover:bg-gray-50">
-                          <Image src="/bin.svg" alt="Delete" width={16} height={16} />
+                          <Image src="/bin.svg" alt="Delete" width={12} height={12} />
                         </button>
                       </div>
                     </td>
