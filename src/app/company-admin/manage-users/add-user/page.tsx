@@ -21,7 +21,7 @@ interface FormData {
 
 export default function AddUserPage() {
   const router = useRouter();
-  const [invitationCode, setInvitationCode] = useState('A7K3D');
+  const [invitationCode, setInvitationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
