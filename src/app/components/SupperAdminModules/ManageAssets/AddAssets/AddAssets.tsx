@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
@@ -8,17 +9,50 @@ interface AddAssetsProps {
   onBack?: () => void;
 }
 
+interface AssetProperties {
+  brand?: string;
+  model?: string;
+  length?: string;
+  width?: string;
+  height?: string;
+  weight?: string;
+  yearOfManufacture?: string;
+}
+
+interface AssetMetadata {
+  notes?: string;
+}
+
+interface AssetPayload {
+  name: string;
+  type: string;
+  description?: string;
+  value?: number;
+  residualValue?: number;
+  status?: string;
+  properties?: AssetProperties;
+  metadata?: AssetMetadata;
+  projectId?: string;
+}
+
 export default function AddAssets({ onBack }: AddAssetsProps) {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
-    description: '',
     type: 'equipment',
+    description: '',
     value: '',
     residualValue: '',
     status: '',
-    brand: '',
+    industry: '',
+    make: '',
+    length: '',
+    specialTransportationConsideration: '',
     model: '',
-    notes: '',
+    width: '',
+    height: '',
+    weight: '',
+    yearOfManufacture: '',
     projectId: ''
   });
 
@@ -35,33 +69,59 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       const authToken = localStorage.getItem('authToken');
       console.log('Auth token found:', authToken ? 'Yes' : 'No');
       console.log('Auth token value:', authToken);
-      
+
       if (!authToken) {
         throw new Error('Authentication token not found. Please log in again.');
       }
 
       // Prepare the data according to the API structure
-      const assetData = {
+      const assetData: AssetPayload = {
         name: formData.name,
-        description: formData.description,
-        type: formData.type,
-        value: parseFloat(formData.value) || 0,
-        residualValue: parseFloat(formData.residualValue) || 0,
-        status: formData.status,
-        properties: {
-          brand: formData.brand,
-          model: formData.model
-        },
-        metadata: {
-          notes: formData.notes
-        },
-        projectId: formData.projectId
+        type: formData.type
       };
+
+      // Add optional fields only if they have values
+      if (formData.description) {
+        assetData.description = formData.description;
+      }
+      if (formData.value) {
+        assetData.value = parseFloat(formData.value);
+      }
+      if (formData.residualValue) {
+        assetData.residualValue = parseFloat(formData.residualValue);
+      }
+      if (formData.status) {
+        assetData.status = formData.status;
+      }
+      if (formData.projectId) {
+        assetData.projectId = formData.projectId;
+      }
+
+      // Build properties object if any property fields have values
+      const properties: AssetProperties = {};
+      if (formData.make) properties.brand = formData.make;
+      if (formData.model) properties.model = formData.model;
+      if (formData.length) properties.length = formData.length;
+      if (formData.width) properties.width = formData.width;
+      if (formData.height) properties.height = formData.height;
+      if (formData.weight) properties.weight = formData.weight;
+      if (formData.yearOfManufacture) properties.yearOfManufacture = formData.yearOfManufacture;
+
+      if (Object.keys(properties).length > 0) {
+        assetData.properties = properties;
+      }
+
+      // Build metadata object if notes field has value
+      if (formData.specialTransportationConsideration) {
+        assetData.metadata = {
+          notes: formData.specialTransportationConsideration
+        };
+      }
 
       console.log('Submitting asset data:', assetData);
 
@@ -81,23 +141,29 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
 
       const result = await response.json();
       console.log('Asset created successfully:', result);
-      
+
       toast.success('Asset created successfully!');
-      
+
       // Reset form
       setFormData({
         name: '',
-        description: '',
         type: 'equipment',
+        description: '',
         value: '',
         residualValue: '',
         status: '',
-        brand: '',
+        industry: '',
+        make: '',
+        length: '',
+        specialTransportationConsideration: '',
         model: '',
-        notes: '',
+        width: '',
+        height: '',
+        weight: '',
+        yearOfManufacture: '',
         projectId: ''
       });
-      
+
       // After successful submission, go back to the list
       if (onBack) {
         onBack();
@@ -113,14 +179,20 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
   const handleDiscardChanges = () => {
     setFormData({
       name: '',
-      description: '',
       type: 'equipment',
+      description: '',
       value: '',
       residualValue: '',
       status: '',
-      brand: '',
+      industry: '',
+      make: '',
+      length: '',
+      specialTransportationConsideration: '',
       model: '',
-      notes: '',
+      width: '',
+      height: '',
+      weight: '',
+      yearOfManufacture: '',
       projectId: ''
     });
     toast.success('Changes discarded successfully!');
@@ -134,7 +206,10 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
       <div className="bg-white  rounded-[8px] p-8">
         {/* Top Right Button */}
         <div className="flex justify-end mb-8">
-          <button className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-[8px] text-sm font-medium flex items-center gap-2 cursor-pointer">
+          <button
+            onClick={() => router.push('/dashboard/manage-assets/import')}
+            className="bg-red-500 hover:bg-red-600 text-white px-8 py-2 rounded-[8px] text-sm font-medium flex items-center gap-2 cursor-pointer"
+          >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
             </svg>
@@ -147,10 +222,95 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-6">
-              {/* Asset Name */}
+              {/* Industry */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-[#343A40] mb-2">
-                  Asset Name *
+                <label htmlFor="industry" className="block text-sm font-medium text-[#343A40] mb-2">
+                  Industry
+                </label>
+                <input
+                  type="text"
+                  id="industry"
+                  name="industry"
+                  value={formData.industry}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+
+                />
+              </div>
+
+              {/* Make */}
+              <div>
+                <label htmlFor="make" className="block text-sm font-medium text-gray-700 mb-2">
+                  Make
+                </label>
+                <input
+                  type="text"
+                  id="make"
+                  name="make"
+                  value={formData.make}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+
+                />
+              </div>
+
+
+
+              <div className="grid grid-cols-2 gap-4">
+                {/* Width */}
+                <div>
+                  <label htmlFor="width" className="block text-sm font-medium text-gray-700 mb-2">
+                    Width (meter unit)
+                  </label>
+                  <input
+                    type="text"
+                    id="width"
+                    name="width"
+                    value={formData.width}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  />
+                </div>
+
+
+                {/* Length */}
+                <div>
+                  <label htmlFor="length" className="block text-sm font-medium text-gray-700 mb-2">
+                    Length (meter unit)
+                  </label>
+                  <input
+                    type="text"
+                    id="length"
+                    name="length"
+                    value={formData.length}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  />
+                </div>
+              </div>
+
+              {/* Special Transportation Consideration */}
+              <div>
+                <label htmlFor="specialTransportationConsideration" className="block text-sm font-medium text-gray-700 mb-2">
+                  Special Transportation Consideration <span className="text-gray-400">(Optional)</span>
+                </label>
+                <textarea
+                  id="specialTransportationConsideration"
+                  name="specialTransportationConsideration"
+                  value={formData.specialTransportationConsideration}
+                  onChange={handleInputChange}
+                  rows={4}
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                />
+              </div>
+            </div>
+
+            {/* Right Column */}
+            <div className="space-y-6">
+              {/* Name - Required */}
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                  Name <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -159,32 +319,15 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   value={formData.name}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none"
                   placeholder="e.g., Laptop Computer"
                 />
               </div>
 
-              {/* Description */}
-              <div>
-                <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                  Description *
-                </label>
-                <input
-                  type="text"
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                  placeholder="e.g., Dell Latitude 5520"
-                />
-              </div>
-
-              {/* Asset Type */}
+              {/* Type - Required */}
               <div>
                 <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                  Asset Type *
+                  Type <span className="text-red-500">*</span>
                 </label>
                 <select
                   id="type"
@@ -192,7 +335,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   value={formData.type}
                   onChange={handleInputChange}
                   required
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none"
                 >
                   <option value="equipment">Equipment</option>
                   <option value="vehicle">Vehicle</option>
@@ -200,103 +343,6 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   <option value="technology">Technology</option>
                   <option value="machinery">Machinery</option>
                 </select>
-              </div>
-
-              {/* Value and Residual Value Row */}
-              <div className="grid grid-cols-2 gap-4">
-                {/* Value */}
-                <div>
-                  <label htmlFor="value" className="block text-sm font-medium text-gray-700 mb-2">
-                    Value ($) *
-                  </label>
-                  <input
-                    type="number"
-                    id="value"
-                    name="value"
-                    value={formData.value}
-                    onChange={handleInputChange}
-                    required
-                    min="0"
-                    step="0.01"
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                    placeholder="1500"
-                  />
-                </div>
-
-                {/* Residual Value */}
-                <div>
-                  <label htmlFor="residualValue" className="block text-sm font-medium text-gray-700 mb-2">
-                    Residual Value ($) *
-                  </label>
-                  <input
-                    type="number"
-                    id="residualValue"
-                    name="residualValue"
-                    value={formData.residualValue}
-                    onChange={handleInputChange}
-                    required
-                    min="0"
-                    step="0.01"
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                    placeholder="300"
-                  />
-                </div>
-              </div>
-
-              {/* Project ID */}
-              <div>
-                <label htmlFor="projectId" className="block text-sm font-medium text-gray-700 mb-2">
-                  Project ID *
-                </label>
-                <input
-                  type="text"
-                  id="projectId"
-                  name="projectId"
-                  value={formData.projectId}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                  placeholder="123e4567-e89b-12d3-a456-426614174000"
-                />
-              </div>
-            </div>
-
-            {/* Right Column */}
-            <div className="space-y-6">
-              {/* Status */}
-              <div>
-                <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-2">
-                  Status
-                </label>
-                <select
-                  id="status"
-                  name="status"
-                  value={formData.status}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                >
-                  <option value="">Select Status</option>
-                  <option value="active">Active</option>
-                  <option value="inactive">Inactive</option>
-                  <option value="maintenance">Maintenance</option>
-                  <option value="retired">Retired</option>
-                </select>
-              </div>
-
-              {/* Brand */}
-              <div>
-                <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-2">
-                  Brand
-                </label>
-                <input
-                  type="text"
-                  id="brand"
-                  name="brand"
-                  value={formData.brand}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                  placeholder="e.g., Dell"
-                />
               </div>
 
               {/* Model */}
@@ -311,23 +357,55 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   value={formData.model}
                   onChange={handleInputChange}
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                  placeholder="e.g., Latitude 5520"
+
                 />
               </div>
 
-              {/* Notes */}
+              <div className="grid grid-cols-2 gap-4">
+
+                {/* Height */}
+                <div>
+                  <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
+                    Height (meter unit)
+                  </label>
+                  <input
+                    type="text"
+                    id="height"
+                    name="height"
+                    value={formData.height}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  />
+                </div>
+
+                {/* Weight */}
+                <div>
+                  <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
+                    Weight (pound unit)
+                  </label>
+                  <input
+                    type="text"
+                    id="weight"
+                    name="weight"
+                    value={formData.weight}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  />
+                </div>
+              </div>
+
+              {/* Year of Manufacture */}
               <div>
-                <label htmlFor="notes" className="block text-sm font-medium text-gray-700 mb-2">
-                  Notes <span className="text-gray-400">(Optional)</span>
+                <label htmlFor="yearOfManufacture" className="block text-sm font-medium text-gray-700 mb-2">
+                  Year of Manufacture
                 </label>
-                <textarea
-                  id="notes"
-                  name="notes"
-                  value={formData.notes}
+                <input
+                  type="text"
+                  id="yearOfManufacture"
+                  name="yearOfManufacture"
+                  value={formData.yearOfManufacture}
                   onChange={handleInputChange}
-                  rows={3}
                   className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-                  placeholder="e.g., Company laptop"
                 />
               </div>
             </div>
