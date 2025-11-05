@@ -12,6 +12,7 @@ export default function CompanyAdminContent() {
   const [onGoingProjects, setOnGoingProjects] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [loading, setLoading] = useState(true);
+  console.log(totalProjects)
 
   // Fetch projects data for this company admin
   const fetchProjects = async () => {
@@ -37,7 +38,8 @@ export default function CompanyAdminContent() {
       }
 
       // The backend should automatically filter projects by the authenticated user's company
-      const response = await fetch(getApiUrl('/projects'), {
+      // Use pagination so we can reliably read the total count from the response
+      const response = await fetch(getApiUrl('/projects?page=1&limit=1000'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
@@ -46,16 +48,16 @@ export default function CompanyAdminContent() {
         const data = await response.json();
         const projects = data.projects || data.data || [];
 
-        // Filter projects created by this company admin (if needed)
-        // The backend should already filter by company, but we can add additional filtering here
-        const companyProjects = projects.filter((project: { createdById?: string; companyId?: string }) =>
-          project.createdById === userId || project.companyId === userProfile.companyId
-        );
-
-        setTotalProjects(companyProjects.length);
+        // Prefer the API-provided total (matches Manage Projects page totalItems)
+        if (typeof data.total === 'number') {
+          setTotalProjects(data.total);
+        } else {
+          // Fallback to length if total isn't provided
+          setTotalProjects(projects.length);
+        }
 
         // Count ongoing projects (active status)
-        const ongoingCount = companyProjects.filter((project: { status: string }) =>
+        const ongoingCount = projects.filter((project: { status: string }) =>
           project.status === 'active' || project.status === 'in_progress'
         ).length;
         setOnGoingProjects(ongoingCount);
@@ -82,7 +84,7 @@ export default function CompanyAdminContent() {
         }
       }
 
-      const response = await fetch(getApiUrl('/users'), {
+      const response = await fetch(getApiUrl('/users?page=1&limit=1000'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
@@ -106,6 +108,7 @@ export default function CompanyAdminContent() {
           return isCustomerUser && isFromSameCompany;
         });
 
+        // Match Manage Users page behavior: use filtered count
         setTotalUsers(filteredUsers.length);
       }
     } catch (error) {
