@@ -638,7 +638,7 @@ const ResidualAnalysisPage = () => {
                       className="block mb-2"
                       style={labelStyles}
                     >
-                      Lease Phone
+                    Client Phone
                     </label>
                     <div className="flex">
                       <select
