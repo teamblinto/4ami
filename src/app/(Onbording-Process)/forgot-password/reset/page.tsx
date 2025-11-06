@@ -10,8 +10,7 @@ import { Suspense } from "react";
 function ResetPasswordPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const email = searchParams.get("email") || "";
-  const code = searchParams.get("code") || "";
+  const token = searchParams.get("token") || "";
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -30,13 +29,27 @@ function ResetPasswordPageContent() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password || password !== confirmPassword) return;
+    if (!password || password !== confirmPassword || !token) return;
     setIsSubmitting(true);
     try {
-      // TODO: integrate with backend reset endpoint
-      // await fetch('/api/auth/reset-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, code, password }) })
-      console.log("Reset password for", email, "code", code);
-      router.push("/forgot-password/success");
+      const response = await fetch('/api/auth/reset-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token, password }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        router.push("/forgot-password/success");
+      } else {
+        // Handle error - you might want to show an error message to the user
+        console.error("Reset password error:", data);
+        alert(data.message || "Failed to reset password. Please try again.");
+      }
+    } catch (error) {
+      console.error("Reset password error:", error);
+      alert("An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -55,6 +68,11 @@ function ResetPasswordPageContent() {
             <div className="w-full md:w-2/5 p-6">
               <h1 className="text-[24px] font-medium text-[#080607] mb-2">Reset Password</h1>
               <p className="text-[#6C757D] mb-6">Please enter your new password below</p>
+              {!token && (
+                <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                  <p className="text-sm text-red-600">Invalid or missing reset token. Please use the link from your email.</p>
+                </div>
+              )}
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
@@ -111,9 +129,9 @@ function ResetPasswordPageContent() {
 
                 <button
                   type="submit"
-                  disabled={isSubmitting || !password || password !== confirmPassword}
+                  disabled={isSubmitting || !password || password !== confirmPassword || !token}
                   className={`px-5 py-2 rounded-md text-white font-medium cursor-pointer ${
-                    isSubmitting || !password || password !== confirmPassword
+                    isSubmitting || !password || password !== confirmPassword || !token
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-red-500 hover:bg-red-600"
                   }`}

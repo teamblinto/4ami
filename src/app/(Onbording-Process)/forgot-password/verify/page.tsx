@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 
@@ -12,10 +12,8 @@ function VerifyCodePageContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get("email") || "";
 
-  const [code, setCode] = useState<string[]>(Array(6).fill(""));
-  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
-  const [isVerifying, setIsVerifying] = useState(false);
   const [timeLeft, setTimeLeft] = useState(120); // 2 minutes
+  const [isResending, setIsResending] = useState(false);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -32,44 +30,31 @@ function VerifyCodePageContent() {
     return `${m}:${s}`;
   }, [timeLeft]);
 
-  const handleChange = (idx: number, value: string) => {
-    if (!/^[0-9]?$/.test(value)) return; // allow only single digit
-    const next = [...code];
-    next[idx] = value;
-    setCode(next);
-    if (value && idx < inputsRef.current.length - 1) {
-      inputsRef.current[idx + 1]?.focus();
-    }
-  };
-
-  const handleKeyDown = (idx: number, e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Backspace" && !code[idx] && idx > 0) {
-      inputsRef.current[idx - 1]?.focus();
-    }
-  };
-
-  const enteredCode = useMemo(() => code.join(""), [code]);
-
-  const handleVerify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (enteredCode.length !== 6) return;
-    setIsVerifying(true);
-    try {
-      // TODO: integrate with backend verification endpoint
-      // await fetch('/api/auth/verify-reset-code', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, code: enteredCode }) })
-      console.log("Verify code", enteredCode, "for", email);
-      // Redirect to reset password page
-      router.push(`/forgot-password/reset?email=${encodeURIComponent(email)}&code=${enteredCode}`);
-    } finally {
-      setIsVerifying(false);
-    }
-  };
-
   const handleResend = async () => {
-    if (timeLeft > 0) return;
-    setTimeLeft(120);
-    // TODO: call resend endpoint
-    // await fetch('/api/auth/forgot-password', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) })
+    if (timeLeft > 0 || !email) return;
+    setIsResending(true);
+    try {
+      const response = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setTimeLeft(120);
+        alert("Reset link sent successfully!");
+      } else {
+        console.error("Resend link error:", data);
+        alert(data.message || "Failed to resend link. Please try again.");
+      }
+    } catch (error) {
+      console.error("Resend link error:", error);
+      alert("An error occurred. Please try again.");
+    } finally {
+      setIsResending(false);
+    }
   };
 
   return (
@@ -81,55 +66,43 @@ function VerifyCodePageContent() {
 
         <main className="flex-grow flex max-w-[1000px] mx-auto items-center justify-center bg-gray-100 pt-6 pb-6">
           <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
-            {/* Left Section - Verification */}
+            {/* Left Section - Check Email */}
             <div className="w-full md:w-2/5 p-6">
-              <h1 className="text-[24px] font-medium text-[#080607] mb-2">Please Check Your Email</h1>
+              <h1 className="text-[24px] font-medium text-[#080607] mb-2">Check Your Email</h1>
               <p className="text-[#6C757D] mb-6">
-                We have sent a code to <span className="font-semibold">{email}</span>
+                We have sent a password reset link to <span className="font-semibold">{email}</span>
+              </p>
+              <p className="text-sm text-[#6C757D] mb-6">
+                Please click on the link in the email to reset your password. The link will expire after a certain period.
               </p>
 
-              <form onSubmit={handleVerify}>
-                <div className="flex gap-2 mb-4">
-                  {code.map((d, idx) => (
-                    <input
-                      key={idx}
-                      ref={(el) => {
-                        inputsRef.current[idx] = el;
-                      }}
-                      inputMode="numeric"
-                      maxLength={1}
-                      value={d}
-                      onChange={(e) => handleChange(idx, e.target.value)}
-                      onKeyDown={(e) => handleKeyDown(idx, e)}
-                      className="w-10 h-10 text-center focus:outline-none focus:ring-1 text-black rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
-                    />
-                  ))}
-                </div>
+              <div className="mb-6">
+                <p className="text-xs text-gray-500 mb-2">
+                  Didn&#39;t receive the email?
+                </p>
+                <p className="text-xs text-gray-500">
+                  {timeLeft > 0 ? (
+                    <>You can resend the link in {formattedTime}</>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={handleResend}
+                      disabled={isResending || !email}
+                      className={`underline ${isResending || !email ? "text-gray-400 cursor-not-allowed" : "text-red-500 hover:text-red-600"}`}
+                    >
+                      {isResending ? "Sending..." : "Resend reset link"}
+                    </button>
+                  )}
+                </p>
+              </div>
 
-                <button
-                  type="submit"
-                  disabled={isVerifying || enteredCode.length !== 6}
-                  className={`px-5 py-2 rounded-md text-white font-medium cursor-pointer ${
-                    isVerifying || enteredCode.length !== 6
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-red-500 hover:bg-red-600"
-                  }`}
-                >
-                  {isVerifying ? "Verifying..." : "Verify"}
-                </button>
-              </form>
-
-              <p className="text-xs text-gray-500 mt-4">
-                Send code again in {formattedTime} {" "}
-                <button
-                  type="button"
-                  onClick={handleResend}
-                  disabled={timeLeft > 0}
-                  className={`underline ${timeLeft > 0 ? "text-gray-400" : "text-red-500"}`}
-                >
-                  send code
-                </button>
-              </p>
+              <button
+                type="button"
+                onClick={() => router.push("/login")}
+                className="px-5 py-2 rounded-md text-gray-700 font-medium border border-gray-300 hover:bg-gray-50"
+              >
+                Back to Login
+              </button>
             </div>
 
             {/* Right Section - Illustration */}

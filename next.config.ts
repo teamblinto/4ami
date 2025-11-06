@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
   experimental: {
     optimizePackageImports: ['@next/font'],
   },
+  // Rewrite /reset-password to /forgot-password/reset to handle email links
+  async rewrites() {
+    return [
+      {
+        source: '/reset-password',
+        destination: '/forgot-password/reset',
+      },
+    ];
+  },
   /* config options here */
 };
 

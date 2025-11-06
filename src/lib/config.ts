@@ -10,6 +10,8 @@ export const config = {
       signin: '/auth/signin',
       customerAdminSignup: '/auth/customer-admin-signup',
       verifyEmail: '/auth/verify-email',
+      forgotPassword: '/auth/forgot-password',
+      resetPassword: '/auth/reset-password',
     },
     users: {
       invite: '/users/invite',
