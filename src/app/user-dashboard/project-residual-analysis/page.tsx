@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
@@ -24,6 +24,35 @@ const ResidualAnalysisPage = () => {
   const [communicationValue, setCommunicationValue] = useState("No");
   const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
   const [communicationValue2, setCommunicationValue2] = useState("No");
+  const [showSubmittalDateTooltip, setShowSubmittalDateTooltip] = useState(false);
+  const [showClientCommunicationTooltip, setShowClientCommunicationTooltip] = useState(false);
+  const [showSourceCommunicationTooltip, setShowSourceCommunicationTooltip] = useState(false);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const clientCommunicationTooltipRef = useRef<HTMLDivElement>(null);
+  const sourceCommunicationTooltipRef = useRef<HTMLDivElement>(null);
+
+  // Close tooltips when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (tooltipRef.current && !tooltipRef.current.contains(event.target as Node)) {
+        setShowSubmittalDateTooltip(false);
+      }
+      if (clientCommunicationTooltipRef.current && !clientCommunicationTooltipRef.current.contains(event.target as Node)) {
+        setShowClientCommunicationTooltip(false);
+      }
+      if (sourceCommunicationTooltipRef.current && !sourceCommunicationTooltipRef.current.contains(event.target as Node)) {
+        setShowSourceCommunicationTooltip(false);
+      }
+    };
+
+    if (showSubmittalDateTooltip || showClientCommunicationTooltip || showSourceCommunicationTooltip) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSubmittalDateTooltip, showClientCommunicationTooltip, showSourceCommunicationTooltip]);
 
   // Phone validation states
   const [phoneErrors, setPhoneErrors] = useState({
@@ -111,6 +140,46 @@ const ResidualAnalysisPage = () => {
   const [sourcePhone2, setSourcePhone2] = useState("");
   const [sourceEmail, setSourceEmail] = useState("");
   const [sourceWebsite, setSourceWebsite] = useState("");
+
+  // Previously inserted sources (client-side cache)
+  type SourceEntry = { name: string; number: string };
+  const [availableSources, setAvailableSources] = useState<SourceEntry[]>([]);
+  const [isNewSourceName, setIsNewSourceName] = useState<boolean>(false);
+
+  useEffect(() => {
+    try {
+      const raw = typeof window !== 'undefined' ? localStorage.getItem('userSources') : null;
+      if (raw) {
+        const parsed = JSON.parse(raw) as SourceEntry[];
+        if (Array.isArray(parsed)) setAvailableSources(parsed);
+      }
+    } catch {}
+  }, []);
+
+  const generateSourceNumber = (): string => {
+    const d = new Date();
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    const rnd = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+    return `S-${y}${m}${day}-${rnd}`;
+  };
+
+  const handleSourceNameChange = (value: string) => {
+    setSourceName(value);
+    const match = availableSources.find(s => s.name === value);
+    if (match) {
+      setSourceNo(match.number);
+      setIsNewSourceName(false);
+    } else if (value.trim().length > 0) {
+      // New source: auto-assign a number
+      const newNo = generateSourceNumber();
+      setSourceNo(newNo);
+      setIsNewSourceName(true);
+    } else {
+      setIsNewSourceName(false);
+    }
+  };
 
   // Equipment fields
   // const [equipmentId, setEquipmentId] = useState("");
@@ -313,7 +382,7 @@ const ResidualAnalysisPage = () => {
       const storedToken =
         (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
 
-    
+
 
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -338,6 +407,18 @@ const ResidualAnalysisPage = () => {
         alert((data && (data.message || data.error)) || 'Failed to submit project');
         return;
       }
+
+      // Persist new source name locally so it appears next time
+      try {
+        if (isNewSourceName && sourceName && sourceNo) {
+          const raw = localStorage.getItem('userSources');
+          const existing: { name: string; number: string }[] = raw ? JSON.parse(raw) : [];
+          if (!existing.some(s => s.name === sourceName)) {
+            existing.push({ name: sourceName, number: sourceNo });
+            localStorage.setItem('userSources', JSON.stringify(existing));
+          }
+        }
+      } catch {}
 
       router.push('/user-dashboard/thank-you');
     } catch (err) {
@@ -417,7 +498,39 @@ const ResidualAnalysisPage = () => {
                   readOnly
                 />
               </div>
-
+              <div>
+                <div className="flex items-center  gap-2">
+                  <label
+                    htmlFor="start-date"
+                    className="block mb-2 text-[#6C757D] font-medium text-sm leading-6"
+                  >
+                    Submittal Date
+                  </label>
+                  <div className="relative" ref={tooltipRef}>
+                    <Image
+                      className="mb-[5px] cursor-pointer"
+                      src="/communication.svg"
+                      alt="communication"
+                      width={12}
+                      height={12}
+                      onClick={() => setShowSubmittalDateTooltip(!showSubmittalDateTooltip)}
+                    />
+                    {showSubmittalDateTooltip && (
+                      <div className="absolute left-0 top-6 z-10 w-64 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg">
+                        <p>This field fills in automatically with the date and time after you click Submit.</p>
+                        <div className="absolute -top-1 left-3 w-2 h-2 bg-gray-800 transform rotate-45"></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <input
+                  type="date"
+                  id="start-date"
+                  className="w-full h-10 px-3 rounded-lg border border-[#CED4DA] bg-[#FBFBFB] text-[#343A40] text-sm font-normal leading-6 placeholder:text-[#ADB5BD] placeholder:font-normal placeholder:text-sm placeholder:leading-6 focus:outline-none focus:ring-1   focus:border-transparent"
+                  // value={startDate}
+                  readOnly
+                />
+              </div>
             </div>
             <div className="mt-4">
               <label
@@ -509,7 +622,7 @@ const ResidualAnalysisPage = () => {
                       Client email
                     </label>
                     <input
-                 
+
                       type="email"
                       id="client-email"
                       placeholder="yorkerho@gmail.com"
@@ -592,7 +705,22 @@ const ResidualAnalysisPage = () => {
                       >
                         Communication
                       </label>
-                      <Image className="mb-[5px]" src="/communication.svg" alt="communication" width={12} height={12} />
+                      <div className="relative" ref={clientCommunicationTooltipRef}>
+                        <Image
+                          className="mb-[5px] cursor-pointer"
+                          src="/communication.svg"
+                          alt="communication"
+                          width={12}
+                          height={12}
+                          onClick={() => setShowClientCommunicationTooltip(!showClientCommunicationTooltip)}
+                        />
+                        {showClientCommunicationTooltip && (
+                          <div className="absolute left-0 top-6 z-10 w-72 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg">
+                            <p>Selecting Yes authorizes AMI and its representatives to contact your Client for questions or additional information related to this project.</p>
+                            <div className="absolute -top-1 left-3 w-2 h-2 bg-gray-800 transform rotate-45"></div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="relative">
                       <button
@@ -695,6 +823,31 @@ const ResidualAnalysisPage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                   <div>
                     <label
+                      htmlFor="source-name"
+                      className="block mb-2"
+                      style={labelStyles}
+                    >
+                      Source Name
+                    </label>
+                    <input
+
+                      type="text"
+                      id="source-name"
+                      placeholder="GreenTech Machinery"
+                      className="w-full"
+                      list="source-names"
+                      value={sourceName}
+                      onChange={(e) => handleSourceNameChange(e.target.value)}
+                      style={inputStyles}
+                    />
+                    <datalist id="source-names">
+                      {availableSources.map((s) => (
+                        <option key={s.number} value={s.name} />
+                      ))}
+                    </datalist>
+                  </div>
+                  <div>
+                    <label
                       htmlFor="source-no"
                       className="block mb-2"
                       style={labelStyles}
@@ -712,25 +865,7 @@ const ResidualAnalysisPage = () => {
                       style={inputStyles}
                     />
                   </div>
-                  <div>
-                    <label
-                      htmlFor="source-name"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Source Name
-                    </label>
-                    <input
 
-                      type="text"
-                      id="source-name"
-                      placeholder="GreenTech Machinery"
-                      className="w-full"
-                      value={sourceName}
-                      onChange={(e) => setSourceName(e.target.value)}
-                      style={inputStyles}
-                    />
-                  </div>
                   <div>
                     <label
                       htmlFor="source-type"
@@ -747,10 +882,12 @@ const ResidualAnalysisPage = () => {
                       onChange={(e) => setSourceType(e.target.value)}
                       style={inputStyles}
                     >
-                      <option value="">Select Source</option>
-                      <option value="dealer">Dealer</option>
-                      <option value="manufacturer">Manufacturer</option>
+                      <option  hidden value="">Select Source</option>
                       <option value="broker">Broker</option>
+                      <option value="dealer">Dealer</option>
+                      <option value="direct">Direct</option>
+                      <option value="manufacturer">Manufacturer</option>
+                      <option value="other">Other</option>
                     </select>
                   </div>
                 </div>
@@ -800,7 +937,22 @@ const ResidualAnalysisPage = () => {
                       >
                         Communication
                       </label>
-                      <Image className="mb-[5px]" src="/communication.svg" alt="communication" width={12} height={12} />
+                      <div className="relative" ref={sourceCommunicationTooltipRef}>
+                        <Image
+                          className="mb-[5px] cursor-pointer"
+                          src="/communication.svg"
+                          alt="communication"
+                          width={12}
+                          height={12}
+                          onClick={() => setShowSourceCommunicationTooltip(!showSourceCommunicationTooltip)}
+                        />
+                        {showSourceCommunicationTooltip && (
+                          <div className="absolute left-0 top-6 z-10 w-72 bg-gray-800 text-white text-xs rounded-lg p-3 shadow-lg">
+                            <p>Selecting Yes authorizes AMI and its representatives to contact your Client for questions or additional information related to this project.</p>
+                            <div className="absolute -top-1 left-3 w-2 h-2 bg-gray-800 transform rotate-45"></div>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <div className="relative">
                       <button
@@ -932,7 +1084,7 @@ const ResidualAnalysisPage = () => {
                       Email
                     </label>
                     <input
-                  
+
                       type="email"
                       id="email"
                       placeholder="b.nolan@greentechmachinery.com"
@@ -1132,11 +1284,14 @@ const ResidualAnalysisPage = () => {
                       onChange={(e) => setMeterType(e.target.value)}
                       style={inputStyles}
                     >
-                      <option value="">select meter type</option>
+                      <option hidden value="">select meter type</option>
                       <option value="hours">Hours</option>
                       <option value="miles">Miles</option>
                       <option value="kilometers">Kilometers</option>
                       <option value="cycles">Cycles</option>
+                      <option value="units">Units</option>
+                      <option value="n/a">N/A</option>
+                      <option value="other">Other</option>
                     </select>
                   </div>
 
