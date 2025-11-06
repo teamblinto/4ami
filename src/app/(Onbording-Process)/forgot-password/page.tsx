@@ -14,10 +14,25 @@ export default function ForgotPasswordPage() {
     if (!email) return;
     setIsSubmitting(true);
     try {
-      // TODO: integrate with backend endpoint if available
-      // await fetch("/api/auth/forgot-password", { method: "POST", headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
-      // Navigate to verification page with email
-      router.push(`/forgot-password/verify?email=${encodeURIComponent(email)}`);
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Navigate to verification page with email
+        router.push(`/forgot-password/verify?email=${encodeURIComponent(email)}`);
+      } else {
+        // Handle error - you might want to show an error message to the user
+        console.error("Forgot password error:", data);
+        alert(data.message || "Failed to send reset code. Please try again.");
+      }
+    } catch (error) {
+      console.error("Forgot password error:", error);
+      alert("An error occurred. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -66,7 +81,7 @@ export default function ForgotPasswordPage() {
                     isSubmitting ? "bg-gray-400 cursor-not-allowed" : "bg-red-500 hover:bg-red-600"
                   }`}
                 >
-                  {isSubmitting ? "Sending..." : "Send Code"}
+                  {isSubmitting ? "Sending..." : "Send Reset Link"}
                 </button>
               </form>
             </div>
