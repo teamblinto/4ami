@@ -45,14 +45,17 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
     residualValue: '',
     status: '',
     industry: '',
+    industryTag: '',
+    assetType: '',
+    assetTypeTag: '',
     make: '',
-    length: '',
-    specialTransportationConsideration: '',
     model: '',
+    length: '',
     width: '',
     height: '',
     weight: '',
     yearOfManufacture: '',
+    specialTransportationConsideration: '',
     projectId: ''
   });
 
@@ -63,6 +66,56 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }));
+  };
+
+  const handleAddAsIndustry = () => {
+    if (formData.industry.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        industryTag: prev.industry,
+        industry: ''
+      }));
+      toast.success('Industry added successfully!');
+    }
+  };
+
+  const handleAddAsAssetType = () => {
+    if (formData.assetType.trim()) {
+      setFormData(prev => ({
+        ...prev,
+        assetTypeTag: prev.assetType,
+        assetType: ''
+      }));
+      toast.success('Asset type added successfully!');
+    }
+  };
+
+  const handleAddAsMake = () => {
+    if (formData.make.trim()) {
+      toast.success('Make added successfully!');
+      // You can add logic here to save to database if needed
+    }
+  };
+
+  const handleAddAsModel = () => {
+    if (formData.model.trim()) {
+      toast.success('Model added successfully!');
+      // You can add logic here to save to database if needed
+    }
+  };
+
+  const handleRemoveIndustryTag = () => {
+    setFormData(prev => ({
+      ...prev,
+      industryTag: ''
+    }));
+  };
+
+  const handleRemoveAssetTypeTag = () => {
+    setFormData(prev => ({
+      ...prev,
+      assetTypeTag: ''
     }));
   };
 
@@ -81,7 +134,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
 
       // Prepare the data according to the API structure
       const assetData: AssetPayload = {
-        name: formData.name,
+        name: formData.assetTypeTag || formData.assetType || 'Asset',
         type: formData.type
       };
 
@@ -153,14 +206,17 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
         residualValue: '',
         status: '',
         industry: '',
+        industryTag: '',
+        assetType: '',
+        assetTypeTag: '',
         make: '',
-        length: '',
-        specialTransportationConsideration: '',
         model: '',
+        length: '',
         width: '',
         height: '',
         weight: '',
         yearOfManufacture: '',
+        specialTransportationConsideration: '',
         projectId: ''
       });
 
@@ -185,14 +241,17 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
       residualValue: '',
       status: '',
       industry: '',
+      industryTag: '',
+      assetType: '',
+      assetTypeTag: '',
       make: '',
-      length: '',
-      specialTransportationConsideration: '',
       model: '',
+      length: '',
       width: '',
       height: '',
       weight: '',
       yearOfManufacture: '',
+      specialTransportationConsideration: '',
       projectId: ''
     });
     toast.success('Changes discarded successfully!');
@@ -227,55 +286,84 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                 <label htmlFor="industry" className="block text-sm font-medium text-[#343A40] mb-2">
                   Industry
                 </label>
-                <input
-                  type="text"
-                  id="industry"
-                  name="industry"
-                  value={formData.industry}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                <div className="flex gap-2">
+                  <div className="flex-1 relative">
+                    {formData.industryTag ? (
+                      <div className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center justify-between">
+                        <span>{formData.industryTag}</span>
+                        <button
+                          type="button"
+                          onClick={handleRemoveIndustryTag}
+                          className="text-gray-500 hover:text-gray-700 ml-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    ) : (
+                      <input
+                        type="text"
+                        id="industry"
+                        name="industry"
+                        value={formData.industry}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                        placeholder="If typed industry is not available in database"
+                      />
+                    )}
+                  </div>
 
-                />
+                </div>
+                <div className="flex justify-end mt-2">
+                  <button
+                    type="button"
+                    onClick={handleAddAsIndustry}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    + Add as Industry
+                  </button>
+                </div>
               </div>
 
               {/* Make */}
               <div>
-                <label htmlFor="make" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="make" className="block text-sm font-medium text-[#343A40] mb-2">
                   Make
                 </label>
-                <input
-                  type="text"
-                  id="make"
-                  name="make"
-                  value={formData.make}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
-
-                />
-              </div>
-
-
-
-              <div className="grid grid-cols-2 gap-4">
-                {/* Width */}
-                <div>
-                  <label htmlFor="width" className="block text-sm font-medium text-gray-700 mb-2">
-                    Width (meter unit)
-                  </label>
+                <div className="flex gap-2">
                   <input
                     type="text"
-                    id="width"
-                    name="width"
-                    value={formData.width}
+                    id="make"
+                    name="make"
+                    value={formData.make}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                    className="flex-1 px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                    placeholder="If typed make is not available in database"
                   />
+  
                 </div>
+                <div className="flex justify-end mt-2">
+                <button
+                    type="button"
+                    onClick={handleAddAsMake}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    + Add as Make
+                  </button>
+                </div>
+              </div>
 
-
+              <div className="grid grid-cols-2 gap-4">
                 {/* Length */}
                 <div>
-                  <label htmlFor="length" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="length" className="block text-sm font-medium text-[#343A40] mb-2">
                     Length (meter unit)
                   </label>
                   <input
@@ -284,14 +372,28 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                     name="length"
                     value={formData.length}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                  />
+                </div>
+                {/* Width */}
+                <div>
+                  <label htmlFor="width" className="block text-sm font-medium text-[#343A40] mb-2">
+                    Width (meter unit)
+                  </label>
+                  <input
+                    type="text"
+                    id="width"
+                    name="width"
+                    value={formData.width}
+                    onChange={handleInputChange}
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
                   />
                 </div>
               </div>
 
               {/* Special Transportation Consideration */}
               <div>
-                <label htmlFor="specialTransportationConsideration" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="specialTransportationConsideration" className="block text-sm font-medium text-[#343A40] mb-2">
                   Special Transportation Consideration <span className="text-gray-400">(Optional)</span>
                 </label>
                 <textarea
@@ -300,72 +402,98 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   value={formData.specialTransportationConsideration}
                   onChange={handleInputChange}
                   rows={4}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
                 />
               </div>
             </div>
 
             {/* Right Column */}
             <div className="space-y-6">
-              {/* Name - Required */}
+              {/* Subject Asset Type */}
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-                  Name <span className="text-red-500">*</span>
+                <label htmlFor="assetType" className="block text-sm font-medium text-[#343A40] mb-2">
+                  Subject Asset Type
                 </label>
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none"
-                  placeholder="e.g., Laptop Computer"
-                />
-              </div>
+                <div className="flex gap-2">
+                  <div className="flex-1 relative">
+                    {formData.assetTypeTag ? (
+                      <div className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center justify-between">
+                        <span>{formData.assetTypeTag}</span>
+                        <button
+                          type="button"
+                          onClick={handleRemoveAssetTypeTag}
+                          className="text-gray-500 hover:text-gray-700 ml-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    ) : (
+                      <input
+                        type="text"
+                        id="assetType"
+                        name="assetType"
+                        value={formData.assetType}
+                        onChange={handleInputChange}
+                        className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                        placeholder="If typed asset type is not available in database"
+                      />
+                    )}
+                  </div>
 
-              {/* Type - Required */}
-              <div>
-                <label htmlFor="type" className="block text-sm font-medium text-gray-700 mb-2">
-                  Type <span className="text-red-500">*</span>
-                </label>
-                <select
-                  id="type"
-                  name="type"
-                  value={formData.type}
-                  onChange={handleInputChange}
-                  required
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none"
-                >
-                  <option value="equipment">Equipment</option>
-                  <option value="vehicle">Vehicle</option>
-                  <option value="furniture">Furniture</option>
-                  <option value="technology">Technology</option>
-                  <option value="machinery">Machinery</option>
-                </select>
+                </div>
+                <div className="flex justify-end mt-2">
+                <button
+                    type="button"
+                    onClick={handleAddAsAssetType}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    + Add as Asset Type
+                  </button>
+                </div>
               </div>
 
               {/* Model */}
               <div>
-                <label htmlFor="model" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="model" className="block text-sm font-medium text-[#343A40] mb-2">
                   Model
                 </label>
-                <input
-                  type="text"
-                  id="model"
-                  name="model"
-                  value={formData.model}
-                  onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    id="model"
+                    name="model"
+                    value={formData.model}
+                    onChange={handleInputChange}
+                    className="flex-1 px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                    placeholder="If typed model is not available in database"
+                  />
 
-                />
+                </div>
+                <div className="flex justify-end mt-2">
+                <button
+                    type="button"
+                    onClick={handleAddAsModel}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md text-sm font-medium flex items-center gap-1 whitespace-nowrap"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+                    </svg>
+                    + Add as Model
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
 
+
+              <div className="grid grid-cols-2 gap-4">
                 {/* Height */}
                 <div>
-                  <label htmlFor="height" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="height" className="block text-sm font-medium text-[#343A40] mb-2">
                     Height (meter unit)
                   </label>
                   <input
@@ -374,13 +502,13 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                     name="height"
                     value={formData.height}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
                   />
                 </div>
 
                 {/* Weight */}
                 <div>
-                  <label htmlFor="weight" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="weight" className="block text-sm font-medium text-[#343A40] mb-2">
                     Weight (pound unit)
                   </label>
                   <input
@@ -389,14 +517,14 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                     name="weight"
                     value={formData.weight}
                     onChange={handleInputChange}
-                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                    className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
                   />
                 </div>
-              </div>
 
+              </div>
               {/* Year of Manufacture */}
               <div>
-                <label htmlFor="yearOfManufacture" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="yearOfManufacture" className="block text-sm font-medium text-[#343A40] mb-2">
                   Year of Manufacture
                 </label>
                 <input
@@ -405,7 +533,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   name="yearOfManufacture"
                   value={formData.yearOfManufacture}
                   onChange={handleInputChange}
-                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#343A40]"
+                  className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
                 />
               </div>
             </div>
