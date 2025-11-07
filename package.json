@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
+    "@headlessui/react": "^2.2.9",
     "axios": "^1.11.0",
     "geist": "^1.4.2",
     "next": "15.5.2",
