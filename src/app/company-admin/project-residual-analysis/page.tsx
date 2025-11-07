@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import CheckboxDropdown from "@/app/Animations/CheckboxDropdown";
 
 const ResidualAnalysisPage = () => {
   const router = useRouter();
@@ -20,10 +21,65 @@ const ResidualAnalysisPage = () => {
     useState(true);
   const [isEquipmentDetailsOpen, setIsEquipmentDetailsOpen] = useState(true);
   const [isFinancialInfoOpen, setIsFinancialInfoOpen] = useState(true);
-  const [isCommunicationOpen, setCommunicationOpen] = useState(false);
-  const [communicationValue, setCommunicationValue] = useState("No");
-  const [isCommunicationOpen2, setCommunicationOpen2] = useState(false);
-  const [communicationValue2, setCommunicationValue2] = useState("No");
+  const [communicationValue, setCommunicationValue] = useState<string | null>("No");
+  const [communicationValue2, setCommunicationValue2] = useState<string | null>("No");
+
+  // Communication options for dropdown
+  const communicationOptions = [
+    { label: "Yes", value: "Yes" },
+    { label: "No", value: "No" },
+  ];
+
+  // Source Type options
+  const sourceTypeOptions = [
+    { label: "Broker", value: "broker" },
+    { label: "Dealer", value: "dealer" },
+    { label: "Direct", value: "direct" },
+    { label: "Manufacturer", value: "manufacturer" },
+    { label: "Other", value: "other" },
+  ];
+
+  // Meter Type options
+  const meterTypeOptions = [
+    { label: "Hours", value: "hours" },
+    { label: "Miles", value: "miles" },
+    { label: "Kilometers", value: "kilometers" },
+    { label: "Cycles", value: "cycles" },
+    { label: "Units", value: "units" },
+    { label: "N/A", value: "n/a" },
+    { label: "Other", value: "other" },
+  ];
+
+  // Environment Ranking options
+  const environmentRankingOptions = [
+    { label: "New", value: "New" },
+    { label: "Good", value: "Good" },
+    { label: "Fair", value: "Fair" },
+    { label: "Poor", value: "Poor" },
+  ];
+
+  // Structure options
+  const structureOptions = [
+    { label: "Operating", value: "operating" },
+    { label: "Capital", value: "capital" },
+    { label: "Sale Leaseback", value: "sale-leaseback" },
+    { label: "Bullet", value: "Bullet" },
+  ];
+
+  // Application options
+  const applicationOptions = [
+    { label: "Construction", value: "construction" },
+    { label: "Mining", value: "mining" },
+    { label: "Agriculture", value: "agriculture" },
+    { label: "Transportation", value: "transportation" },
+  ];
+
+  // Environment options
+  const environmentOptions = [
+    { label: "Indoor", value: "indoor" },
+    { label: "Outdoor", value: "outdoor" },
+    { label: "Mixed", value: "mixed" },
+  ];
   const [showSubmittalDateTooltip, setShowSubmittalDateTooltip] = useState(false);
   const [showClientCommunicationTooltip, setShowClientCommunicationTooltip] = useState(false);
   const [showSourceCommunicationTooltip, setShowSourceCommunicationTooltip] = useState(false);
@@ -123,7 +179,7 @@ const ResidualAnalysisPage = () => {
   // Source fields
   const [sourceNo, setSourceNo] = useState("");
   const [sourceName, setSourceName] = useState("");
-  const [sourceType, setSourceType] = useState("");
+  const [sourceType, setSourceType] = useState<string | null>(null);
   const [sourceContact, setSourceContact] = useState("");
   const [sourceTitle, setSourceTitle] = useState("");
   const [sourcePhone1, setSourcePhone1] = useState("");
@@ -132,14 +188,22 @@ const ResidualAnalysisPage = () => {
   const [sourceWebsite, setSourceWebsite] = useState("");
 
   // Equipment fields
-  const [industry, setIndustry] = useState("");
+  const [industry, setIndustry] = useState<string | null>(null);
   const [assetClass, setAssetClass] = useState("");
+
+  // Industry options for dropdown
+  const industryOptions = [
+    { label: "Construction", value: "construction" },
+    { label: "Mining", value: "mining" },
+    { label: "Agriculture", value: "agriculture" },
+    { label: "Transportation", value: "transportation" },
+  ];
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
   const [currentMeterReading, setCurrentMeterReading] = useState("");
-  const [meterType, setMeterType] = useState("");
-  const [environmentRanking, setEnvironmentRanking] = useState("New");
+  const [meterType, setMeterType] = useState<string | null>(null);
+  const [environmentRanking, setEnvironmentRanking] = useState<string | null>("New");
   const [productRequirement, setProductRequirement] = useState("");
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -157,9 +221,9 @@ const ResidualAnalysisPage = () => {
   const [maintenanceRecords] = useState("");
   const [inspectionReport] = useState("");
   const [terms] = useState("");
-  const [structure, setStructure] = useState("");
-  const [application, setApplication] = useState("");
-  const [environment, setEnvironment] = useState("");
+  const [structure, setStructure] = useState<string | null>(null);
+  const [application, setApplication] = useState<string | null>(null);
+  const [environment, setEnvironment] = useState<string | null>(null);
 
   // removed useEffect; lazy initialize in useState above
 
@@ -278,7 +342,7 @@ const ResidualAnalysisPage = () => {
       source: {
         sourceNo,
         sourceName,
-        sourceType,
+        sourceType: sourceType || "",
         contact: sourceContact,
         title: sourceTitle,
         communication: communicationValue2 === "Yes",
@@ -289,15 +353,15 @@ const ResidualAnalysisPage = () => {
       },
       equipments: [
         {
-          industry,
+          industry: industry || "",
           assetClass,
           make,
           model,
           year: year ? Number(year) : undefined,
           currentMeterReading: currentMeterReading ? Number(currentMeterReading) : undefined,
-          meterType,
+          meterType: meterType || "",
           proposedUtilization,
-          environmentRanking,
+          environmentRanking: environmentRanking || "",
           note: productRequirement,
         },
       ],
@@ -314,9 +378,9 @@ const ResidualAnalysisPage = () => {
         maintenanceRecords,
         inspectionReport,
         terms: terms ? Number(terms) : undefined,
-        structure,
-        application,
-        environment,
+        structure: structure || "",
+        application: application || "",
+        environment: environment || "",
       },
       utilizationScenarios: scenarios.map((scenario, index) => ({
 
@@ -637,11 +701,10 @@ const ResidualAnalysisPage = () => {
                   </div>
 
                   <div>
-                    <div className="flex items-center  gap-2">
+                    <div className="flex items-center gap-2 mb-2">
                       <label
                         htmlFor="communication"
-                        className="block mb-2"
-                        style={labelStyles}
+                        className="block text-sm font-medium leading-6 text-[#6C757D]"
                       >
                         Communication
                       </label>
@@ -662,72 +725,12 @@ const ResidualAnalysisPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="relative">
-                      <button
-                        type="button"
-                        className="w-full text-left flex justify-between items-center cursor-pointer"
-                        style={inputStyles}
-                        onClick={() =>
-                          setCommunicationOpen(!isCommunicationOpen)
-                        }
-                      >
-                        {communicationValue}
-                        <svg
-                          className={`w-5 h-5 text-gray-400 transform transition-transform ${isCommunicationOpen ? "rotate-180" : ""
-                            }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
-                      {isCommunicationOpen && (
-                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
-                          <ul>
-                            <li
-                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
-                              onClick={() => {
-                                setCommunicationValue("Yes");
-                                setCommunicationOpen(false);
-                              }}
-                            >
-                              <div className="flex items-center">
-                                <input
-                                  type="checkbox"
-                                  className="form-checkbox accent-[#ED272C]"
-                                  checked={communicationValue === "Yes"}
-                                  readOnly
-                                />
-                                <span className="ml-2">Yes</span>
-                              </div>
-                            </li>
-                            <li
-                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
-                              onClick={() => {
-                                setCommunicationValue("No");
-                                setCommunicationOpen(false);
-                              }}
-                            >
-                              <div className="flex items-center">
-                                <input
-                                  type="checkbox"
-                                  className="form-checkbox  accent-[#ED272C]"
-                                  checked={communicationValue === "No"}
-                                  readOnly
-                                />
-                                <span className="ml-2">No</span>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    <CheckboxDropdown
+                      options={communicationOptions}
+                      value={communicationValue}
+                      onChange={setCommunicationValue}
+                      placeholder="Select"
+                    />
                   </div>
                 </div>
               </div>
@@ -800,28 +803,13 @@ const ResidualAnalysisPage = () => {
                     />
                   </div>
                   <div>
-                    <label
-                      htmlFor="source-type"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Source Type
-                    </label>
-                    <select
-                      id="source-type"
-
-                      className="w-full"
+                    <CheckboxDropdown
+                      options={sourceTypeOptions}
                       value={sourceType}
-                      onChange={(e) => setSourceType(e.target.value)}
-                      style={inputStyles}
-                    >
-                      <option hidden value="">Select Source</option>
-                      <option value="broker">Broker</option>
-                      <option value="dealer">Dealer</option>
-                      <option value="direct">Direct</option>
-                      <option value="manufacturer">Manufacturer</option>
-                      <option value="other">Other</option>
-                    </select>
+                      onChange={setSourceType}
+                      label="Source Type"
+                      placeholder="Select Source"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -862,11 +850,10 @@ const ResidualAnalysisPage = () => {
                     />
                   </div>
                   <div>
-                    <div className="flex items-center  gap-2">
+                    <div className="flex items-center gap-2 mb-2">
                       <label
                         htmlFor="communication"
-                        className="block mb-2"
-                        style={labelStyles}
+                        className="block text-sm font-medium leading-6 text-[#6C757D]"
                       >
                         Communication
                       </label>
@@ -887,72 +874,12 @@ const ResidualAnalysisPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="relative">
-                      <button
-                        type="button"
-                        className="w-full text-left flex justify-between items-center"
-                        style={inputStyles}
-                        onClick={() =>
-                          setCommunicationOpen2(!isCommunicationOpen2)
-                        }
-                      >
-                        {communicationValue2}
-                        <svg
-                          className={`w-5 h-5 text-gray-400 transform transition-transform ${isCommunicationOpen2 ? "rotate-180" : ""
-                            }`}
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
-                      </button>
-                      {isCommunicationOpen2 && (
-                        <div className="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg">
-                          <ul>
-                            <li
-                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
-                              onClick={() => {
-                                setCommunicationValue2("Yes");
-                                setCommunicationOpen2(false);
-                              }}
-                            >
-                              <div className="flex items-center">
-                                <input
-                                  type="checkbox"
-                                  className="form-checkbox accent-[#ED272C]"
-                                  checked={communicationValue2 === "Yes"}
-                                  readOnly
-                                />
-                                <span className="ml-2">Yes</span>
-                              </div>
-                            </li>
-                            <li
-                              className="px-4 py-2 text-sm text-gray-700 cursor-pointer hover:bg-gray-100"
-                              onClick={() => {
-                                setCommunicationValue2("No");
-                                setCommunicationOpen2(false);
-                              }}
-                            >
-                              <div className="flex items-center">
-                                <input
-                                  type="checkbox"
-                                  className="form-checkbox  accent-[#ED272C]"
-                                  checked={communicationValue2 === "No"}
-                                  readOnly
-                                />
-                                <span className="ml-2">No</span>
-                              </div>
-                            </li>
-                          </ul>
-                        </div>
-                      )}
-                    </div>
+                    <CheckboxDropdown
+                      options={communicationOptions}
+                      value={communicationValue2}
+                      onChange={setCommunicationValue2}
+                      placeholder="Select"
+                    />
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
@@ -1076,23 +1003,22 @@ const ResidualAnalysisPage = () => {
             {isEquipmentDetailsOpen && (
               <div className="flex flex-col gap-4 mt-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+
                   <div>
-                    <label
-                      htmlFor="industry"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Industry<span>*</span>
-                    </label>
-                    <select id="industry" className="w-full" style={inputStyles} value={industry} onChange={(e) => setIndustry(e.target.value)}>
-                      <option value="">Select Industry</option>
-                      <option value="construction">Construction</option>
-                      <option value="mining">Mining</option>
-                      <option value="agriculture">Agriculture</option>
-                      <option value="transportation">Transportation</option>
-                    </select>
+                    <CheckboxDropdown
+                      options={industryOptions}
+                      value={industry}
+                      onChange={setIndustry}
+                      label="Industry"
+                      placeholder="Select Industry"
+                      required={true}
+                    />
                   </div>
+
+
                   <div>
+
                     <label
                       htmlFor="asset-class"
                       className="block mb-2"
@@ -1190,52 +1116,25 @@ const ResidualAnalysisPage = () => {
                     />
                   </div>
                   <div>
-                    <label
-                      htmlFor="meter-type"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Meter Type<span>*</span>
-                    </label>
-                    <select
-                      id="meter-type"
-                      required
-                      className="w-full"
+                    <CheckboxDropdown
+                      options={meterTypeOptions}
                       value={meterType}
-                      onChange={(e) => setMeterType(e.target.value)}
-                      style={inputStyles}
-                    >
-                      <option hidden value="">select meter type</option>
-                      <option value="hours">Hours</option>
-                      <option value="miles">Miles</option>
-                      <option value="kilometers">Kilometers</option>
-                      <option value="cycles">Cycles</option>
-                      <option value="units">Units</option>
-                      <option value="n/a">N/A</option>
-                      <option value="other">Other</option>
-                    </select>
+                      onChange={setMeterType}
+                      label="Meter Type"
+                      placeholder="Select meter type"
+                      required={true}
+                    />
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="environment-ranking"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Environment Ranking<span>*</span>
-                    </label>
-                    <select
-                      id="environment-ranking"
-                      className="w-full"
+                    <CheckboxDropdown
+                      options={environmentRankingOptions}
                       value={environmentRanking}
-                      onChange={(e) => setEnvironmentRanking(e.target.value)}
-                      style={inputStyles}
-                    >
-                      <option value="New">New</option>
-                      <option value="Good">Good</option>
-                      <option value="Fair">Fair</option>
-                      <option value="Poor">Poor</option>
-                    </select>
+                      onChange={setEnvironmentRanking}
+                      label="Environment Ranking"
+                      placeholder="Select"
+                      required={true}
+                    />
                   </div>
                 </div>
 
@@ -1421,65 +1320,33 @@ const ResidualAnalysisPage = () => {
 
 
                 <div>
-                  <label
-                    htmlFor="structure"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Structure<span>*</span>
-                  </label>
-                  <select id="structure" className="w-full" style={inputStyles} value={structure} onChange={(e) => setStructure(e.target.value)} required>
-                    <option value="">Select</option>
-                    <option value="operating">Operating</option>
-                    <option value="capital">Capital</option>
-                    <option value="sale-leaseback">Sale Leaseback</option>
-                    <option value="Bullet">Bullet</option>
-                  </select>
+                  <CheckboxDropdown
+                    options={structureOptions}
+                    value={structure}
+                    onChange={setStructure}
+                    label="Structure"
+                    placeholder="Select"
+                    required={true}
+                  />
                 </div>
                 <div>
-                  <label
-                    htmlFor="application"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Application
-                  </label>
-                  <select
-                    id="application"
-
-                    className="w-full"
-                    style={inputStyles}
+                  <CheckboxDropdown
+                    options={applicationOptions}
                     value={application}
-                    onChange={(e) => setApplication(e.target.value)}
-                  >
-                    <option value="">Select</option>
-                    <option value="construction">Construction</option>
-                    <option value="mining">Mining</option>
-                    <option value="agriculture">Agriculture</option>
-                    <option value="transportation">Transportation</option>
-                  </select>
+                    onChange={setApplication}
+                    label="Application"
+                    placeholder="Select"
+                  />
                 </div>
                 <div>
-                  <label
-                    htmlFor="environment"
-                    className="block mb-2"
-                    style={labelStyles}
-                  >
-                    Environment<span>*</span>
-                  </label>
-                  <select
-                    id="environment"
-                    required
-                    className="w-full"
-                    style={inputStyles}
+                  <CheckboxDropdown
+                    options={environmentOptions}
                     value={environment}
-                    onChange={(e) => setEnvironment(e.target.value)}
-                  >
-                    <option value="">Select</option>
-                    <option value="indoor">Indoor</option>
-                    <option value="outdoor">Outdoor</option>
-                    <option value="mixed">Mixed</option>
-                  </select>
+                    onChange={setEnvironment}
+                    label="Environment"
+                    placeholder="Select"
+                    required={true}
+                  />
                 </div>
               </div>
             )}
