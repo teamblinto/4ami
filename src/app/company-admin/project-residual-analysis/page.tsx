@@ -189,7 +189,17 @@ const ResidualAnalysisPage = () => {
 
   // Equipment fields
   const [industry, setIndustry] = useState<string | null>(null);
-  const [assetClass, setAssetClass] = useState("");
+  const [assetClass, setAssetClass] = useState<string | null>(null);
+  
+  // Asset classes state - will be fetched from API and filtered by industry
+  const [allAssetClasses, setAllAssetClasses] = useState<Array<{
+    id: number;
+    industryId: number;
+    name: string;
+    description?: string;
+    industry: { id: number; name: string };
+  }>>([]);
+  const [assetClassOptions, setAssetClassOptions] = useState<Array<{ label: string; value: string }>>([]);
 
   // Industry options for dropdown - will be fetched from API
   const [industryOptions, setIndustryOptions] = useState<Array<{ label: string; value: string }>>([
@@ -266,6 +276,67 @@ const ResidualAnalysisPage = () => {
 
     fetchIndustries();
   }, []);
+
+  // Fetch asset classes from API
+  useEffect(() => {
+    const fetchAssetClasses = async () => {
+      try {
+        const storedToken =
+          (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+
+        if (storedToken) {
+          headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
+        }
+
+        const response = await fetch('/api/asset-classes', {
+          method: 'GET',
+          headers,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setAllAssetClasses(data);
+          }
+        } else {
+          console.error('Failed to fetch asset classes:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching asset classes:', error);
+      }
+    };
+
+    fetchAssetClasses();
+  }, []);
+
+  // Filter asset classes based on selected industry
+  useEffect(() => {
+    if (industry && allAssetClasses.length > 0) {
+      // Filter asset classes by industry name (case-insensitive)
+      const filtered = allAssetClasses.filter(ac => 
+        ac.industry.name.toLowerCase() === industry.toLowerCase()
+      );
+      
+      const transformed = filtered.map((assetClassItem) => ({
+        label: assetClassItem.name.charAt(0).toUpperCase() + assetClassItem.name.slice(1),
+        value: assetClassItem.name.toLowerCase(),
+      }));
+      
+      setAssetClassOptions(transformed);
+      
+      // Clear asset class if it's not in the filtered list
+      if (assetClass && !transformed.some(opt => opt.value === assetClass.toLowerCase())) {
+        setAssetClass(null);
+      }
+    } else {
+      setAssetClassOptions([]);
+      setAssetClass(null);
+    }
+  }, [industry, allAssetClasses, assetClass]);
 
   // Functions for managing scenarios
   const addScenario = () => {
@@ -394,7 +465,7 @@ const ResidualAnalysisPage = () => {
       equipments: [
         {
           industry: industry || "",
-          assetClass,
+          assetClass: assetClass || "",
           make,
           model,
           year: year ? Number(year) : undefined,
@@ -1080,23 +1151,13 @@ const ResidualAnalysisPage = () => {
 
 
                   <div>
-
-                    <label
-                      htmlFor="asset-class"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Asset class<span>*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      id="asset-class"
-                      placeholder="Enter asset class"
-                      className="w-full"
+                    <CheckboxDropdown
+                      options={assetClassOptions}
                       value={assetClass}
-                      onChange={(e) => setAssetClass(e.target.value)}
-                      style={inputStyles}
+                      onChange={setAssetClass}
+                      label="Asset class"
+                      placeholder="Select asset class"
+                      required={true}
                     />
                   </div>
                   <div>
@@ -1137,6 +1198,9 @@ const ResidualAnalysisPage = () => {
                       style={inputStyles}
                     />
                   </div>
+
+
+                  
                   <div>
                     <label
                       htmlFor="year"
@@ -1839,7 +1903,7 @@ interface ResidualAnalysisPayload {
   };
   equipments: Array<{
     industry: string;
-    assetClass: string;
+    assetClass: string | null;
     make: string;
     model: string;
     year?: number;
