@@ -191,13 +191,13 @@ const ResidualAnalysisPage = () => {
   const [industry, setIndustry] = useState<string | null>(null);
   const [assetClass, setAssetClass] = useState("");
 
-  // Industry options for dropdown
-  const industryOptions = [
+  // Industry options for dropdown - will be fetched from API
+  const [industryOptions, setIndustryOptions] = useState<Array<{ label: string; value: string }>>([
     { label: "Construction", value: "construction" },
     { label: "Mining", value: "mining" },
     { label: "Agriculture", value: "agriculture" },
     { label: "Transportation", value: "transportation" },
-  ];
+  ]);
   const [make, setMake] = useState("");
   const [model, setModel] = useState("");
   const [year, setYear] = useState("");
@@ -225,7 +225,47 @@ const ResidualAnalysisPage = () => {
   const [application, setApplication] = useState<string | null>(null);
   const [environment, setEnvironment] = useState<string | null>(null);
 
-  // removed useEffect; lazy initialize in useState above
+  // Fetch industries from API
+  useEffect(() => {
+    const fetchIndustries = async () => {
+      try {
+        const storedToken =
+          (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+
+        if (storedToken) {
+          headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
+        }
+
+        const response = await fetch('/api/industries', {
+          method: 'GET',
+          headers,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Transform API response to dropdown format
+          if (Array.isArray(data)) {
+            const transformed = data.map((industry: { id: number; name: string; description?: string }) => ({
+              label: industry.name.charAt(0).toUpperCase() + industry.name.slice(1),
+              value: industry.name.toLowerCase(),
+            }));
+            setIndustryOptions(transformed);
+          }
+        } else {
+          console.error('Failed to fetch industries:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching industries:', error);
+        // Keep default options on error
+      }
+    };
+
+    fetchIndustries();
+  }, []);
 
   // Functions for managing scenarios
   const addScenario = () => {

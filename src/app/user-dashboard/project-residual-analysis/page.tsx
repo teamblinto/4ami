@@ -39,13 +39,13 @@ const ResidualAnalysisPage = () => {
     { label: "Other", value: "other" },
   ];
 
-  // Industry options for dropdown
-  const industryOptions = [
+  // Industry options for dropdown - will be fetched from API
+  const [industryOptions, setIndustryOptions] = useState<Array<{ label: string; value: string }>>([
     { label: "Construction", value: "construction" },
     { label: "Mining", value: "mining" },
     { label: "Agriculture", value: "agriculture" },
     { label: "Transportation", value: "transportation" },
-  ];
+  ]);
 
   // Meter Type options
   const meterTypeOptions = [
@@ -217,6 +217,48 @@ const ResidualAnalysisPage = () => {
         if (Array.isArray(parsed)) setAvailableSources(parsed);
       }
     } catch {}
+  }, []);
+
+  // Fetch industries from API
+  useEffect(() => {
+    const fetchIndustries = async () => {
+      try {
+        const storedToken =
+          (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+
+        if (storedToken) {
+          headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
+        }
+
+        const response = await fetch('/api/industries', {
+          method: 'GET',
+          headers,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          // Transform API response to dropdown format
+          if (Array.isArray(data)) {
+            const transformed = data.map((industry: { id: number; name: string; description?: string }) => ({
+              label: industry.name.charAt(0).toUpperCase() + industry.name.slice(1),
+              value: industry.name.toLowerCase(),
+            }));
+            setIndustryOptions(transformed);
+          }
+        } else {
+          console.error('Failed to fetch industries:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching industries:', error);
+        // Keep default options on error
+      }
+    };
+
+    fetchIndustries();
   }, []);
 
   const generateSourceNumber = (): string => {
