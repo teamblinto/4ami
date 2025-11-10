@@ -445,30 +445,53 @@ const ResidualAnalysisPage = () => {
       const storedToken =
         (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
 
+      // Create FormData for multipart/form-data request
+      const formData = new FormData();
+      
+      // Append projectData as a JSON string (matching Postman structure)
+      formData.append('projectData', JSON.stringify(payload));
+      
+      // Append uploaded files
+      uploadedFiles.forEach((file) => {
+        formData.append('files', file);
+      });
 
-
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-      };
+      const headers: Record<string, string> = {};
+      // Don't set Content-Type header - let the browser set it with the boundary for multipart/form-data
 
       if (storedToken) {
         headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
       }
 
+      console.log('Request headers:', headers);
+      console.log('Payload being sent:', payload);
+      console.log('Files being sent:', uploadedFiles.length);
+
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers,
-        body: JSON.stringify(payload),
+        body: formData,
       });
 
       const contentType = response.headers.get('content-type');
       const isJson = contentType && contentType.includes('application/json');
-      const data = isJson ? await response.json() : { message: await response.text() };
-
+      
+      // Read response body once
+      const responseBody = isJson ? await response.json() : await response.text();
+      
       if (!response.ok) {
-        console.error('Project create failed:', data);
-        alert((data && (data.message || data.error)) || 'Failed to submit project');
+        const errorData = typeof responseBody === 'string' ? { message: responseBody } : responseBody;
+        console.error('Project create failed:', errorData);
+        alert((errorData && (errorData.message || errorData.error)) || 'Failed to submit project');
         return;
+      }
+
+      // Type the successful response
+      const responseData: ResidualAnalysisResponse = responseBody as ResidualAnalysisResponse;
+      
+      if (responseData) {
+        console.log('Project created successfully:', responseData);
+        // You can access responseData.id, responseData.projectNumber, etc. here if needed
       }
 
       // Persist new source name locally so it appears next time
@@ -1828,7 +1851,6 @@ interface ResidualAnalysisPayload {
   description: string;
   startDate?: string;
   endDate?: string;
-  // status: string;
   metadata: {
     priority: string;
     category: string;
@@ -1888,6 +1910,122 @@ interface ResidualAnalysisPayload {
     proposedUtilization?: number;
     unitPrice?: number;
   }>;
+}
+
+// Define a type for the API response
+interface ResidualAnalysisResponse {
+  id: string;
+  projectNumber: string;
+  name: string;
+  description: string;
+  status: string;
+  submitDate: string;
+  startDate: string;
+  endDate: string;
+  metadata: {
+    category: string;
+    priority: string;
+  };
+  companyId: string;
+  projectTypeId: string;
+  createdById: string;
+  createdAt: string;
+  updatedAt: string;
+  createdBy: {
+    id: string;
+    firstName: string;
+    lastName: string;
+  };
+  company: {
+    id: string;
+    companyName: string;
+  };
+  projectType: {
+    id: string;
+    name: string;
+  };
+  client: {
+    id: string;
+    projectId: string;
+    clientName: string;
+    clientEmail: string;
+    lesseePhone: string;
+    countryCode: string;
+    website: string;
+    communicationPreference: boolean;
+    createdAt: string;
+    updatedAt: string;
+  };
+  source: {
+    id: string;
+    projectId: string;
+    sourceNo: string;
+    sourceName: string;
+    sourceType: string;
+    contact: string;
+    title: string;
+    communication: boolean;
+    phoneNumber1: string;
+    phoneNumber2: string;
+    email: string;
+    website: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  financial: {
+    id: string;
+    projectId: string;
+    subjectPrice: string;
+    concession: string;
+    extendedWarranty: string;
+    maintenancePMs: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  transaction: {
+    id: string;
+    projectId: string;
+    currentMeter: number;
+    proposedAnnualUtilization: number;
+    meterUnit: string;
+    maintenanceRecords: string;
+    inspectionReport: string;
+    terms: number;
+    structure: string;
+    application: string;
+    environment: string;
+    createdAt: string;
+    updatedAt: string;
+  };
+  equipments: Array<{
+    id?: string;
+    projectId?: string;
+    industry: string;
+    assetClass: string;
+    make: string;
+    model: string;
+    year?: number;
+    currentMeterReading?: number;
+    meterType: string;
+    proposedUtilization?: number;
+    environmentRanking: string;
+    note?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+  }>;
+  utilizationScenarios: Array<{
+    id?: string;
+    projectId?: string;
+    scenarioNo: number;
+    terms?: number;
+    proposedUtilization?: number;
+    unitPrice?: number;
+    createdAt?: string;
+    updatedAt?: string;
+  }>;
+  assets: Array<unknown>;
+  reports: Array<unknown>;
+  attachments: Array<unknown>;
 }
 
 export default ResidualAnalysisPage;
