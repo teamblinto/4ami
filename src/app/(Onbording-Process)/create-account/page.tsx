@@ -26,10 +26,48 @@ function ClientContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
+  // Valid API roles
+  const validApiRoles = ['ADMIN', 'CUSTOMER_ADMIN', 'CUSTOMER_USER', 'APPRAISER'];
+  
+  // Function to fix partial/truncated roles
+  const fixPartialRole = (role: string): string => {
+    if (!role) return "";
+    // If it's already a valid role, return it
+    if (validApiRoles.includes(role)) {
+      return role;
+    }
+    // Try to match partial role to full role (e.g., "CUSTOMER_ADMI" -> "CUSTOMER_ADMIN")
+    // Find all roles that start with the partial role, then pick the longest (most specific) match
+    const matchingRoles = validApiRoles.filter(validRole => validRole.startsWith(role));
+    if (matchingRoles.length > 0) {
+      // Return the longest match (most specific)
+      const matchedRole = matchingRoles.reduce((longest, current) => 
+        current.length > longest.length ? current : longest
+      );
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Fixed partial role "${role}" to "${matchedRole}"`);
+      }
+      return matchedRole;
+    }
+    // If no match found, return the original role
+    return role;
+  };
+  
   // Keep only the enum-like role token (e.g., CUSTOMER_USER) and strip email signatures/extras
   const sanitizeRoleParam = (value: string): string => {
-    const match = value.match(/[A-Z_]+/);
-    return match ? match[0] : value.split(/[\s,\n]+/)[0]?.trim() || "";
+    if (!value) return "";
+    // First, try to match the full role enum (CUSTOMER_ADMIN, CUSTOMER_USER, etc.)
+    // Match one or more uppercase letters/underscores - this should capture the full enum
+    const match = value.match(/[A-Z_]+/g);
+    if (match && match.length > 0) {
+      // Return the longest match (in case there are multiple matches, take the full role)
+      const extractedRole = match.reduce((longest, current) => current.length > longest.length ? current : longest);
+      // Fix any partial/truncated roles
+      return fixPartialRole(extractedRole);
+    }
+    // Fallback: split by whitespace/newlines and take the first part
+    const fallbackRole = value.split(/[\s,\n]+/)[0]?.trim() || "";
+    return fixPartialRole(fallbackRole);
   };
   
   useEffect(() => {
