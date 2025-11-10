@@ -78,16 +78,28 @@ export default function CompanyAdminLayout({
     }
   }, []);
 
-  // Redirect company admins to register-company if no company registered yet
+  // Redirect company admins to register-company if companyId is null
   useEffect(() => {
     try {
-      const isRegistered = localStorage.getItem('companyRegistered');
-      // Only gate company-admin routes; this layout only wraps those pages
-      if (!isRegistered) {
-        router.push('/register-company');
+      const userDataString = localStorage.getItem('userData');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        // Check if companyId is null or undefined
+        // Also check the companyRegistered flag as a fallback
+        const isCompanyRegistered = localStorage.getItem('companyRegistered') === 'true';
+        const hasCompanyId = userData.companyId && userData.companyId !== null;
+        
+        if (!hasCompanyId && !isCompanyRegistered) {
+          // Only redirect if not already on register-company page
+          if (pathname !== '/register-company') {
+            router.push('/register-company');
+          }
+        }
       }
-    } catch { }
-  }, [router]);
+    } catch (error) {
+      console.error('Error checking companyId:', error);
+    }
+  }, [router, pathname]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

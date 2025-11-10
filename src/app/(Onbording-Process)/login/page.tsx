@@ -63,7 +63,12 @@ export default function LoginPage() {
         if (data.user && data.user.role === "ADMIN") {
           router.push("/dashboard");
         } else if (data.user && data.user.role === "CUSTOMER_ADMIN") {
-          router.push("/company-admin");
+          // Check if companyId is null, redirect to register-company page
+          if (!data.user.companyId || data.user.companyId === null) {
+            router.push("/register-company");
+          } else {
+            router.push("/company-admin");
+          }
         } else if (data.user && data.user.role === "CUSTOMER_USER") {
           router.push("/user-dashboard");
         } else {
