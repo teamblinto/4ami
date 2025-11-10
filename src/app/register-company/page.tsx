@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import ProtectedRoute from '../components/ProtectedRoute';
+import toast from 'react-hot-toast';
 
 export default function RegisterCompany() {
   const [isSuccess, setIsSuccess] = useState(false);
@@ -86,6 +87,22 @@ export default function RegisterCompany() {
     setIsLoading(true);
 
     try {
+      // Validate email format
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (formData.companyEmail && !emailRegex.test(formData.companyEmail.trim())) {
+        toast.error('Please enter a valid company email address');
+        setIsLoading(false);
+        return;
+      }
+
+      // Validate EIN/Tax ID format (XX-XXXXXXX)
+      const einRegex = /^\d{2}-\d{7}$/;
+      if (formData.einTaxId && !einRegex.test(formData.einTaxId.trim())) {
+        toast.error('EIN/Tax ID must follow the format XX-XXXXXXX (e.g., 12-3456789)');
+        setIsLoading(false);
+        return;
+      }
+
       // Prepare the registration data strictly as backend expects
       const registrationData = {
         companyName: formData.companyName,
@@ -120,7 +137,20 @@ export default function RegisterCompany() {
       const result = await response.json();
 
       if (!response.ok) {
-        throw new Error(result.message || `HTTP error! status: ${response.status}`);
+        // Handle different error messages with meaningful toasts
+        if (result.message) {
+          if (result.message.includes('companyEmail must be an email')) {
+            toast.error('Please enter a valid company email address');
+          } else if (result.message.includes('EIN/Tax ID must follow the format')) {
+            toast.error('EIN/Tax ID must follow the format XX-XXXXXXX (e.g., 12-3456789)');
+          } else {
+            toast.error(result.message);
+          }
+        } else {
+          toast.error('Failed to register company. Please try again.');
+        }
+        setIsLoading(false);
+        return;
       }
 
       console.log('Company registration success:', result);
@@ -148,12 +178,12 @@ export default function RegisterCompany() {
         console.error('Error updating userData:', error);
       }
       
+      toast.success('Company registered successfully!');
       // Show success confirmation UI; user can click Continue to go to dashboard
       setIsSuccess(true);
     } catch (error) {
       console.error('Registration error:', error);
-      // You can add toast notification here if needed
-      // toast.error('Failed to register company. Please try again.');
+      toast.error('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -283,6 +313,7 @@ export default function RegisterCompany() {
                           name="einTaxId"
                           value={formData.einTaxId}
                           onChange={handleInputChange}
+                          placeholder="XX-XXXXXXX (e.g., 12-3456789)"
                           className="w-full px-3 py-2 bg-[#FBFBFB] text-[#343A40] rounded-[8px] focus:border-transparent"
                           style={{
                             fontFamily: 'Inter, sans-serif',
