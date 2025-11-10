@@ -300,8 +300,34 @@ const ResidualAnalysisPage = () => {
     industry: { id: number; name: string };
   }>>([]);
   const [assetClassOptions, setAssetClassOptions] = useState<Array<{ label: string; value: string }>>([]);
-  const [make, setMake] = useState("");
-  const [model, setModel] = useState("");
+  const [make, setMake] = useState<string | null>(null);
+  
+  // Makes state - will be fetched from API and filtered by industry and asset class
+  const [allMakes, setAllMakes] = useState<Array<{
+    id: number;
+    industryId: number;
+    assetClassId: number;
+    name: string;
+    description?: string;
+    industry: { id: number; name: string };
+    assetClass: { id: number; name: string };
+  }>>([]);
+  const [makeOptions, setMakeOptions] = useState<Array<{ label: string; value: string }>>([]);
+  const [model, setModel] = useState<string | null>(null);
+  
+  // Models state - will be fetched from API and filtered by industry, asset class, and make
+  const [allModels, setAllModels] = useState<Array<{
+    id: number;
+    industryId: number;
+    assetClassId: number;
+    makeId: number;
+    name: string;
+    description?: string;
+    industry: { id: number; name: string };
+    assetClass: { id: number; name: string };
+    make: { id: number; name: string };
+  }>>([]);
+  const [modelOptions, setModelOptions] = useState<Array<{ label: string; value: string }>>([]);
   const [year, setYear] = useState("");
   const [currentMeterReading, setCurrentMeterReading] = useState("");
   const [meterType, setMeterType] = useState<string | null>(null);
@@ -387,6 +413,131 @@ const ResidualAnalysisPage = () => {
       setAssetClass(null);
     }
   }, [industry, allAssetClasses, assetClass]);
+
+  // Fetch makes from API
+  useEffect(() => {
+    const fetchMakes = async () => {
+      try {
+        const storedToken =
+          (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+
+        if (storedToken) {
+          headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
+        }
+
+        const response = await fetch('/api/makes', {
+          method: 'GET',
+          headers,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setAllMakes(data);
+          }
+        } else {
+          console.error('Failed to fetch makes:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching makes:', error);
+      }
+    };
+
+    fetchMakes();
+  }, []);
+
+  // Filter makes based on selected industry and asset class
+  useEffect(() => {
+    if (industry && assetClass && allMakes.length > 0) {
+      // Filter makes by both industry name and asset class name (case-insensitive)
+      const filtered = allMakes.filter(makeItem => 
+        makeItem.industry.name.toLowerCase() === industry.toLowerCase() &&
+        makeItem.assetClass.name.toLowerCase() === assetClass.toLowerCase()
+      );
+      
+      const transformed = filtered.map((makeItem) => ({
+        label: makeItem.name.charAt(0).toUpperCase() + makeItem.name.slice(1),
+        value: makeItem.name.toLowerCase(),
+      }));
+      
+      setMakeOptions(transformed);
+      
+      // Clear make if it's not in the filtered list
+      if (make && !transformed.some(opt => opt.value === make.toLowerCase())) {
+        setMake(null);
+      }
+    } else {
+      setMakeOptions([]);
+      setMake(null);
+    }
+  }, [industry, assetClass, allMakes, make]);
+
+  // Fetch models from API
+  useEffect(() => {
+    const fetchModels = async () => {
+      try {
+        const storedToken =
+          (typeof window !== 'undefined' && (localStorage.getItem('authToken') || sessionStorage.getItem('authToken'))) || '';
+
+        const headers: Record<string, string> = {
+          'Content-Type': 'application/json',
+        };
+
+        if (storedToken) {
+          headers['Authorization'] = storedToken.startsWith('Bearer ') ? storedToken : `Bearer ${storedToken}`;
+        }
+
+        const response = await fetch('/api/models', {
+          method: 'GET',
+          headers,
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          if (Array.isArray(data)) {
+            setAllModels(data);
+          }
+        } else {
+          console.error('Failed to fetch models:', response.status);
+        }
+      } catch (error) {
+        console.error('Error fetching models:', error);
+      }
+    };
+
+    fetchModels();
+  }, []);
+
+  // Filter models based on selected industry, asset class, and make
+  useEffect(() => {
+    if (industry && assetClass && make && allModels.length > 0) {
+      // Filter models by industry name, asset class name, and make name (case-insensitive)
+      const filtered = allModels.filter(modelItem => 
+        modelItem.industry.name.toLowerCase() === industry.toLowerCase() &&
+        modelItem.assetClass.name.toLowerCase() === assetClass.toLowerCase() &&
+        modelItem.make.name.toLowerCase() === make.toLowerCase()
+      );
+      
+      const transformed = filtered.map((modelItem) => ({
+        label: modelItem.name.charAt(0).toUpperCase() + modelItem.name.slice(1),
+        value: modelItem.name.toLowerCase(),
+      }));
+      
+      setModelOptions(transformed);
+      
+      // Clear model if it's not in the filtered list
+      if (model && !transformed.some(opt => opt.value === model.toLowerCase())) {
+        setModel(null);
+      }
+    } else {
+      setModelOptions([]);
+      setModel(null);
+    }
+  }, [industry, assetClass, make, allModels, model]);
 
   // Functions for managing scenarios
   const addScenario = () => {
@@ -516,8 +667,8 @@ const ResidualAnalysisPage = () => {
         {
           industry: industry || "",
           assetClass: assetClass || "",
-          make,
-          model,
+          make: make || "",
+          model: model || "",
           year: year ? Number(year) : undefined,
           currentMeterReading: currentMeterReading ? Number(currentMeterReading) : undefined,
           meterType: meterType || "",
@@ -1229,42 +1380,24 @@ const ResidualAnalysisPage = () => {
                     </div>
 
                   <div>
-                    <label
-                      htmlFor="make"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Make<span>*</span>
-                    </label>
-                    <input
-                      required={true}
-                      type="text"
-                      id="make"
-                      placeholder="Enter make"
-                      className="w-full"
+                    <CheckboxDropdown
+                      options={makeOptions}
                       value={make}
-                      onChange={(e) => setMake(e.target.value)}
-                      style={inputStyles}
+                      onChange={setMake}
+                      label="Make"
+                      placeholder="Select make"
+                      required={true}
                     />
                   </div>
 
                   <div>
-                    <label
-                      htmlFor="model"
-                      className="block mb-2"
-                      style={labelStyles}
-                    >
-                      Model<span>*</span>
-                    </label>
-                    <input
-                      required={true}
-                      type="text"
-                      id="model"
-                      placeholder="Enter model"
-                      className="w-full"
+                    <CheckboxDropdown
+                      options={modelOptions}
                       value={model}
-                      onChange={(e) => setModel(e.target.value)}
-                      style={inputStyles}
+                      onChange={setModel}
+                      label="Model"
+                      placeholder="Select model"
+                      required={true}
                     />
                   </div>
 
@@ -1980,8 +2113,8 @@ interface ResidualAnalysisPayload {
   equipments: Array<{
     industry: string;
     assetClass: string | null;
-    make: string;
-    model: string;
+    make: string | null;
+    model: string | null;
     year?: number;
     currentMeterReading?: number;
     meterType: string;
@@ -2104,8 +2237,8 @@ interface ResidualAnalysisResponse {
     projectId?: string;
     industry: string;
     assetClass: string;
-    make: string;
-    model: string;
+    make: string | null;
+    model: string | null;
     year?: number;
     currentMeterReading?: number;
     meterType: string;
