@@ -1,12 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import ProtectedRoute from '../components/ProtectedRoute';
 
 export default function RegisterCompany() {
-  const router = useRouter();
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({
     companyName: '',
@@ -77,6 +75,12 @@ export default function RegisterCompany() {
     // Stay on the same page (register-company)
   };
 
+  const handleContinue = () => {
+    // Force a page reload to ensure the layout picks up the updated userData
+    // This ensures the companyId check in the layout works correctly
+    window.location.href = '/company-admin';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -120,9 +124,30 @@ export default function RegisterCompany() {
       }
 
       console.log('Company registration success:', result);
+      
+      // Update userData with companyId from the response
       try {
+        const userDataString = localStorage.getItem('userData');
+        if (userDataString) {
+          const userData = JSON.parse(userDataString);
+          // Update companyId from the registration response
+          // Try different possible response structures
+          const companyId = result.companyId || result.company?.id || result.id || result.data?.id || result.data?.companyId;
+          if (companyId) {
+            userData.companyId = companyId;
+            localStorage.setItem('userData', JSON.stringify(userData));
+            console.log('Updated userData with companyId:', companyId);
+          } else {
+            console.warn('No companyId found in registration response:', result);
+            console.log('Full registration response:', JSON.stringify(result, null, 2));
+          }
+        }
+        // Keep the old flag for backward compatibility
         localStorage.setItem('companyRegistered', 'true');
-      } catch { }
+      } catch (error) {
+        console.error('Error updating userData:', error);
+      }
+      
       // Show success confirmation UI; user can click Continue to go to dashboard
       setIsSuccess(true);
     } catch (error) {
@@ -157,7 +182,7 @@ export default function RegisterCompany() {
                 <h2 className="text-xl font-semibold text-[#343A40] mb-1">Company Registered Successfully!</h2>
                 <p className="text-sm text-[#6C757D] mb-6">Your company has been registered successfully.</p>
                 <button
-                  onClick={() => router.push('/company-admin')}
+                  onClick={handleContinue}
                   className="bg-red-600 text-white px-6 py-2 rounded-md hover:bg-red-700 cursor-pointer"
                 >
                   Continue
