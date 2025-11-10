@@ -121,8 +121,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         role: roleMapping[formData.role],
         source: formData.source.trim(),
         invitationCode: invitationCode,
-        // title: formData.title.trim(),
-        // Removed 'title' field as API says it should not exist
+        title: formData.title.trim(),
       };
 
       console.log('Sending invitation data:', invitationData);

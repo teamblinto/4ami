@@ -85,7 +85,11 @@ function ClientContent() {
     }
 
     if (emailParam) setEmail(emailParam);
-    if (codeParam) setInvitationCode(codeParam);
+    if (codeParam) {
+      setInvitationCode(codeParam);
+      // Fetch invitation data to auto-fill form fields
+      fetchInvitationData(codeParam);
+    }
     
     // Set role from URL parameter if provided, otherwise keep default
     if (roleParam) {
@@ -108,6 +112,7 @@ function ClientContent() {
     if (!codeParam && token) {
       setInvitationCode(token);
       setIsAutoPopulated(true);
+      fetchInvitationData(token);
       return;
     }
 
@@ -149,6 +154,42 @@ function ClientContent() {
       'Appraiser': 'APPRAISER'
     };
     return reverseMapping[formRole] || '';
+  };
+
+  const fetchInvitationData = async (invitationCode: string) => {
+    try {
+      const response = await fetch(`/api/users/invitation?invitationCode=${encodeURIComponent(invitationCode)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Invitation data:', data);
+        }
+        
+        // Auto-fill form fields from invitation data
+        setFormData(prev => ({
+          ...prev,
+          firstName: data.firstName || prev.firstName,
+          lastName: data.lastName || prev.lastName,
+          title: data.title || prev.title,
+          company: data.companyName || prev.company,
+          source: data.source || prev.source,
+        }));
+        
+        // Auto-fill email if available and not already set
+        if (data.email && !email) {
+          setEmail(data.email);
+        }
+        
+        setIsAutoPopulated(true);
+      } else {
+        // Silently fail - don't show error if invitation data fetch fails
+        console.warn('Failed to fetch invitation data:', response.status);
+      }
+    } catch (error) {
+      // Silently fail - don't show error if invitation data fetch fails
+      console.warn('Error fetching invitation data:', error);
+    }
   };
 
   const fetchVerificationData = async (token: string) => {

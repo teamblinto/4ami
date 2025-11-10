@@ -22,6 +22,7 @@ function ClientContent() {
     const roleParam = searchParams.get("role");
     const token = searchParams.get("token");
 
+    const hasEmailParam = !!emailParam;
     if (emailParam) {
       setEmail(emailParam);
       setIsEmailAutoPopulated(true);
@@ -29,6 +30,8 @@ function ClientContent() {
     if (codeParam) {
       setInvitationCode(codeParam);
       setIsCodeAutoPopulated(true);
+      // Fetch invitation data to auto-fill email (skip if email already set from URL)
+      fetchInvitationData(codeParam, hasEmailParam);
     }
     if (roleParam) {
       setRole(roleParam);
@@ -37,6 +40,7 @@ function ClientContent() {
     if (!codeParam && token) {
       setInvitationCode(token);
       setIsCodeAutoPopulated(true);
+      fetchInvitationData(token, hasEmailParam);
       return;
     }
 
@@ -50,6 +54,27 @@ function ClientContent() {
     // Nothing else to do
   }, [searchParams]);
  
+
+  const fetchInvitationData = async (invitationCode: string, skipIfEmailExists: boolean = false) => {
+    try {
+      const response = await fetch(`/api/users/invitation?invitationCode=${encodeURIComponent(invitationCode)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Auto-fill email if available and not already set from URL params
+        if (data.email && !skipIfEmailExists) {
+          setEmail(data.email);
+          setIsEmailAutoPopulated(true);
+        }
+      } else {
+        // Silently fail - don't show error if invitation data fetch fails
+        console.warn('Failed to fetch invitation data:', response.status);
+      }
+    } catch (error) {
+      // Silently fail - don't show error if invitation data fetch fails
+      console.warn('Error fetching invitation data:', error);
+    }
+  };
 
   const fetchVerificationData = async (token: string) => {
     setIsVerifying(true);
