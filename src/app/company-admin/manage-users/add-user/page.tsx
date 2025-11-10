@@ -123,6 +123,7 @@ export default function AddUserPage() {
         role: roleMapping[formData.role] || 'CUSTOMER_USER',
         source: formData.source || 'Company Admin',
         invitationCode: invitationCode,
+        title: formData.title.trim(),
       };
 
       console.log('Sending invitation data:', invitationData);
