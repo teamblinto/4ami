@@ -11,7 +11,7 @@ export default function CompanyAdminContent() {
   const [totalProjects, setTotalProjects] = useState(0);
   const [onGoingProjects, setOnGoingProjects] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [, setLoading] = useState(true);
   console.log(totalProjects)
 
   // Fetch projects data for this company admin
@@ -178,7 +178,7 @@ export default function CompanyAdminContent() {
                     <CountUp
                       end={stat.value as number}
                       duration={2.5}
-                      separator=","
+                      separator="," 
                       enableScrollSpy
                       scrollSpyOnce
                     />
@@ -201,11 +201,7 @@ export default function CompanyAdminContent() {
         ))}
       </div>
 
-      {loading ? (
-        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] text-center flex flex-col items-center self-stretch pt-[60px] pb-[60px]">
-          <div className="text-[#6C757D] text-[14px]">Loading projects...</div>
-        </div>
-      ) : totalProjects === 0 ? (
+      {totalProjects === 0 ? (
         <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col  self-stretch pt:[75px] pb:[75px] gap:[21px]">
           <h1 className="text-lg font-semibold text-start p-4 mb-4 text-[#080607] ">Projects</h1>
           <div className="flex flex-col pb-14  items-center justify-center w-full h-full">

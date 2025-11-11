@@ -199,15 +199,6 @@ export default function CompanyAdminManageUsersPage() {
     router.push("/company-admin/manage-users/import");
   };
 
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading invited users...</div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -309,7 +300,9 @@ export default function CompanyAdminManageUsersPage() {
 
       {/* Users Table */}
       <div className="bg-white overflow-x-auto">
-        {usersData.length === 0 && !loading ? (
+        {loading ? (
+          <div className="text-center py-12 text-gray-600">Loading invited users...</div>
+        ) : usersData.length === 0 ? (
           <div className="text-center py-12">
             <div className="flex justify-center items-center">
               <Image src="/No-data.svg" alt="" width={65} height={65} />

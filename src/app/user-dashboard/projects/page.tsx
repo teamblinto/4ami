@@ -119,14 +119,6 @@ const ProjectsPage = () => {
     setCurrentPage(1); // Reset to first page when changing items per page
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading projects...</div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -206,7 +198,11 @@ const ProjectsPage = () => {
 
       {/* Projects Table */}
       <div className="bg-white overflow-x-auto">
-        {projects.length === 0 && !loading ? (
+        {loading ? (
+          <div className="text-center py-12">
+            <div className="text-gray-500 text-lg">Loading projects...</div>
+          </div>
+        ) : projects.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-500 text-lg mb-2">No projects found</div>
             <div className="text-gray-400 text-sm">
