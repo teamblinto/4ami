@@ -5,10 +5,6 @@ import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 import { getAuthHeaders } from '@/lib/config';
 
-interface AddAssetsProps {
-  onBack?: () => void;
-}
-
 interface EquipmentPayload {
   industryId?: number;
   assetClassId?: number;
@@ -33,7 +29,7 @@ interface EquipmentPayload {
   projectId?: string | null;
 }
 
-export default function AddAssets({ onBack }: AddAssetsProps) {
+export default function AddAssets() {
   const router = useRouter();
   const [formData, setFormData] = useState({
     name: '',
@@ -65,25 +61,25 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
   const [isAddingMake, setIsAddingMake] = useState(false);
   const [isAddingModel, setIsAddingModel] = useState(false);
   const [industries, setIndustries] = useState<Array<{ id: number; name: string; description: string }>>([]);
-  const [assetClasses, setAssetClasses] = useState<Array<{ 
-    id: number; 
-    name: string; 
+  const [assetClasses, setAssetClasses] = useState<Array<{
+    id: number;
+    name: string;
     description: string;
     industryId?: number;
     industry?: { id: number; name: string; description: string };
   }>>([]);
-  const [makes, setMakes] = useState<Array<{ 
-    id: number; 
-    name: string; 
+  const [makes, setMakes] = useState<Array<{
+    id: number;
+    name: string;
     description: string;
     industryId?: number;
     assetClassId?: number;
     industry?: { id: number; name: string; description: string };
     assetClass?: { id: number; name: string; description: string };
   }>>([]);
-  const [models, setModels] = useState<Array<{ 
-    id: number; 
-    name: string; 
+  const [models, setModels] = useState<Array<{
+    id: number;
+    name: string;
     description: string;
     industryId?: number;
     assetClassId?: number;
@@ -98,16 +94,16 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
   const [showModelSuggestions, setShowModelSuggestions] = useState(false);
   const [filteredIndustries, setFilteredIndustries] = useState<Array<{ id: number; name: string; description: string }>>([]);
   const [filteredAssetClasses, setFilteredAssetClasses] = useState<Array<{ id: number; name: string; description: string }>>([]);
-  const [filteredMakes, setFilteredMakes] = useState<Array<{ 
-    id: number; 
-    name: string; 
+  const [filteredMakes, setFilteredMakes] = useState<Array<{
+    id: number;
+    name: string;
     description: string;
     industryId?: number;
     assetClassId?: number;
   }>>([]);
-  const [filteredModels, setFilteredModels] = useState<Array<{ 
-    id: number; 
-    name: string; 
+  const [filteredModels, setFilteredModels] = useState<Array<{
+    id: number;
+    name: string;
     description: string;
     industryId?: number;
     assetClassId?: number;
@@ -454,10 +450,10 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
         if (selectedIndustry) {
           const currentAssetClass = assetClasses.find(ac => ac.name === formData.assetTypeTag);
           if (currentAssetClass) {
-            const matchesIndustry = 
+            const matchesIndustry =
               (currentAssetClass.industry && currentAssetClass.industry.name.toLowerCase() === formData.industryTag.toLowerCase()) ||
               (currentAssetClass.industryId === selectedIndustry.id);
-            
+
             if (!matchesIndustry) {
               setFormData(prev => ({
                 ...prev,
@@ -493,10 +489,10 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
         if (selectedAssetClass) {
           const currentMake = makes.find(m => m.name === formData.makeTag);
           if (currentMake) {
-            const matchesAssetClass = 
+            const matchesAssetClass =
               (currentMake.assetClass && currentMake.assetClass.name.toLowerCase() === formData.assetTypeTag.toLowerCase()) ||
               (currentMake.assetClassId === selectedAssetClass.id);
-            
+
             if (!matchesAssetClass) {
               setFormData(prev => ({
                 ...prev,
@@ -528,10 +524,10 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
         if (selectedMake) {
           const currentModel = models.find(mod => mod.name === formData.modelTag);
           if (currentModel) {
-            const matchesMake = 
+            const matchesMake =
               (currentModel.make && currentModel.make.name.toLowerCase() === formData.makeTag.toLowerCase()) ||
               (currentModel.makeId === selectedMake.id);
-            
+
             if (!matchesMake) {
               setFormData(prev => ({
                 ...prev,
@@ -856,18 +852,18 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
       }
 
       // Get selected industry, asset class, make, and model with their IDs
-      const selectedIndustry = formData.industryTag 
+      const selectedIndustry = formData.industryTag
         ? industries.find(ind => ind.name === formData.industryTag)
         : null;
-      
+
       const selectedAssetClass = formData.assetTypeTag
         ? assetClasses.find(ac => ac.name === formData.assetTypeTag)
         : null;
-      
+
       const selectedMake = formData.makeTag
         ? makes.find(m => m.name === formData.makeTag)
         : null;
-      
+
       const selectedModel = formData.modelTag
         ? models.find(mod => mod.name === formData.modelTag)
         : null;
@@ -959,35 +955,8 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
 
       toast.success('Equipment created successfully!');
 
-      // Reset form
-      setFormData({
-        name: '',
-        type: 'equipment',
-        description: '',
-        value: '',
-        residualValue: '',
-        status: '',
-        industry: '',
-        industryTag: '',
-        assetType: '',
-        assetTypeTag: '',
-        make: '',
-        makeTag: '',
-        model: '',
-        modelTag: '',
-        length: '',
-        width: '',
-        height: '',
-        weight: '',
-        yearOfManufacture: '',
-        specialTransportationConsideration: '',
-        projectId: ''
-      });
-
-      // After successful submission, go back to the list
-      if (onBack) {
-        onBack();
-      }
+      // Redirect to manage-assets page after successful creation
+      router.push('/dashboard/manage-assets');
     } catch (error) {
       console.error('Error creating equipment:', error);
       toast.error(error instanceof Error ? error.message : 'Failed to create equipment');
@@ -1008,19 +977,18 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
       industryTag: '',
       assetType: '',
       assetTypeTag: '',
-        make: '',
-        makeTag: '',
-        model: '',
-        modelTag: '',
-        length: '',
-        width: '',
-        height: '',
-        weight: '',
-        yearOfManufacture: '',
-        specialTransportationConsideration: '',
-        projectId: ''
-      });
-    toast.success('Changes discarded successfully!');
+      make: '',
+      makeTag: '',
+      model: '',
+      modelTag: '',
+      length: '',
+      width: '',
+      height: '',
+      weight: '',
+      yearOfManufacture: '',
+      specialTransportationConsideration: '',
+      projectId: ''
+    });
   };
 
   return (
@@ -1071,6 +1039,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                       )}
                       {!formData.industryTag && (
                         <input
+                          autoComplete="off"
                           ref={industryInputRef}
                           type="text"
                           id="industry"
@@ -1152,6 +1121,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                       )}
                       {!formData.makeTag && (
                         <input
+                          autoComplete="off"
                           ref={makeInputRef}
                           type="text"
                           id="make"
@@ -1189,7 +1159,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   </div>
                 </div>
                 <div className="flex justify-end mt-2">
-                <button
+                  <button
                     type="button"
                     onClick={handleAddAsMake}
                     disabled={isAddingMake || !formData.make.trim() || !formData.assetTypeTag || !!formData.makeTag}
@@ -1276,6 +1246,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                       )}
                       {!formData.assetTypeTag && (
                         <input
+                          autoComplete="off"
                           ref={assetTypeInputRef}
                           type="text"
                           id="assetType"
@@ -1314,7 +1285,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
 
                 </div>
                 <div className="flex justify-end mt-2">
-                <button
+                  <button
                     type="button"
                     onClick={handleAddAsAssetType}
                     disabled={isAddingAssetType || !formData.assetType.trim() || !!formData.assetTypeTag}
@@ -1358,6 +1329,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                       )}
                       {!formData.modelTag && (
                         <input
+                          autoComplete="off"
                           ref={modelInputRef}
                           type="text"
                           id="model"
@@ -1395,7 +1367,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                   </div>
                 </div>
                 <div className="flex justify-end mt-2">
-                <button
+                  <button
                     type="button"
                     onClick={handleAddAsModel}
                     disabled={isAddingModel || !formData.model.trim() || !formData.makeTag || !!formData.modelTag}
@@ -1478,7 +1450,7 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
             </button>
             <button
               type="button"
-              onClick={onBack}
+              onClick={router.back}
               className="bg-white hover:bg-gray-50 text-[#080607] px-4 py-2 rounded-md font-medium border border-[#6C757D] cursor-pointer"
             >
               Cancel
