@@ -1017,21 +1017,22 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                 </label>
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
-                    {formData.industryTag ? (
-                      <div className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center justify-between">
-                        <span>{formData.industryTag}</span>
-                        <button
-                          type="button"
-                          onClick={handleRemoveIndustryTag}
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    ) : (
-                      <>
+                    <div className="w-full min-h-[42px] px-3 py-2 border border-[#CED4DA] text-[#343A40]  rounded-md flex items-center gap-2 flex-wrap">
+                      {formData.industryTag && (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded-md text-sm">
+                          <span>{formData.industryTag}</span>
+                          <button
+                            type="button"
+                            onClick={handleRemoveIndustryTag}
+                            className="text-gray-500 hover:text-gray-700 ml-1"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                      {!formData.industryTag && (
                         <input
                           ref={industryInputRef}
                           type="text"
@@ -1044,27 +1045,27 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                               setShowIndustrySuggestions(true);
                             }
                           }}
-                          className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                          className="flex-1 min-w-[120px] bg-transparent focus:outline-none placeholder:text-[#6C757D]"
                           placeholder="Type to search or add new industry"
                         />
-                        {showIndustrySuggestions && filteredIndustries.length > 0 && (
-                          <div
-                            ref={industrySuggestionsRef}
-                            className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      )}
+                    </div>
+                    {showIndustrySuggestions && filteredIndustries.length > 0 && !formData.industryTag && (
+                      <div
+                        ref={industrySuggestionsRef}
+                        className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      >
+                        {filteredIndustries.map((industry) => (
+                          <button
+                            key={industry.id}
+                            type="button"
+                            onClick={() => handleSelectIndustry(industry.name)}
+                            className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
                           >
-                            {filteredIndustries.map((industry) => (
-                              <button
-                                key={industry.id}
-                                type="button"
-                                onClick={() => handleSelectIndustry(industry.name)}
-                                className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
-                              >
-                                {industry.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </>
+                            {industry.name}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
 
@@ -1091,27 +1092,28 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                 </label>
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
-                    {formData.makeTag ? (
-                      <div className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center justify-between">
-                        <span>{formData.makeTag}</span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => ({
-                              ...prev,
-                              makeTag: '',
-                              make: ''
-                            }));
-                          }}
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    ) : (
-                      <>
+                    <div className={`w-full min-h-[42px] px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center gap-2 flex-wrap ${!formData.assetTypeTag ? 'opacity-50' : ''}`}>
+                      {formData.makeTag && (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded-md text-sm">
+                          <span>{formData.makeTag}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFormData(prev => ({
+                                ...prev,
+                                makeTag: '',
+                                make: ''
+                              }));
+                            }}
+                            className="text-gray-500 hover:text-gray-700 ml-1"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                      {!formData.makeTag && (
                         <input
                           ref={makeInputRef}
                           type="text"
@@ -1124,28 +1126,28 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                               setShowMakeSuggestions(true);
                             }
                           }}
-                          className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                          className="flex-1 min-w-[120px] bg-transparent focus:outline-none placeholder:text-[#6C757D]"
                           placeholder={formData.assetTypeTag ? "Type to search or add new make" : "Select an asset type first"}
                           disabled={!formData.assetTypeTag}
                         />
-                        {showMakeSuggestions && filteredMakes.length > 0 && (
-                          <div
-                            ref={makeSuggestionsRef}
-                            className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      )}
+                    </div>
+                    {showMakeSuggestions && filteredMakes.length > 0 && !formData.makeTag && (
+                      <div
+                        ref={makeSuggestionsRef}
+                        className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      >
+                        {filteredMakes.map((make) => (
+                          <button
+                            key={make.id}
+                            type="button"
+                            onClick={() => handleSelectMake(make.name)}
+                            className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
                           >
-                            {filteredMakes.map((make) => (
-                              <button
-                                key={make.id}
-                                type="button"
-                                onClick={() => handleSelectMake(make.name)}
-                                className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
-                              >
-                                {make.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </>
+                            {make.name}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
@@ -1220,21 +1222,22 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                 </label>
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
-                    {formData.assetTypeTag ? (
-                      <div className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center justify-between">
-                        <span>{formData.assetTypeTag}</span>
-                        <button
-                          type="button"
-                          onClick={handleRemoveAssetTypeTag}
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    ) : (
-                      <>
+                    <div className={`w-full min-h-[42px] px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center gap-2 flex-wrap ${!formData.industryTag ? 'opacity-50' : ''}`}>
+                      {formData.assetTypeTag && (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded-md text-sm">
+                          <span>{formData.assetTypeTag}</span>
+                          <button
+                            type="button"
+                            onClick={handleRemoveAssetTypeTag}
+                            className="text-gray-500 hover:text-gray-700 ml-1"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                      {!formData.assetTypeTag && (
                         <input
                           ref={assetTypeInputRef}
                           type="text"
@@ -1247,28 +1250,28 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                               setShowAssetTypeSuggestions(true);
                             }
                           }}
-                          className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                          className="flex-1 min-w-[120px] bg-transparent focus:outline-none placeholder:text-[#6C757D]"
                           placeholder={formData.industryTag ? "Type to search or add new asset type" : "Select an industry first"}
                           disabled={!formData.industryTag}
                         />
-                        {showAssetTypeSuggestions && filteredAssetClasses.length > 0 && (
-                          <div
-                            ref={assetTypeSuggestionsRef}
-                            className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      )}
+                    </div>
+                    {showAssetTypeSuggestions && filteredAssetClasses.length > 0 && !formData.assetTypeTag && (
+                      <div
+                        ref={assetTypeSuggestionsRef}
+                        className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      >
+                        {filteredAssetClasses.map((assetClass) => (
+                          <button
+                            key={assetClass.id}
+                            type="button"
+                            onClick={() => handleSelectAssetType(assetClass.name)}
+                            className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
                           >
-                            {filteredAssetClasses.map((assetClass) => (
-                              <button
-                                key={assetClass.id}
-                                type="button"
-                                onClick={() => handleSelectAssetType(assetClass.name)}
-                                className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
-                              >
-                                {assetClass.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </>
+                            {assetClass.name}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
 
@@ -1295,27 +1298,28 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                 </label>
                 <div className="flex gap-2">
                   <div className="flex-1 relative">
-                    {formData.modelTag ? (
-                      <div className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center justify-between">
-                        <span>{formData.modelTag}</span>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setFormData(prev => ({
-                              ...prev,
-                              modelTag: '',
-                              model: ''
-                            }));
-                          }}
-                          className="text-gray-500 hover:text-gray-700 ml-2"
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                          </svg>
-                        </button>
-                      </div>
-                    ) : (
-                      <>
+                    <div className={`w-full min-h-[42px] px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md flex items-center gap-2 flex-wrap ${!formData.makeTag ? 'opacity-50' : ''}`}>
+                      {formData.modelTag && (
+                        <div className="inline-flex items-center gap-1 px-2 py-1 bg-gray-200 rounded-md text-sm">
+                          <span>{formData.modelTag}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setFormData(prev => ({
+                                ...prev,
+                                modelTag: '',
+                                model: ''
+                              }));
+                            }}
+                            className="text-gray-500 hover:text-gray-700 ml-1"
+                          >
+                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                          </button>
+                        </div>
+                      )}
+                      {!formData.modelTag && (
                         <input
                           ref={modelInputRef}
                           type="text"
@@ -1328,28 +1332,28 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
                               setShowModelSuggestions(true);
                             }
                           }}
-                          className="w-full px-3 py-2 border border-[#CED4DA] text-[#343A40] bg-[#FBFBFB] rounded-md focus:outline-none placeholder:text-[#6C757D]"
+                          className="flex-1 min-w-[120px] bg-transparent focus:outline-none placeholder:text-[#6C757D]"
                           placeholder={formData.makeTag ? "Type to search or add new model" : "Select a make first"}
                           disabled={!formData.makeTag}
                         />
-                        {showModelSuggestions && filteredModels.length > 0 && (
-                          <div
-                            ref={modelSuggestionsRef}
-                            className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      )}
+                    </div>
+                    {showModelSuggestions && filteredModels.length > 0 && !formData.modelTag && (
+                      <div
+                        ref={modelSuggestionsRef}
+                        className="absolute z-50 w-full mt-1 bg-white border border-[#CED4DA] rounded-md shadow-lg max-h-60 overflow-auto"
+                      >
+                        {filteredModels.map((model) => (
+                          <button
+                            key={model.id}
+                            type="button"
+                            onClick={() => handleSelectModel(model.name)}
+                            className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
                           >
-                            {filteredModels.map((model) => (
-                              <button
-                                key={model.id}
-                                type="button"
-                                onClick={() => handleSelectModel(model.name)}
-                                className="w-full text-left px-3 py-2 hover:bg-red-50 text-[#343A40] text-sm transition-colors"
-                              >
-                                {model.name}
-                              </button>
-                            ))}
-                          </div>
-                        )}
-                      </>
+                            {model.name}
+                          </button>
+                        ))}
+                      </div>
                     )}
                   </div>
                 </div>
