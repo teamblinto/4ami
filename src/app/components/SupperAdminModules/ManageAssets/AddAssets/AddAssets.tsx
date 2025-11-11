@@ -3,36 +3,34 @@
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
-import { getApiUrl, getAuthHeaders } from '@/lib/config';
+import { getAuthHeaders } from '@/lib/config';
 
 interface AddAssetsProps {
   onBack?: () => void;
 }
 
-interface AssetProperties {
-  brand?: string;
-  model?: string;
-  length?: string;
-  width?: string;
-  height?: string;
-  weight?: string;
-  yearOfManufacture?: string;
-}
-
-interface AssetMetadata {
-  notes?: string;
-}
-
-interface AssetPayload {
-  name: string;
-  type: string;
-  description?: string;
+interface EquipmentPayload {
+  industryId?: number;
+  assetClassId?: number;
+  makeId?: number;
+  modelId?: number;
+  industryName?: string;
+  assetClassName?: string;
+  makeName?: string;
+  modelName?: string;
+  yearOfManufacture?: number;
+  length?: number;
+  width?: number;
+  height?: number;
+  weight?: number;
+  specialTransportationConsideration?: string;
   value?: number;
   residualValue?: number;
   status?: string;
-  properties?: AssetProperties;
-  metadata?: AssetMetadata;
-  projectId?: string;
+  metadata?: {
+    notes?: string;
+  };
+  projectId?: string | null;
 }
 
 export default function AddAssets({ onBack }: AddAssetsProps) {
@@ -857,70 +855,109 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
         throw new Error('Authentication token not found. Please log in again.');
       }
 
-      // Prepare the data according to the API structure
-      const assetData: AssetPayload = {
-        name: formData.assetTypeTag || formData.assetType || 'Asset',
-        type: formData.type
-      };
+      // Get selected industry, asset class, make, and model with their IDs
+      const selectedIndustry = formData.industryTag 
+        ? industries.find(ind => ind.name === formData.industryTag)
+        : null;
+      
+      const selectedAssetClass = formData.assetTypeTag
+        ? assetClasses.find(ac => ac.name === formData.assetTypeTag)
+        : null;
+      
+      const selectedMake = formData.makeTag
+        ? makes.find(m => m.name === formData.makeTag)
+        : null;
+      
+      const selectedModel = formData.modelTag
+        ? models.find(mod => mod.name === formData.modelTag)
+        : null;
 
-      // Add optional fields only if they have values
-      if (formData.description) {
-        assetData.description = formData.description;
+      // Prepare the data according to the API structure
+      const equipmentData: EquipmentPayload = {};
+
+      // Add IDs if available
+      if (selectedIndustry) {
+        equipmentData.industryId = selectedIndustry.id;
+        equipmentData.industryName = selectedIndustry.name;
+      }
+      if (selectedAssetClass) {
+        equipmentData.assetClassId = selectedAssetClass.id;
+        equipmentData.assetClassName = selectedAssetClass.name;
+      }
+      if (selectedMake) {
+        equipmentData.makeId = selectedMake.id;
+        equipmentData.makeName = selectedMake.name;
+      }
+      if (selectedModel) {
+        equipmentData.modelId = selectedModel.id;
+        equipmentData.modelName = selectedModel.name;
+      }
+
+      // Add numeric fields
+      if (formData.yearOfManufacture) {
+        equipmentData.yearOfManufacture = parseInt(formData.yearOfManufacture) || undefined;
+      }
+      if (formData.length) {
+        equipmentData.length = parseFloat(formData.length) || undefined;
+      }
+      if (formData.width) {
+        equipmentData.width = parseFloat(formData.width) || undefined;
+      }
+      if (formData.height) {
+        equipmentData.height = parseFloat(formData.height) || undefined;
+      }
+      if (formData.weight) {
+        equipmentData.weight = parseFloat(formData.weight) || undefined;
       }
       if (formData.value) {
-        assetData.value = parseFloat(formData.value);
+        equipmentData.value = parseFloat(formData.value) || undefined;
       }
       if (formData.residualValue) {
-        assetData.residualValue = parseFloat(formData.residualValue);
+        equipmentData.residualValue = parseFloat(formData.residualValue) || undefined;
+      }
+
+      // Add text fields
+      if (formData.specialTransportationConsideration) {
+        equipmentData.specialTransportationConsideration = formData.specialTransportationConsideration;
       }
       if (formData.status) {
-        assetData.status = formData.status;
-      }
-      if (formData.projectId) {
-        assetData.projectId = formData.projectId;
+        equipmentData.status = formData.status;
       }
 
-      // Build properties object if any property fields have values
-      const properties: AssetProperties = {};
-      if (formData.makeTag || formData.make) properties.brand = formData.makeTag || formData.make;
-      if (formData.modelTag || formData.model) properties.model = formData.modelTag || formData.model;
-      if (formData.length) properties.length = formData.length;
-      if (formData.width) properties.width = formData.width;
-      if (formData.height) properties.height = formData.height;
-      if (formData.weight) properties.weight = formData.weight;
-      if (formData.yearOfManufacture) properties.yearOfManufacture = formData.yearOfManufacture;
-
-      if (Object.keys(properties).length > 0) {
-        assetData.properties = properties;
-      }
-
-      // Build metadata object if notes field has value
-      if (formData.specialTransportationConsideration) {
-        assetData.metadata = {
-          notes: formData.specialTransportationConsideration
+      // Add metadata if description exists
+      if (formData.description) {
+        equipmentData.metadata = {
+          notes: formData.description
         };
       }
 
-      console.log('Submitting asset data:', assetData);
+      // Add projectId
+      if (formData.projectId) {
+        equipmentData.projectId = formData.projectId;
+      } else {
+        equipmentData.projectId = null;
+      }
+
+      console.log('Submitting equipment data:', equipmentData);
 
       const headers = getAuthHeaders(authToken);
       console.log('Request headers:', headers);
 
-      const response = await fetch(getApiUrl('/assets'), {
+      const response = await fetch('/api/equipments', {
         method: 'POST',
         headers: headers,
-        body: JSON.stringify(assetData)
+        body: JSON.stringify(equipmentData)
       });
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to create asset');
+        throw new Error(errorData.message || 'Failed to create equipment');
       }
 
       const result = await response.json();
-      console.log('Asset created successfully:', result);
+      console.log('Equipment created successfully:', result);
 
-      toast.success('Asset created successfully!');
+      toast.success('Equipment created successfully!');
 
       // Reset form
       setFormData({
@@ -952,8 +989,8 @@ export default function AddAssets({ onBack }: AddAssetsProps) {
         onBack();
       }
     } catch (error) {
-      console.error('Error creating asset:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to create asset');
+      console.error('Error creating equipment:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to create equipment');
     } finally {
       setLoading(false);
     }
