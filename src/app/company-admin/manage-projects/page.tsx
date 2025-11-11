@@ -130,14 +130,6 @@ export default function CompanyAdminManageProjectsPage() {
     setCurrentPage(1); // Reset to first page when changing items per page
   };
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading projects...</div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -214,7 +206,9 @@ export default function CompanyAdminManageProjectsPage() {
 
       {/* Projects Table */}
       <div className="bg-white overflow-x-auto">
-        {projects.length === 0 && !loading ? (
+        {loading ? (
+          <div className="text-center py-12 text-gray-600">Loading projects...</div>
+        ) : projects.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-gray-500 text-lg mb-2">No projects found</div>
             <div className="text-gray-400 text-sm">
@@ -355,7 +349,7 @@ export default function CompanyAdminManageProjectsPage() {
           </button>
           <button 
             className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
-              currentPage === 1 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+              currentPage === 1 ? 'bg-red-500 text:white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
             }`}
             onClick={() => handlePageChange(1)}
           >

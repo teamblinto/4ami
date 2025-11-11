@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import FilterDropdown from "./FilterDropdown";
-import FilterProjectStatus from "./FilterProjectStatus";
 import AddFilterDropDown from "./AddFilterDropDown";
 import { getApiUrl, getAuthHeaders } from "@/lib/config";
 import Link from "next/link";
@@ -109,13 +107,6 @@ export default function AfterSubmitProjectTable() {
           </svg>
 
           <AddFilterDropDown />
-
-
-          {/* <select className="border border-gray-300 rounded-lg px-4 py-2 text-sm text-red-500">
-          
-          <option>Add Filter</option>
-          <option><AddFilterDropDown /></option>
-        </select> */}
 
         </div>
 
