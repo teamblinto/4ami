@@ -3,62 +3,149 @@
 import Image from "next/image";
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { getAuthHeaders } from '@/lib/config';
 
-type Asset = {
-  name: string;
-  description: string;
-  type: string;
-  value: number;
-  residualValue: number;
+type Equipment = {
+  id: number;
+  industryId: number;
+  assetClassId: number;
+  makeId: number;
+  modelId: number;
+  industryName: string;
+  assetClassName: string;
+  makeName: string;
+  modelName: string;
+  yearOfManufacture: number;
+  length: string;
+  width: string;
+  height: string;
+  weight: string;
+  specialTransportationConsideration: string | null;
+  value: number | null;
+  residualValue: number | null;
   status: string;
-  asset: string; // display name
-  industry: string;
-  make: string;
-  model: string;
-  properties?: { brand?: string; model?: string };
-  metadata?: { notes?: string };
-  projectId: string;
+  metadata: { notes?: string } | null;
+  projectId: string | null;
+  createdAt: string;
+  updatedAt: string;
+  industry?: { id: number; name: string; description: string };
+  assetClass?: { id: number; name: string; description: string };
+  make?: { id: number; name: string; description: string };
+  model?: { id: number; name: string; description: string };
+};
+
+type EquipmentsResponse = {
+  equipments?: Equipment[];
+  data?: Equipment[];
+  total?: number;
+  page?: number;
+  limit?: number;
 };
 
 export default function ManageAssets() {
   const [searchQuery] = useState("");
-  const [assets, setAssets] = useState<Asset[]>([]);
+  const [assets, setAssets] = useState<Equipment[]>([]);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
+  const fetchAssets = async (page: number = 1, limit: number = 10) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+      
+      const response = await fetch(`/api/equipments?page=${page}&limit=${limit}`, {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Unauthorized - Please login again');
+        } else if (response.status === 403) {
+          throw new Error('Forbidden - You do not have permission to view equipments');
+        } else {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+      }
+
+      const result: EquipmentsResponse | Equipment[] = await response.json();
+      
+      // Handle different possible response structures
+      let equipmentsArray: Equipment[] = [];
+      let total = 0;
+      
+      if (Array.isArray(result)) {
+        // If response is directly an array
+        equipmentsArray = result;
+        total = result.length;
+      } else if (result.equipments && Array.isArray(result.equipments)) {
+        // If response has equipments array
+        equipmentsArray = result.equipments;
+        total = result.total || result.equipments.length;
+      } else if (result.data && Array.isArray(result.data)) {
+        // If response has data array
+        equipmentsArray = result.data;
+        total = result.total || result.data.length;
+      }
+
+      setAssets(equipmentsArray);
+      setTotalItems(total);
+      if (result && typeof result === 'object' && 'page' in result) {
+        setCurrentPage(result.page || page);
+      }
+    } catch (err) {
+      console.error('Error fetching equipments:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch equipments');
+      setAssets([]);
+      setTotalItems(0);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchAssets = async () => {
-      const response = await fetch('/getAssets.json');
-      const data: Asset[] = await response.json();
-      setAssets(Array.isArray(data) ? data : []);
-    };
-    fetchAssets();
-  }, []);
-console.log(assets)
-        
-  
+    fetchAssets(currentPage, rowsPerPage);
+  }, [currentPage, rowsPerPage]);
 
   const filteredAssets = assets.filter(a =>
-    [a.asset, a.industry, a.make, a.model].some(v => v.toLowerCase().includes(searchQuery.toLowerCase()))
+    [a.assetClassName, a.industryName, a.makeName, a.modelName].some(v => 
+      v && v.toLowerCase().includes(searchQuery.toLowerCase())
+    )
   );
 
-  const totalItems = filteredAssets.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / rowsPerPage));
-  const startIndex = (currentPage - 1) * rowsPerPage;
-  const endIndex = Math.min(startIndex + rowsPerPage, totalItems);
-  const currentItems = filteredAssets.slice(startIndex, endIndex);
-
-  useEffect(() => {
-    if (currentPage > totalPages) {
-      setCurrentPage(totalPages);
-    }
-  }, [totalPages, currentPage]);
 
   const handlePageChange = (page: number) => {
     const next = Math.min(Math.max(1, page), totalPages);
     setCurrentPage(next);
   };
+
+  const handleLimitChange = (newLimit: number) => {
+    setRowsPerPage(newLimit);
+    setCurrentPage(1);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-gray-500">Loading equipments...</div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-red-500">Error: {error}</div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -111,9 +198,9 @@ console.log(assets)
           <select
             className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2 cursor-pointer"
             value={rowsPerPage}
-            onChange={(e) => { setRowsPerPage(Number(e.target.value)); setCurrentPage(1); }}
+            onChange={(e) => handleLimitChange(Number(e.target.value))}
           >
-              <option value={10}>10</option>
+            <option value={10}>10</option>
             <option value={20}>20</option>
             <option value={50}>50</option>
           </select>
@@ -155,28 +242,36 @@ console.log(assets)
             </tr>
           </thead>
           <tbody>
-            {currentItems.map((asset, index) => {
-              const isStriped = index % 2 === 0;
-              return (
-                <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                  <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
-                    <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
-                  </td>
-                  <td className="px-6  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{asset.asset}</td>
-                  <td className="px-6  whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.industry}</td>
-                  <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.make}</td>
-                  <td className="px-6  whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.model}</td>
-                  <td className="px-6  whitespace-nowrap border border-[#D0D5DD]">
-                    <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                      <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
-                    </button>
-                    <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                      <Image src="/bin.svg" alt="Delete" width={12} height={12} />
-                    </button>
-                  </td>
-                </tr>
-              );
-            })}
+            {filteredAssets.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  No equipments found
+                </td>
+              </tr>
+            ) : (
+              filteredAssets.map((asset, index) => {
+                const isStriped = index % 2 === 0;
+                return (
+                  <tr key={asset.id} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                      <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
+                    </td>
+                    <td className="px-6  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{asset.assetClassName || 'N/A'}</td>
+                    <td className="px-6  whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.industryName || 'N/A'}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.makeName || 'N/A'}</td>
+                    <td className="px-6  whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.modelName || 'N/A'}</td>
+                    <td className="px-6  whitespace-nowrap border border-[#D0D5DD]">
+                      <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
+                      </button>
+                      <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <Image src="/bin.svg" alt="Delete" width={12} height={12} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })
+            )}
           </tbody>
         </table>
       </div>
@@ -201,7 +296,7 @@ console.log(assets)
           >
             1
           </button>
-          {totalItems > rowsPerPage && (
+          {totalPages > 1 && (
             <button 
               className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
                 currentPage === 2 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
@@ -211,7 +306,7 @@ console.log(assets)
               2
             </button>
           )}
-          {totalItems > rowsPerPage * 2 && (
+          {totalPages > 2 && (
             <button 
               className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
                 currentPage === 3 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
@@ -221,7 +316,7 @@ console.log(assets)
               3
             </button>
           )}
-          {totalItems > rowsPerPage * 3 && (
+          {totalPages > 3 && (
             <button 
               className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
                 currentPage === 4 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
@@ -233,7 +328,7 @@ console.log(assets)
           )}
           <button 
             className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer disabled:opacity-50"
-            disabled={currentPage * rowsPerPage >= totalItems}
+            disabled={currentPage >= totalPages}
             onClick={() => handlePageChange(currentPage + 1)}
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -242,15 +337,15 @@ console.log(assets)
           </button>
           <input 
             type="number" 
-            placeholder={rowsPerPage.toString()} 
+            placeholder={currentPage.toString()} 
             className="w-16 px-2 text-black py-2 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
             min="1"
-            max={Math.ceil(totalItems / rowsPerPage)}
+            max={totalPages}
             value={currentPage}
             onChange={(e) => {
               const page = parseInt(e.target.value);
               if (!Number.isNaN(page)) {
-                if (page >= 1 && page <= Math.ceil(totalItems / rowsPerPage)) {
+                if (page >= 1 && page <= totalPages) {
                   handlePageChange(page);
                 }
               }
@@ -263,5 +358,3 @@ console.log(assets)
     </div>
   );
 }
-
-

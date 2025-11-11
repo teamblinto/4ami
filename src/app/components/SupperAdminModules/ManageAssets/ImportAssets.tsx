@@ -167,11 +167,7 @@ export default function ImportAssets({ onBack }: ImportAssetsProps) {
   if (isUploading) {
     return (
       <div className="bg-gray-50 min-h-screen p-6">
-        {/* Header */}
-        {/* <div className="mb-8">
-          <h1 className="text-2xl font-semibold text-gray-900 mb-2">Add Asset</h1>
-          <p className="text-sm text-gray-500">Dashboard / Manage Assets / Add Asset Type</p>
-        </div> */}
+
 
         {/* Uploading Content */}
         <div className="bg-white rounded-lg p-12 text-center max-w-md mx-auto">
