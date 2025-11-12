@@ -7,8 +7,15 @@ export default function ResetSuccessPage() {
     return (
         <div className="min-h-screen flex flex-col items-center pt-2 bg-gray-100">
             <div className="w-full max-w-[1200px] mx-auto ">
-                <header className="px-12 py-4">
-                    <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+                <header className="px-12 py-4" style={{ height: '60px' }}>
+                    <Image 
+                        src="/AMILogo.svg" 
+                        alt="AMI Logo" 
+                        width={230} 
+                        height={35}
+                        priority
+                        style={{ width: "230px", height: "35px", display: "block" }}
+                    />
                 </header>
 
                 <main className="flex-grow flex items-center justify-center py-12">

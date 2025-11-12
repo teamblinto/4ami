@@ -58,14 +58,21 @@ function ResetPasswordPageContent() {
   return (
     <div className="min-h-screen flex flex-col items-center pt-2 bg-gray-100">
       <div className="w-full max-w-[1200px] mx-auto ">
-        <header className="px-12 py-4">
-          <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+        <header className="px-12 py-4" style={{ height: '60px' }}>
+          <Image 
+            src="/AMILogo.svg" 
+            alt="AMI Logo" 
+            width={230} 
+            height={35}
+            priority
+            style={{ width: "230px", height: "35px", display: "block" }}
+          />
         </header>
 
         <main className="flex-grow flex max-w-[1000px] mx-auto items-center justify-center bg-gray-100 pt-6 pb-6">
-          <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
+          <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-14 p-6">
             {/* Left Section - Reset Form */}
-            <div className="w-full md:w-2/5 p-6">
+            <div className="w-full md:w-2/5">
               <h1 className="text-[24px] font-medium text-[#080607] mb-2">Reset Password</h1>
               <p className="text-[#6C757D] mb-6">Please enter your new password below</p>
               {!token && (
@@ -220,14 +227,17 @@ function ResetPasswordPageContent() {
             </div>
 
             {/* Right Section - Illustration */}
-            <div className="w-full md:w-3/5 flex items-center justify-end p-6">
-              <Image
-                src="/forget.png.svg"
-                alt="Reset Password Illustration"
-                width={600}
-                height={1000}
-                style={{ width: "600px", height: "auto" }}
-              />
+            <div className="w-full md:w-3/5 flex items-center justify-end">
+              <div style={{ width: '420px', maxHeight: '600px', position: 'relative', aspectRatio: '1/1' }}>
+                <Image
+                  src="/forget.png.svg"
+                  alt="Reset Password Illustration"
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="420px"
+                />
+              </div>
             </div>
           </div>
         </main>
