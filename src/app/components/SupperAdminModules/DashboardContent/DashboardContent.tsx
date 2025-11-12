@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CountUp from 'react-countup';
 import { getApiUrl, getAuthHeaders, config } from '@/lib/config';
+import { ShimmerCard, ShimmerTable } from '@/app/Animations/shimmereffect';
 
 // --- INTERFACES ---
 interface ApiUserData {
@@ -187,9 +188,9 @@ const StatCard = ({
   isAnimated = false,
   endValue = 0,
 }: StatCardProps & { isAnimated?: boolean; endValue?: number }) => (
-  <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg relative">
-    <div className="flex flex-col gap-1">
-      <div className="text-sm font-medium text-[#6C757D] flex items-center">
+  <div className="bg-[#FFFFFF] py-3 px-[18px] rounded-lg relative" style={{ height: '104px' }}>
+    <div className="flex flex-col gap-1 h-full">
+      <div className="text-sm font-medium text-[#6C757D] flex items-center" style={{ height: '20px' }}>
         {title}{" "}
         {title === "Pending Requests" && (
           <span className="ml-1 text-xs">
@@ -204,7 +205,7 @@ const StatCard = ({
           </span>
         )}
       </div>
-      <div className="text-2xl font-bold text-[#080607]">
+      <div className="text-2xl font-bold text-[#080607] flex items-center" style={{ height: '36px' }}>
         {isAnimated ? (
           <CountUp
             end={endValue}
@@ -217,7 +218,7 @@ const StatCard = ({
           value
         )}
       </div>
-      <div className={`text-xs font-regular ${changeColor}`}>{change}</div>
+      <div className={`text-xs font-regular ${changeColor} flex items-center`} style={{ height: '16px' }}>{change}</div>
     </div>
     <div className={`absolute top-3 right-[18px]`}>
       <Image
@@ -288,7 +289,7 @@ const ProjectsTable = () => {
           View All
         </Link>
       </div>
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
+      {/* <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div className="flex items-center gap-2 flex-wrap">
           <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700">
             <option value="all">Project ID All</option>
@@ -321,38 +322,28 @@ const ProjectsTable = () => {
             Clear Filter
           </button>
         </div>
-      </div>
+      </div> */}
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD] ">
           <thead>
             <tr className="bg-white">
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">
+              <th className="px-6 py-2 w-1/7 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">
                 Project ID
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
+              <th className="px-6 py-2 w-1/3 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
                 Project
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">
+              <th className="px-6 py-2 w-1/5 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">
                 Time (Start to End)
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
+              <th className="px-6 py-2 w-1/5  text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
                 Status
               </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr>
-                <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
-                  <div className="flex items-center justify-center">
-                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-gray-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>
-                    Loading projects...
-                  </div>
-                </td>
-              </tr>
+              <ShimmerTable rows={3} cols={4} />
             ) : error ? (
               <tr>
                 <td colSpan={4} className="px-6 py-8 text-center text-red-500">
@@ -372,24 +363,27 @@ const ProjectsTable = () => {
                   <tr
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
                   >
-                    <td className="px-6 py-4 text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r">
+                    <td className="px-6  text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r align-middle" style={{ height: '64px' }}>
                       {project.projectNumber || project.id}
                     </td>
-                    <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD]  border-r">
+                    <td className="px-6  text-gray-700 border-b border-[#D0D5DD]  border-r align-middle" style={{ height: '64px' }}>
                       {project.name}
                     </td>
-                    <td className="px-6 py-4 text-gray-700 border-b border-[#D0D5DD] border-r">
+                    <td className="px-6  text-gray-700 border-b border-[#D0D5DD] border-r align-middle" style={{ height: '64px' }}>
                       {formatDateRange(project.startDate, project.endDate)}
                     </td>
-                    <td className="px-6 py-4 border-b border-[#D0D5DD] border-r">
-                      <span
-                        className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(
-                          project.status
-                        )}`}
-                      >
-                        {project.status}
-                      </span>
+                    <td className="px-6  border-b border-[#D0D5DD] border-r align-middle" style={{ height: '64px' }}>
+                      <div className="flex justify-center items-center">
+                        <span
+                          className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(
+                            project.status
+                          )}`}
+                        >
+                          {project.status}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -563,29 +557,35 @@ export default function DashboardContent() {
         </p>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {statsData.map((stat) => {
-          const numericValue = Number(stat.value);
-          const isNumeric = !Number.isNaN(numericValue);
+        {userCountLoading ? (
+          // Show shimmer cards while loading - use same grid structure
+          Array.from({ length: 4 }).map((_, index) => (
+            <ShimmerCard key={index} />
+          ))
+        ) : (
+          statsData.map((stat) => {
+            const numericValue = Number(stat.value);
+            const isNumeric = !Number.isNaN(numericValue);
 
-          const valueForCard =
-            stat.title === "Users" && userCountLoading ? "..." : stat.value;
+            const valueForCard = stat.value;
 
-          const isAnimated =
-            (stat.title === "Users" && !userCountLoading) ||
-            (stat.title !== "Users" && isNumeric);
+            const isAnimated =
+              (stat.title === "Users") ||
+              (stat.title !== "Users" && isNumeric);
 
-          const endValue = stat.title === "Users" ? userCount : (isNumeric ? numericValue : 0);
+            const endValue = stat.title === "Users" ? userCount : (isNumeric ? numericValue : 0);
 
-          return (
-            <StatCard
-              key={stat.title}
-              {...stat}
-              value={valueForCard}
-              isAnimated={isAnimated}
-              endValue={endValue}
-            />
-          );
-        })}
+            return (
+              <StatCard
+                key={stat.title}
+                {...stat}
+                value={valueForCard}
+                isAnimated={isAnimated}
+                endValue={endValue}
+              />
+            );
+          })
+        )}
       </div>
 
       <ProjectsTable />
