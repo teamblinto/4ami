@@ -1,7 +1,7 @@
 // Environment configuration
 export const config = {
   // Backend API Base URL
-  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://your-alb-dns-name.us-east-1.elb.amazonaws.com/api/v1",
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://4ami.morshadunnur.me/api/v1",
   
   
   // API Endpoints
@@ -10,6 +10,8 @@ export const config = {
       signin: '/auth/signin',
       customerAdminSignup: '/auth/customer-admin-signup',
       verifyEmail: '/auth/verify-email',
+      forgotPassword: '/auth/forgot-password',
+      resetPassword: '/auth/reset-password',
     },
     users: {
       invite: '/users/invite',
@@ -48,15 +50,4 @@ export const getAuthHeaders = (authToken?: string) => {
 // Helper function to check if we're in development mode
 export const isDevelopment = () => {
   return process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined;
-};
-
-// Helper function to get the appropriate API URL based on environment
-export const getApiUrlForEnvironment = (endpoint: string): string => {
-  // In development, we might want to use local API routes to avoid CORS issues
-  if (isDevelopment() && !config.API_BASE_URL.includes('ngrok')) {
-    // Use local API routes as proxy to avoid CORS issues
-    return `/api/proxy${endpoint}`;
-  }
-  
-  return getApiUrl(endpoint);
 };

@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = 'force-dynamic';
+
 import Image from "next/image";
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
@@ -52,21 +54,21 @@ export default function CompanyAdminManageUsersPage() {
     try {
       setLoading(true);
       setError(null);
-      
+
       // Get auth token from localStorage or sessionStorage
       const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-      
+
       // Debug: Check if auth token exists
       console.log('Auth token exists:', !!authToken);
       console.log('Auth token preview:', authToken ? authToken.substring(0, 20) + '...' : 'No token');
-      
+
       // Use the available API endpoint: GET all users with pagination
       // This matches your available API: "GET Get all users with pagination"
       let url = `${config.API_BASE_URL}/users?page=${page}&limit=${limit}`;
-      
+
       console.log('Making request to:', url);
       console.log('Headers:', getAuthHeaders(authToken || undefined));
-      
+
       let response = await fetch(url, {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
@@ -86,12 +88,6 @@ export default function CompanyAdminManageUsersPage() {
         if (response.status === 401) {
           throw new Error('Unauthorized - Please login again');
         } else if (response.status === 403) {
-          // Try alternative approach: maybe company admin needs different endpoint
-          console.log('403 Forbidden - This endpoint might be restricted to super admins only.');
-          console.log('Possible solutions:');
-          console.log('1. Check if you need a different endpoint for company admins');
-          console.log('2. Verify your user role has permission to view users');
-          console.log('3. Check if the auth token is valid and has the right permissions');
           throw new Error('Forbidden - You do not have permission to view all users. This endpoint might be restricted to super admins only.');
         } else if (response.status === 404) {
           throw new Error('Users endpoint not found - Please check if the /users API is available');
@@ -102,11 +98,11 @@ export default function CompanyAdminManageUsersPage() {
 
       const result: ApiResponse = await response.json();
       console.log('Company Admin API Response:', result); // Debug log
-      
+
       // Handle different possible response structures
       let usersArray: ApiUserData[] = [];
       let currentPageNum = 1;
-      
+
       if (result.data && Array.isArray(result.data)) {
         // Standard paginated response
         usersArray = result.data;
@@ -122,23 +118,23 @@ export default function CompanyAdminManageUsersPage() {
       } else {
         throw new Error('Unexpected API response format');
       }
-      
+
       // Filter users by role on frontend if backend doesn't support role filtering
       console.log('Available user roles:', usersArray.map(u => u.role)); // Debug log
-      
+
       const filteredUsers = usersArray.filter((user: ApiUserData) => {
         // Filter for Customer User role only
         // Support different role naming conventions
         const userRole = user.role?.toLowerCase();
-        const isCustomerUser = userRole === 'customer user' || 
-                               userRole === 'customer_user' || 
-                               userRole === 'customer' ||
-                               userRole === 'user';
-        
+        const isCustomerUser = userRole === 'customer user' ||
+          userRole === 'customer_user' ||
+          userRole === 'customer' ||
+          userRole === 'user';
+
         console.log(`User ${user.email} with role "${user.role}" - ${isCustomerUser ? 'INCLUDED' : 'FILTERED OUT'}`);
         return isCustomerUser;
       });
-      
+
       console.log(`Filtered ${filteredUsers.length} Customer Users from ${usersArray.length} total users`);
 
       // Transform the filtered API data to match our frontend structure
@@ -158,7 +154,7 @@ export default function CompanyAdminManageUsersPage() {
     } catch (err) {
       console.error('Error fetching invited users:', err);
       let errorMessage = 'Failed to fetch invited users data';
-      
+
       if (err instanceof Error) {
         if (err.message.includes('fetch')) {
           errorMessage = 'Network error - Please check your connection';
@@ -168,9 +164,9 @@ export default function CompanyAdminManageUsersPage() {
           errorMessage = err.message;
         }
       }
-      
+
       setError(errorMessage);
-      
+
       // Show empty state instead of fallback data
       setUsersData([]);
       setTotalItems(0);
@@ -202,15 +198,6 @@ export default function CompanyAdminManageUsersPage() {
   const handleImportUsers = () => {
     router.push("/company-admin/manage-users/import");
   };
-
-
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading invited users...</div>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -299,7 +286,7 @@ export default function CompanyAdminManageUsersPage() {
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           Rows per page:
-          <select 
+          <select
             className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 ml-2 cursor-pointer"
             value={itemsPerPage}
             onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
@@ -313,14 +300,19 @@ export default function CompanyAdminManageUsersPage() {
 
       {/* Users Table */}
       <div className="bg-white overflow-x-auto">
-        {usersData.length === 0 && !loading ? (
+        {loading ? (
+          <div className="text-center py-12 text-gray-600">Loading invited users...</div>
+        ) : usersData.length === 0 ? (
           <div className="text-center py-12">
+            <div className="flex justify-center items-center">
+              <Image src="/No-data.svg" alt="" width={65} height={65} />
+            </div>
             <div className="text-gray-500 text-lg mb-2">No invited users found</div>
             <div className="text-gray-400 text-sm">
               {error ? 'Unable to load users from the server.' : 'Start by inviting your first user.'}
             </div>
             {!error && (
-              <button 
+              <button
                 onClick={handleAddNewUser}
                 className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
               >
@@ -369,31 +361,33 @@ export default function CompanyAdminManageUsersPage() {
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 w-4 h-4 cursor-pointer"
+                        className="rounded border-gray-300 accent-[#ED272C] w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
                       {user.companyName}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.firstName}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.lastName}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.role}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {user.email}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
-                      </button>
-                      <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/bin.svg" alt="Delete" width={16} height={16} />
-                      </button>
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD]">
+                      <div className="flex items-center justify-center gap-2">
+                        <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                          <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
+                        </button>
+                        <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                          <Image src="/bin.svg" alt="Delete" width={12} height={12} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 );
@@ -411,7 +405,7 @@ export default function CompanyAdminManageUsersPage() {
           <div className="text-red-600 text-xs mt-2">
             Please check your connection and try again. If the problem persists, contact your administrator.
           </div>
-          <button 
+          <button
             onClick={() => fetchInvitedUsers(currentPage, itemsPerPage)}
             className="mt-3 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 text-sm"
           >
@@ -426,7 +420,7 @@ export default function CompanyAdminManageUsersPage() {
           {((currentPage - 1) * itemsPerPage) + 1}-{Math.min(currentPage * itemsPerPage, totalItems)} of {totalItems} items
         </div>
         <div className="flex items-center space-x-2">
-          <button 
+          <button
             className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer disabled:opacity-50"
             disabled={currentPage === 1}
             onClick={() => handlePageChange(currentPage - 1)}
@@ -435,45 +429,41 @@ export default function CompanyAdminManageUsersPage() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
             </svg>
           </button>
-          <button 
-            className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
-              currentPage === 1 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
-            }`}
+          <button
+            className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${currentPage === 1 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+              }`}
             onClick={() => handlePageChange(1)}
           >
             1
           </button>
           {totalItems > itemsPerPage && (
-            <button 
-              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
-                currentPage === 2 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
-              }`}
+            <button
+              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${currentPage === 2 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+                }`}
               onClick={() => handlePageChange(2)}
             >
               2
             </button>
           )}
           {totalItems > itemsPerPage * 2 && (
-            <button 
-              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
-                currentPage === 3 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
-              }`}
+            <button
+              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${currentPage === 3 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+                }`}
               onClick={() => handlePageChange(3)}
             >
               3
             </button>
           )}
           {totalItems > itemsPerPage * 3 && (
-            <button 
-              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${
-                currentPage === 4 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
-              }`}
+            <button
+              className={`border border-gray-300 rounded-md px-4 py-2 cursor-pointer ${currentPage === 4 ? 'bg-red-500 text-white hover:bg-red-600' : 'hover:bg-gray-50 text-gray-700'
+                }`}
               onClick={() => handlePageChange(4)}
             >
               4
             </button>
           )}
-          <button 
+          <button
             className="border border-gray-300 rounded-md p-2 hover:bg-gray-50 text-gray-700 cursor-pointer disabled:opacity-50"
             disabled={currentPage * itemsPerPage >= totalItems}
             onClick={() => handlePageChange(currentPage + 1)}
@@ -483,7 +473,7 @@ export default function CompanyAdminManageUsersPage() {
             </svg>
           </button>
           <input
-            placeholder={itemsPerPage.toString()} 
+            placeholder={itemsPerPage.toString()}
             className="w-16 px-2 text-black py-2 border border-[#343A40] rounded-md text-sm text-center cursor-pointer"
             min="1"
             max={Math.ceil(totalItems / itemsPerPage)}
@@ -493,6 +483,7 @@ export default function CompanyAdminManageUsersPage() {
               if (page >= 1 && page <= Math.ceil(totalItems / itemsPerPage)) {
                 handlePageChange(page);
               }
+
             }}
           />
           <div className="text-sm text-[#343A40] ml-2">/Page</div>

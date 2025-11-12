@@ -1,16 +1,136 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import CountUp from 'react-countup';
 import ProjectDropdown from "./ProjectDropdown";
 import AfterSubmitProjectTable from "./AfterSubmitProjectTable";
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export default function CompanyAdminContent() {
+  const [totalProjects, setTotalProjects] = useState(0);
+  const [onGoingProjects, setOnGoingProjects] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [, setLoading] = useState(true);
+  console.log(totalProjects)
+
+  // Fetch projects data for this company admin
+  const fetchProjects = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+
+      // Get user data to ensure we're filtering by company
+      const userDataString = localStorage.getItem('userData');
+      let userProfile: Record<string, unknown> = {};
+
+      if (userDataString) {
+        try {
+          userProfile = JSON.parse(userDataString);
+        } catch (e) {
+          console.error('Failed to parse userData:', e);
+        }
+      }
+
+      const userId = userProfile.id as string;
+      if (!userId) {
+        console.error('User ID not found in user profile');
+        return;
+      }
+
+      // The backend should automatically filter projects by the authenticated user's company
+      // Use pagination so we can reliably read the total count from the response
+      const response = await fetch(getApiUrl('/projects?page=1&limit=10'), {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const projects = data.projects || data.data || [];
+
+        // Prefer the API-provided total (matches Manage Projects page totalItems)
+        if (typeof data.total === 'number') {
+          setTotalProjects(data.total);
+        } else {
+          // Fallback to length if total isn't provided
+          setTotalProjects(projects.length);
+        }
+
+        // Count ongoing projects (active status)
+        const ongoingCount = projects.filter((project: { status: string }) =>
+          project.status === 'active' || project.status === 'in_progress'
+        ).length;
+        setOnGoingProjects(ongoingCount);
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+    }
+  };
+
+  // Fetch users data for this company admin
+  const fetchUsers = async () => {
+    try {
+      const authToken = localStorage.getItem('authToken');
+
+      // Get user data to ensure we're filtering by company
+      const userDataString = localStorage.getItem('userData');
+      let userProfile: Record<string, unknown> = {};
+
+      if (userDataString) {
+        try {
+          userProfile = JSON.parse(userDataString);
+        } catch (e) {
+          console.error('Failed to parse userData:', e);
+        }
+      }
+
+      const response = await fetch(getApiUrl('/users?page=1&limit=1'), {
+        method: 'GET',
+        headers: getAuthHeaders(authToken || undefined),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const users = data.users || data.data || [];
+
+        // Filter users by role (Customer User role only) and by company
+        // The backend should already filter by company, but we can add additional filtering here
+        const filteredUsers = users.filter((user: { role?: string; companyId?: string; invitedBy?: string }) => {
+          const userRole = user.role?.toLowerCase();
+          const isCustomerUser = userRole === 'customer user' ||
+            userRole === 'customer_user' ||
+            userRole === 'customer' ||
+            userRole === 'user';
+
+          // Additional company filtering if needed
+          const isFromSameCompany = !userProfile.companyId || user.companyId === userProfile.companyId;
+
+          return isCustomerUser && isFromSameCompany;
+        });
+
+        // Match Manage Users page behavior: use filtered count
+        setTotalUsers(filteredUsers.length);
+      }
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([fetchProjects(), fetchUsers()]);
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [setLoading]);
+
   const statsData = [
-    { title: "Total Projects", value: "0", icon: "/sv1.svg" },
-    { title: "On Going Projects", value: "0", icon: "/sv2.svg" },
-    { title: "Total Users", value: "0", icon: "/sv3.svg", hasDropdown: true },
-    { title: "Token Left", value: "10", icon: "/sv4.svg" },
+    { title: "Total Projects", value: totalProjects, icon: "/sv1.svg" },
+    { title: "On Going Projects", value: onGoingProjects, icon: "/sv2.svg" },
+    { title: "Total Users", value: totalUsers, icon: "/sv3.svg", hasDropdown: true },
+    { title: "Token Left", value: 10, icon: "/sv4.svg" },
   ];
 
   return (
@@ -54,7 +174,17 @@ export default function CompanyAdminContent() {
                   )}
                 </div>
                 <p className="text-2xl font-bold text-gray-900 mt-1">
-                  {stat.value}
+                  {stat.title === "Total Projects" || stat.title === "Total Users" ? (
+                    <CountUp
+                      end={stat.value as number}
+                      duration={2.5}
+                      separator="," 
+                      enableScrollSpy
+                      scrollSpyOnce
+                    />
+                  ) : (
+                    stat.value
+                  )}
                 </p>
               </div>
               <div>
@@ -71,8 +201,26 @@ export default function CompanyAdminContent() {
         ))}
       </div>
 
+      {totalProjects === 0 ? (
+        <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col  self-stretch pt:[75px] pb:[75px] gap:[21px]">
+          <h1 className="text-lg font-semibold text-start p-4 mb-4 text-[#080607] ">Projects</h1>
+          <div className="flex flex-col pb-14  items-center justify-center w-full h-full">
 
-      <AfterSubmitProjectTable />
+            <Image
+              src="/majesticons_plus-line.svg"
+              alt="majesticons_plus-line"
+              width={80}
+              height={80}
+              style={{ width: "auto", height: "auto" }}
+            />
+            <p className="text-[#6C757D] text-[14px] font-medium text-center mt-3">
+              Start by creating your first project
+            </p>
+          </div>
+        </div>
+      ) : (
+        <AfterSubmitProjectTable />
+      )}
 
       {/* Bottom Sections */}
 

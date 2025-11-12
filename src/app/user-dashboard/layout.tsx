@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-// import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
@@ -17,6 +17,20 @@ export default function UserDashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<{
+    id: string;
+    title: string;
+    description?: string;
+    date: string;
+    read?: boolean;
+    avatar?: string;
+  }[]>([
+    { id: '1', title: 'There are pending service approvals that need your attention. Please review the service details to approve or reject', date: 'April 15, 2025', avatar: '/Display-Picture.svg' },
+    { id: '2', title: 'The residual value analysis for [Asset Name] has been completed. Please review the results', date: 'March 28, 2025', avatar: '/Display-Picture.svg', read: true },
+    { id: '3', title: 'A new service request has been submitted. Review the request details to proceed', date: 'March 20, 2025', avatar: '/Display-Picture.svg' },
+    { id: '4', title: 'A new user has registered on the platform. Please review their details and approve the account if necessary', date: 'March 20, 2025', avatar: '/Display-Picture.svg', read: true },
+  ]);
   const [userData, setUserData] = useState<{
     firstName?: string;
     lastName?: string;
@@ -60,29 +74,36 @@ export default function UserDashboardLayout({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const toggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (!target.closest('.dropdown-container')) {
         setIsDropdownOpen(false);
       }
+      if (!target.closest('.notif-container')) {
+        setIsNotificationsOpen(false);
+      }
     };
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isNotificationsOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isNotificationsOpen]);
 
   return (
-    // <ProtectedRoute requiredRole="CUSTOMER_USER">
+    <ProtectedRoute requiredRole="CUSTOMER_USER">
       <div className="flex min-h-screen  bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
+          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${
             isSidebarCollapsed ? 'collapsed' : ''
           }`}
           style={{ 
@@ -144,7 +165,7 @@ export default function UserDashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Dashboard</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Dashboard</span>
                     )}
                   </Link>
                 </li>
@@ -165,7 +186,7 @@ export default function UserDashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Projects</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Projects</span>
                     )}
                   </Link>
                 </li>
@@ -186,7 +207,7 @@ export default function UserDashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Profile</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Profile</span>
                     )}
                   </Link>
                 </li>
@@ -230,10 +251,51 @@ export default function UserDashboardLayout({
               </svg>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="relative cursor-pointer text-gray-600 hover:text-gray-800">
-                <Image src="/notification-bell.svg" alt="Notifications" width={20} height={20} style={{ width: "auto", height: "auto" }} />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">1</span>
-              </button>
+              <div className="relative notif-container">
+                <button
+                  onClick={toggleNotifications}
+                  className="relative cursor-pointer text-gray-600 hover:text-gray-800"
+                  aria-haspopup="true"
+                  aria-expanded={isNotificationsOpen}
+                >
+                  <Image src="/notification-bell.svg" alt="Notifications" width={20} height={20} style={{ width: "auto", height: "auto" }} />
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {notifications.filter(n => !n.read).length || notifications.length}
+                  </span>
+                </button>
+
+                {isNotificationsOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-[420px] bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-4 border-b border-gray-100">
+                      <h3 className="font-semibold text-gray-900">Notifications</h3>
+                    </div>
+                    <ul className="max-h-[420px] overflow-auto">
+                      {notifications.map((n) => (
+                        <li key={n.id} className="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition">
+                          <div className="flex items-start gap-3">
+                            <Image src={n.avatar || '/Display-Picture.svg'} alt="avatar" width={28} height={28} style={{ width: 'auto', height: 'auto' }} />
+                            <div className="flex-1">
+                              <p className={`text-sm ${n.read ? 'text-gray-400 line-clamp-2' : 'text-gray-800'}`}>{n.title}</p>
+                              {n.description && (<p className="text-xs text-gray-500 mt-1">{n.description}</p>)}
+                              <p className="text-xs text-gray-400 mt-1">{n.date}</p>
+                            </div>
+                            <button
+                              onClick={() => setNotifications(prev => prev.filter(x => x.id !== n.id))}
+                              className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                              aria-label="Dismiss notification"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="px-4 py-3">
+                      <button className="w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer">See all notifications</button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* User Profile Dropdown */}
               <div className="relative dropdown-container">
@@ -305,6 +367,6 @@ export default function UserDashboardLayout({
           {children}
         </main>
       </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 }

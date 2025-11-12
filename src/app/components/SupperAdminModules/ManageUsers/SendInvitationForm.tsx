@@ -35,10 +35,9 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     const uppercaseChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const lowercaseChars = 'abcdefghijklmnopqrstuvwxyz';
     const numbers = '0123456789';
-    const specialChars = '!@#$%^&*';
 
     // Combine all character sets for better security
-    const allChars = uppercaseChars + lowercaseChars + numbers + specialChars;
+    const allChars = uppercaseChars + lowercaseChars + numbers;
 
     let result = '';
     const codeLength = 12; // Increased length for better security
@@ -47,7 +46,6 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
     result += uppercaseChars.charAt(Math.floor(Math.random() * uppercaseChars.length));
     result += lowercaseChars.charAt(Math.floor(Math.random() * lowercaseChars.length));
     result += numbers.charAt(Math.floor(Math.random() * numbers.length));
-    result += specialChars.charAt(Math.floor(Math.random() * specialChars.length));
 
     // Fill the remaining length with random characters from all sets
     for (let i = 4; i < codeLength; i++) {
@@ -123,8 +121,7 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
         role: roleMapping[formData.role],
         source: formData.source.trim(),
         invitationCode: invitationCode,
-        // title: formData.title.trim(),
-        // Removed 'title' field as API says it should not exist
+        title: formData.title.trim(),
       };
 
       console.log('Sending invitation data:', invitationData);
@@ -367,14 +364,27 @@ export default function SendInvitationForm({ onInvitationSent }: SendInvitationF
       </div>
 
       {/* Image & Links */}
-      <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4 min-w-0">
+      {/* <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4 min-w-0">
         <Image
           src="/invitation-img.png"
           alt="Dashboard Illustration"
           width={400}
           height={800}
           className="w-full h-auto max-w-full max-h-[1000px] object-contain"
-        />
+        /> */}
+
+              {/* Image & Links */}
+      <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4 min-w-0">
+        <div style={{ width: '450px', maxHeight: '600px', position: 'relative', aspectRatio: '1/2' }}>
+          <Image
+            src="/invitation-img.png"
+            alt="Dashboard Illustration"
+            fill
+            priority
+            className="object-cover"
+            sizes="400px"
+          />
+        </div>
 
         <div className="w-full mt-6 text-sm text-end text-black flex flex-wrap justify-end gap-4">
           <a href="#" className="underline hover:text-gray-600">Terms of Use</a>{' '}

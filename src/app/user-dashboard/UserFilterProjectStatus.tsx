@@ -35,7 +35,6 @@ export default function FilterProjectStatus() {
   }, [isOpen]);
 
   const handleConfirm = () => {
-    console.log("Filter:", filterType, order);
     setIsOpen(false);
   };
 

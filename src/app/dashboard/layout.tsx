@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
-// import ProtectedRoute from "../components/ProtectedRoute";
+import ProtectedRoute from "../components/ProtectedRoute";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
@@ -17,6 +17,42 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const [notifications, setNotifications] = useState<{
+    id: string;
+    title: string;
+    description?: string;
+    date: string;
+    read?: boolean;
+    avatar?: string;
+  }[]>([
+    {
+      id: '1',
+      title: 'There are pending service approvals that need your attention. Please review the service details to approve or reject',
+      date: 'April 15, 2025',
+      avatar: '/Display-Picture.svg',
+    },
+    {
+      id: '2',
+      title: 'The residual value analysis for [Asset Name] has been completed. Please review the results',
+      date: 'March 28, 2025',
+      avatar: '/Display-Picture.svg',
+      read: true,
+    },
+    {
+      id: '3',
+      title: 'A new service request has been submitted. Review the request details to proceed',
+      date: 'March 20, 2025',
+      avatar: '/Display-Picture.svg',
+    },
+    {
+      id: '4',
+      title: 'A new user has registered on the platform. Please review their details and approve the account if necessary',
+      date: 'March 20, 2025',
+      avatar: '/Display-Picture.svg',
+      read: true,
+    },
+  ]);
   const [userData, setUserData] = useState<{
     firstName?: string;
     lastName?: string;
@@ -41,16 +77,16 @@ export default function DashboardLayout({
     localStorage.removeItem("authToken");
     localStorage.removeItem("userData");
 
-    toast.success('Logged out successfully',{
+    toast.success('Logged out successfully', {
       position: 'top-center',
       icon: null,
       style: {
         background: 'black',
         color: 'white',
         borderRadius: '4px',
-        
+
       }
-    } );
+    });
 
     router.push("/login");
   };
@@ -59,32 +95,38 @@ export default function DashboardLayout({
     setIsDropdownOpen(!isDropdownOpen);
   };
 
-  // Close dropdown when clicking outside
+  const toggleNotifications = () => {
+    setIsNotificationsOpen(!isNotificationsOpen);
+  };
+
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Element;
       if (!target.closest(".dropdown-container")) {
         setIsDropdownOpen(false);
       }
+      if (!target.closest('.notif-container')) {
+        setIsNotificationsOpen(false);
+      }
     };
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isNotificationsOpen) {
       document.addEventListener("mousedown", handleClickOutside);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isNotificationsOpen]);
 
   return (
-    // <ProtectedRoute requiredRole="ADMIN">
+    <ProtectedRoute requiredRole="ADMIN">
       <div className="flex min-h-screen bg-gray-100">
         {/* Sidebar */}
         <aside
-          className={`bg-white  flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar ${
-            isSidebarCollapsed ? "collapsed" : ""
-          }`}
+          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? "collapsed" : ""
+            }`}
           style={{
             width: isSidebarCollapsed ? "64px" : "230px",
             minWidth: isSidebarCollapsed ? "64px" : "230px",
@@ -93,9 +135,8 @@ export default function DashboardLayout({
         >
           <div>
             <div
-              className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${
-                isSidebarCollapsed ? "justify-center" : "justify-between"
-              }`}
+              className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"
+                }`}
             >
               {!isSidebarCollapsed && (
                 <div className="flex items-center">
@@ -130,7 +171,7 @@ export default function DashboardLayout({
                 </button>
 
                 {/* Hover tooltip */}
-                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-600 whitespace-nowrap z-50 pointer-events-none">
                   {isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
                 </div>
               </div>
@@ -141,11 +182,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard")
                         ? "text-[#FFFFFF] bg-[#ED272C]"
                         : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard") ? (
                       <Image
@@ -164,7 +204,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Dashboard</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Dashboard</span>
                     )}
                   </Link>
                 </li>
@@ -172,11 +212,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard/manage-projects"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard/manage-projects")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/manage-projects")
                         ? "bg-[#ED272C] text-[#FFFFFF]"
                         : "text-[#080607] hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard/manage-projects") ? (
                       <Image
@@ -195,7 +234,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Projects</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Projects</span>
                     )}
                   </Link>
                 </li>
@@ -203,11 +242,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard/manage-users"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard/manage-users")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/manage-users")
                         ? "bg-[#ED272C] text-[#FFFFFF]"
                         : "text-[#080607] hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard/manage-users") ? (
                       <Image
@@ -226,7 +264,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Users</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Users</span>
                     )}
                   </Link>
                 </li>
@@ -234,11 +272,10 @@ export default function DashboardLayout({
                 <li className="mb-2">
                   <Link
                     href="/dashboard/manage-assets"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/dashboard/manage-assets")
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/manage-assets")
                         ? "bg-[#ED272C] text-[#FFFFFF]"
                         : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                      }`}
                   >
                     {isActive("/dashboard/manage-assets") ? (
                       <Image
@@ -257,7 +294,7 @@ export default function DashboardLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3">Manage Assets</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Assets</span>
                     )}
                   </Link>
                 </li>
@@ -306,18 +343,61 @@ export default function DashboardLayout({
               </svg>
             </div>
             <div className="flex items-center space-x-4">
-              <button className="relative text-gray-600 hover:text-gray-800 cursor-pointer">
-                <Image
-                  src="/notification-bell.svg"
-                  alt="Notifications"
-                  width={20}
-                  height={20}
-                  style={{ width: "auto", height: "auto" }}
-                />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                  1
-                </span>
-              </button>
+              <div className="relative notif-container">
+                <button
+                  onClick={toggleNotifications}
+                  className="relative text-gray-600 hover:text-gray-800 cursor-pointer"
+                  aria-haspopup="true"
+                  aria-expanded={isNotificationsOpen}
+                >
+                  <Image
+                    src="/notification-bell.svg"
+                    alt="Notifications"
+                    width={20}
+                    height={20}
+                    style={{ width: "auto", height: "auto" }}
+                  />
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                    {notifications.filter(n => !n.read).length || notifications.length}
+                  </span>
+                </button>
+
+                {isNotificationsOpen && (
+                  <div className="absolute right-0 top-full mt-2 w-[420px] bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                    <div className="p-4 border-b border-gray-100">
+                      <h3 className="font-semibold text-gray-900">Notifications</h3>
+                    </div>
+                    <ul className="max-h-[420px] overflow-auto">
+                      {notifications.map((n) => (
+                        <li key={n.id} className="px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition">
+                          <div className="flex items-start gap-3">
+                            <Image src={n.avatar || '/Display-Picture.svg'} alt="avatar" width={28} height={28} style={{ width: 'auto', height: 'auto' }} />
+                            <div className="flex-1">
+                              <p className={`text-sm ${n.read ? 'text-gray-400 line-clamp-2' : 'text-gray-800'}`}>{n.title}</p>
+                              {n.description && (
+                                <p className="text-xs text-gray-500 mt-1">{n.description}</p>
+                              )}
+                              <p className="text-xs text-gray-400 mt-1">{n.date}</p>
+                            </div>
+                            <button
+                              onClick={() => setNotifications(prev => prev.filter(x => x.id !== n.id))}
+                              className="text-gray-400 hover:text-gray-600 cursor-pointer"
+                              aria-label="Dismiss notification"
+                            >
+                              ×
+                            </button>
+                          </div>
+                        </li>
+                      ))}
+                    </ul>
+                    <div className="px-4 py-3">
+                      <button className="w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer">
+                        See all notifications
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
 
               {/* User Profile Dropdown */}
               <div className="relative dropdown-container">
@@ -457,6 +537,6 @@ export default function DashboardLayout({
           {children}
         </main>
       </div>
-    // </ProtectedRoute>
+    </ProtectedRoute>
   );
 }
