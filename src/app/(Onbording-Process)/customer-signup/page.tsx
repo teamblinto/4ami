@@ -135,8 +135,15 @@ function ClientContent() {
   return (
     <div className="min-h-screen bg-[#FBFBFB]">
       {/* Header with Logo */}
-      <header className="px-12 py-4">
-        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+      <header className="px-12 py-4" style={{ height: '60px' }}>
+        <Image 
+          src="/AMILogo.svg" 
+          alt="AMI Logo" 
+          width={230} 
+          height={35}
+          priority
+          style={{ width: "230px", height: "35px", display: "block" }}
+        />
       </header>
 
       {/* Main Content */}
@@ -277,11 +284,23 @@ function ClientContent() {
           {/* Right Side - Illustration */}
           <div className="flex flex-col items-center justify-between">
             <div className="flex-grow flex items-center">
-              <Image src="/Illustration Banner.svg" alt="Illustration" width={500} height={500} />
+              {/* Image & Links */}
+              <div className="flex flex-col items-center justify-center">
+                <div style={{ width: '400px', height: '600px', position: 'relative' }}>
+                  <Image
+                    src="/banner.svg"
+                    alt="Dashboard Illustration"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="400px"
+                  />
+                </div>
+              </div>
             </div>
             {/* Footer */}
             <footer className="p-6">
-              <div className="flex justify-center space-x-6 text-sm text-gray-500">
+              <div className="flex justify-end space-x-6 text-sm text-gray-500">
                 <a href="#" className="hover:text-gray-700">
                   Terms of Use
                 </a>

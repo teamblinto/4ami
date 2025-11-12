@@ -56,8 +56,15 @@ function ClientContent() {
 
   return (
     <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
-      <header className="px-12 py-4">
-        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+      <header className="px-12 py-4" style={{ height: '60px' }}>
+        <Image 
+          src="/AMILogo.svg" 
+          alt="AMI Logo" 
+          width={230} 
+          height={35}
+          priority
+          style={{ width: "230px", height: "35px", display: "block" }}
+        />
       </header>
       <main className="flex-grow flex items-center mt-4 justify-center">
         <div
@@ -347,35 +354,42 @@ function ClientContent() {
               </form>
             </div>
 
-            {/* Image & Links */}
-            <div className="flex flex-col items-center justify-center">
-              <Image
-                src="/banner.svg"
-                alt="Dashboard Illustration"
-                width={400}
-                height={200}
-                className="w-full h-auto"
-              />
+            {/* Right Side - Illustration */}
+            <div className="flex flex-col items-center justify-between">
+              <div className="flex-grow flex items-center">
+                {/* Image & Links */}
+                <div className="flex flex-col items-center justify-center">
+                  <div style={{ width: '400px', height: '600px', position: 'relative' }}>
+                    <Image
+                      src="/banner.svg"
+                      alt="Dashboard Illustration"
+                      fill
+                      priority
+                      className="object-cover"
+                      sizes="400px"
+                    />
+                  </div>
+                </div>
+              </div>
+              {/* Footer */}
+              <footer className="p-6">
+                <div className="flex justify-end space-x-6 text-sm text-gray-500">
+                  <a href="#" className="hover:text-gray-700">
+                    Terms of Use
+                  </a>
+                  <a href="#" className="hover:text-gray-700">
+                    Privacy Policy
+                  </a>
+                  <a href="#" className="hover:text-gray-700">
+                    Cookie Policy
+                  </a>
+                  <a href="#" className="hover:text-gray-700">
+                    Anti Bribery Policy
+                  </a>
+                </div>
+              </footer>
             </div>
           </div>
-
-          {/* Footer */}
-          <footer className="p-6">
-            <div className="flex justify-end space-x-6 text-sm text-gray-500">
-              <a href="#" className="hover:text-gray-700">
-                Terms of Use
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Privacy Policy
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Cookie Policy
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Anti Bribery Policy
-              </a>
-            </div>
-          </footer>
         </div>
       </main>
     </div>
