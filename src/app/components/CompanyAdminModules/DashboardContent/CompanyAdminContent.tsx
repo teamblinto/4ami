@@ -84,7 +84,7 @@ export default function CompanyAdminContent() {
         }
       }
 
-      const response = await fetch(getApiUrl('/users?page=1&limit=1000'), {
+      const response = await fetch(getApiUrl('/users?page=1&limit=1'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
