@@ -39,7 +39,7 @@ export default function CompanyAdminContent() {
 
       // The backend should automatically filter projects by the authenticated user's company
       // Use pagination so we can reliably read the total count from the response
-      const response = await fetch(getApiUrl('/projects?page=1&limit=1000'), {
+      const response = await fetch(getApiUrl('/projects?page=1&limit=10'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
