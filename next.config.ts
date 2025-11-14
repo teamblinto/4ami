@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  reactStrictMode: false,
   // output: 'export', // Commented out to allow API routes to work
   output: 'standalone', // Enable standalone output for Docker
   images: {
