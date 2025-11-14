@@ -19,6 +19,7 @@ export default function AfterSubmitProjectTable() {
     cancelled: "bg-gray-100 text-gray-800",
     completed: "bg-blue-100 text-blue-800",
   };
+  console.log(projects);
 
   function formatDate(dateStr) {
     if (!dateStr) return "N/A";
