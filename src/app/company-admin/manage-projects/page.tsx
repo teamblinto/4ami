@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
+import { ShimmerEffect } from '@/app/Animations/shimmereffect';
 
 interface Project {
   id: string;
@@ -206,74 +207,95 @@ export default function CompanyAdminManageProjectsPage() {
 
       {/* Projects Table */}
       <div className="bg-white overflow-x-auto">
-        {loading ? (
-          <div className="text-center py-12 text-gray-600">Loading projects...</div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-2">No projects found</div>
-            <div className="text-gray-400 text-sm">
-              {error ? 'Unable to load projects from the server.' : 'Start by creating your first project.'}
-            </div>
-            {!error && (
-              <button 
-                className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
-              >
-                Create First Project
-              </button>
-            )}
-          </div>
-        ) : (
-          <table className="min-w-full border-collapse">
-            <thead className="bg-white">
-              <tr>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
-                  Select
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  <div className="flex items-center justify-between">
-                    <span>Project ID</span>
-                    <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
-                  </div>
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Description
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Status
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Start Date
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-white">
+            <tr>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between">
+                  <span>Project ID</span>
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
+                </div>
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Description
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Status
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Start Date
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 Submit Date
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Action
-                </th>
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <>
+                {Array.from({ length: Math.min(itemsPerPage, 10) }).map((_, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
+                  >
+                    <td colSpan={7} className="px-6 pt-4 pb-4 align-middle border border-[#D0D5DD]" style={{ height: '64px' }}>
+                      <ShimmerEffect className="h-5 w-full" />
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ) : error ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
+                  Error: {error}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => {
+            ) : projects.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  <div className="text-gray-500 text-lg mb-2">No projects found</div>
+                  <div className="text-gray-400 text-sm">
+                    Start by creating your first project.
+                  </div>
+                  {!error && (
+                    <button 
+                      className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
+                    >
+                      Create First Project
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ) : (
+              projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
             
                 return (
                   <tr
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
                   >
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center align-middle" style={{ height: '64px' }}>
                       <input
                         type="checkbox"
                         className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.projectNumber}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.description || 'No description'}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <span className={`px-2 py-1 rounded-full text-xs ${
                         project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                         project.status === 'active' ? 'bg-red-100 text-red-800' :
@@ -285,13 +307,13 @@ export default function CompanyAdminManageProjectsPage() {
                         {project.status}
                       </span>
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {new Date(project.startDate).toLocaleDateString()}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="flex items-center justify-center gap-4">
                         <button 
                           onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
@@ -309,10 +331,10 @@ export default function CompanyAdminManageProjectsPage() {
                     </td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        )}
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       {error && (

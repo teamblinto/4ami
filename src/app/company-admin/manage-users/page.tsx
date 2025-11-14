@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useState, useEffect } from 'react';
 import { useRouter } from "next/navigation";
 import { config, getAuthHeaders } from '@/lib/config';
+import { ShimmerEffect } from '@/app/Animations/shimmereffect';
 
 // Interface for user data
 interface UserData {
@@ -300,86 +301,107 @@ export default function CompanyAdminManageUsersPage() {
 
       {/* Users Table */}
       <div className="bg-white overflow-x-auto">
-        {loading ? (
-          <div className="text-center py-12 text-gray-600">Loading invited users...</div>
-        ) : usersData.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="flex justify-center items-center">
-              <Image src="/No-data.svg" alt="" width={65} height={65} />
-            </div>
-            <div className="text-gray-500 text-lg mb-2">No invited users found</div>
-            <div className="text-gray-400 text-sm">
-              {error ? 'Unable to load users from the server.' : 'Start by inviting your first user.'}
-            </div>
-            {!error && (
-              <button
-                onClick={handleAddNewUser}
-                className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
-              >
-                Invite First User
-              </button>
-            )}
-          </div>
-        ) : (
-          <table className="min-w-full border-collapse">
-            <thead className="bg-white">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-white">
+            <tr>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between">
+                  <span>Company Name</span>
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
+                </div>
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                First Name
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Last Name
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Role
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                E-Mail
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <>
+                {Array.from({ length: Math.min(itemsPerPage, 10) }).map((_, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
+                  >
+                    <td colSpan={7} className="px-6 pt-4 pb-4 align-middle border border-[#D0D5DD]" style={{ height: '64px' }}>
+                      <ShimmerEffect className="h-5 w-full" />
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ) : error ? (
               <tr>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
-                  Select
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  <div className="flex items-center justify-between">
-                    <span>Company Name</span>
-                    <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
-                  </div>
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  First Name
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Last Name
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Role
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  E-Mail
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Action
-                </th>
+                <td colSpan={7} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
+                  Error: {error}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {usersData.map((user, index) => {
+            ) : usersData.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center border border-[#D0D5DD]">
+                  <div className="flex justify-center items-center mb-4">
+                    <Image src="/No-data.svg" alt="" width={65} height={65} />
+                  </div>
+                  <div className="text-gray-500 text-lg mb-2">No invited users found</div>
+                  <div className="text-gray-400 text-sm">
+                    {error ? 'Unable to load users from the server.' : 'Start by inviting your first user.'}
+                  </div>
+                  {!error && (
+                    <button
+                      onClick={handleAddNewUser}
+                      className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
+                    >
+                      Invite First User
+                    </button>
+                  )}
+                </td>
+              </tr>
+            ) : (
+              usersData.map((user, index) => {
                 const isStriped = index % 2 === 0;
                 return (
                   <tr
                     key={index}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
                   >
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center align-middle" style={{ height: '64px' }}>
                       <input
                         type="checkbox"
                         className="rounded border-gray-300 accent-[#ED272C] w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {user.companyName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {user.firstName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {user.lastName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {user.role}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {user.email}
                     </td>
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="flex items-center justify-center gap-2">
                         <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
                           <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
@@ -391,10 +413,10 @@ export default function CompanyAdminManageUsersPage() {
                     </td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        )}
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       {error && (
