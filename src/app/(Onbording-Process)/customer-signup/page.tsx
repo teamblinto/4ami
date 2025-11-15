@@ -22,6 +22,7 @@ function ClientContent() {
     const roleParam = searchParams.get("role");
     const token = searchParams.get("token");
 
+    const hasEmailParam = !!emailParam;
     if (emailParam) {
       setEmail(emailParam);
       setIsEmailAutoPopulated(true);
@@ -29,6 +30,8 @@ function ClientContent() {
     if (codeParam) {
       setInvitationCode(codeParam);
       setIsCodeAutoPopulated(true);
+      // Fetch invitation data to auto-fill email (skip if email already set from URL)
+      fetchInvitationData(codeParam, hasEmailParam);
     }
     if (roleParam) {
       setRole(roleParam);
@@ -37,6 +40,7 @@ function ClientContent() {
     if (!codeParam && token) {
       setInvitationCode(token);
       setIsCodeAutoPopulated(true);
+      fetchInvitationData(token, hasEmailParam);
       return;
     }
 
@@ -51,13 +55,33 @@ function ClientContent() {
   }, [searchParams]);
  
 
+  const fetchInvitationData = async (invitationCode: string, skipIfEmailExists: boolean = false) => {
+    try {
+      const response = await fetch(`/api/users/invitation?invitationCode=${encodeURIComponent(invitationCode)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        // Auto-fill email if available and not already set from URL params
+        if (data.email && !skipIfEmailExists) {
+          setEmail(data.email);
+          setIsEmailAutoPopulated(true);
+        }
+      } else {
+        // Silently fail - don't show error if invitation data fetch fails
+        console.warn('Failed to fetch invitation data:', response.status);
+      }
+    } catch (error) {
+      // Silently fail - don't show error if invitation data fetch fails
+      console.warn('Error fetching invitation data:', error);
+    }
+  };
+
   const fetchVerificationData = async (token: string) => {
     setIsVerifying(true);
     try {
       console.log('Fetching verification data for token:', token);
       const response = await fetch(`/api/auth/verify-email?token=${token}`);
       
-      console.log('Response status:', response.status);
       console.log('Response headers:', Object.fromEntries(response.headers.entries()));
 
       // Check if response is JSON
@@ -111,8 +135,15 @@ function ClientContent() {
   return (
     <div className="min-h-screen bg-[#FBFBFB]">
       {/* Header with Logo */}
-      <header className="px-12 py-4">
-        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+      <header className="px-12 py-4" style={{ height: '60px' }}>
+        <Image 
+          src="/AMILogo.svg" 
+          alt="AMI Logo" 
+          width={230} 
+          height={35}
+          priority
+          style={{ width: "230px", height: "35px", display: "block" }}
+        />
       </header>
 
       {/* Main Content */}
@@ -253,11 +284,23 @@ function ClientContent() {
           {/* Right Side - Illustration */}
           <div className="flex flex-col items-center justify-between">
             <div className="flex-grow flex items-center">
-              <Image src="/Illustration Banner.svg" alt="Illustration" width={500} height={500} />
+              {/* Image & Links */}
+              <div className="flex flex-col items-center justify-center">
+                <div style={{ width: '400px', height: '600px', position: 'relative' }}>
+                  <Image
+                    src="/banner.svg"
+                    alt="Dashboard Illustration"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="400px"
+                  />
+                </div>
+              </div>
             </div>
             {/* Footer */}
             <footer className="p-6">
-              <div className="flex justify-center space-x-6 text-sm text-gray-500">
+              <div className="flex justify-end space-x-6 text-sm text-gray-500">
                 <a href="#" className="hover:text-gray-700">
                   Terms of Use
                 </a>

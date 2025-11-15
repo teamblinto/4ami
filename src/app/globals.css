@@ -45,3 +45,13 @@ aside[style*="width"] {
   min-width: 64px !important;
   max-width: 64px !important;
 }
+
+/* Shimmer animation - moves left to right */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import {
   ResponsiveContainer,
   LineChart,
@@ -13,10 +14,66 @@ import {
 } from 'recharts';
 
 export default function ProjectReportPage() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('summary');
   const [expandedSections, setExpandedSections] = useState<{ [key: string]: boolean }>({});
   const [haircutPct, setHaircutPct] = useState<number>(-5); // global haircut in percent
   const [archivedTerms, setArchivedTerms] = useState<Set<number>>(new Set());
+  const [reportMenuOpen, setReportMenuOpen] = useState(false);
+  const [reportSelections, setReportSelections] = useState<{ pdf: boolean; excel: boolean }>({ pdf: true, excel: false });
+  const reportMenuRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    const onDocClick = (e: MouseEvent) => {
+      if (reportMenuRef.current && !reportMenuRef.current.contains(e.target as Node)) {
+        setReportMenuOpen(false);
+      }
+    };
+    if (reportMenuOpen) document.addEventListener('mousedown', onDocClick);
+    return () => document.removeEventListener('mousedown', onDocClick);
+  }, [reportMenuOpen]);
+
+  const downloadJsonFile = (data: unknown, filename: string) => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const downloadCsv = (rows: Record<string, unknown>[], filename: string) => {
+    if (!rows || rows.length === 0) return;
+    const headers = Object.keys(rows[0]);
+    const csv = [headers.join(',')]
+      .concat(
+        rows.map((r) => headers.map((h) => String((r as Record<string, unknown>)[h] ?? '')).join(','))
+      )
+      .join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDownloadSelected = () => {
+    const payload = { summary: analysisData, inflation: inflationData, depreciation: depreciationData, utilization: utilizationData, market: marketDataRows };
+    if (reportSelections.pdf) {
+      downloadJsonFile(payload, 'equipment-analysis-report.json');
+    }
+    if (reportSelections.excel) {
+      downloadCsv(analysisData as unknown as Record<string, unknown>[], 'analysis-data.csv');
+    }
+    setReportMenuOpen(false);
+  };
   const tabsOrder = ['summary', 'inflation', 'depreciation', 'utilization', 'market-data', 'overview'] as const;
 
   const goNext = () => {
@@ -202,38 +259,65 @@ export default function ProjectReportPage() {
       {/* Main Content */}
       <div className="space-y-6">
         {/* Summary Tab Content */}
+
+
+
+
         {activeTab === 'summary' && (
-          <div className=" rounded-lg mx-auto w-[800px] p-6">
+          <div className=" rounded-lg mx-auto w-[950px] p-6">
             <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Residual Value Analysis</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={analysisData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+
+                 <LineChart data={analysisData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}  >
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="termMonth" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[15, 90]} label={{ value: 'Residual %', angle: -90, position: 'center', offset: 20, fill: '#6b7280' }} />
-                  <YAxis yAxisId="rght" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ position: 'center', value: 'Residuals Value ($)', angle: 90, offset: 20, fill: '#ef4444' }} tickFormatter={(v) => `$${v.toLocaleString()}`} />
+                  <XAxis dataKey="termMonth" tick={{ fill: '#6b7280', fontSize: 12, }} tickMargin={6} />
+                  <YAxis
+                    yAxisId="left"
+                    tick={{ fill: '#6b7280', fontSize: 12 }}
+                    tickMargin={10}
+                    width={60}
+                    domain={[15, 95]}
+                    label={{ value: 'Residual %', angle: -90, position: 'left', offset: 15,fontSize: 12,fill: '#6b7280' }}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    tick={{ fill: '#6b7280', fontSize: 12 }}
+                    tickMargin={12}
+                    width={80}
+                    domain={[150000, 400000]}
+                    label={{ value: 'Residual Value ($)', angle: 90, position: 'right', offset: 28, fontSize: 12,fill: '#ef4444' }}
+                    tickFormatter={(v) => `$${v.toLocaleString()}`}
+                  />
                   <Tooltip formatter={(val: number | string, name: string) => {
                     if (name.includes('Value')) return [`$${Number(val).toLocaleString()}`, name];
                     return [`${val}%`, name];
                   }} />
-                  <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80  }} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
 
                   {/* Residual % lines (left axis) */}
-                  <Line yAxisId="left" type="monotone" dataKey="residualHigh" name="Residual % (High)" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
-                  <Line yAxisId="left" type="monotone" dataKey="residualLow" name="Residual % (Low)" stroke="#ef4444" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="left" type="monotone" dataKey="residualHigh" fontSize={12} name="Residual % (High)" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="left" type="monotone" dataKey="residualLow" fontSize={12} name="Residual % (Low)" stroke="#ef4444" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+
 
                   {/* Residual value lines (right axis) */}
-                  <Line yAxisId="right" type="monotone" dataKey="valueHigh" name="Residual Value (High)" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
-                  <Line yAxisId="right" type="monotone" dataKey="valueLow" name="Residual Value (Low)" stroke="#111827" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="right" type="monotone" dataKey="valueHigh" fontSize={12} name="Residual Value (High)" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
+                  <Line yAxisId="right" type="monotone" dataKey="valueLow" fontSize={12} name="Residual Value (Low)" stroke="#111827" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
                 </LineChart>
+
+
               </ResponsiveContainer>
             </div>
           </div>
         )}
 
+
+
+
         {/* Overview Tab Content */}
         {activeTab === 'overview' && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Equipment Analysis Overview</h2>
 
             {/* Project Details */}
@@ -311,60 +395,71 @@ export default function ProjectReportPage() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center justify-between mt-10">
-              <button className="px-4 py-2 border border-gray-300 rounded-md text-sm text-gray-700 hover:bg-gray-50">Read JSON Response</button>
-
-              <div className="flex items-center space-x-3">
-                <div className="relative">
-                  <button className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm">Download Report ▾</button>
-                  {/* Static dropdown preview matching design */}
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-md shadow-sm p-2">
-                    <label className="flex items-center space-x-2 text-sm text-gray-700 py-1">
-                      <input type="checkbox" defaultChecked className="w-4 h-4" />
+            <div className="flex items-center justify-end mt-10 space-x-3">
+              <button onClick={() => router.push('/dashboard/manage-projects')} className="px-4 py-2 border border-[#D0D5DD] rounded-md text-sm text-[#343A40] hover:bg-[#F8F9FA] cursor-pointer">Go back to all projects</button>
+              <div className="relative" ref={reportMenuRef}>
+                <button onClick={() => setReportMenuOpen((s) => !s)} className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-md text-sm cursor-pointer">Download Report ▾</button>
+                {reportMenuOpen && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white border border-[#D0D5DD] rounded-md shadow-sm p-3">
+                    <label className="flex items-center space-x-2 text-sm text-[#343A40] py-1">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 accent-[#ED272C]"
+                        checked={reportSelections.pdf}
+                        onChange={(e) => setReportSelections((s) => ({ ...s, pdf: e.target.checked }))}
+                      />
                       <span>Pdf Report</span>
                     </label>
-                    <label className="flex items-center space-x-2 text-sm text-gray-700 py-1">
-                      <input type="checkbox" className="w-4 h-4" />
+                    <label className="flex items-center space-x-2 text-sm text-[#343A40] py-1">
+                      <input
+                        type="checkbox"
+                        className="w-4 h-4 accent-[#ED272C]"
+                        checked={reportSelections.excel}
+                        onChange={(e) => setReportSelections((s) => ({ ...s, excel: e.target.checked }))}
+                      />
                       <span>Excel Data</span>
                     </label>
+                    <button onClick={handleDownloadSelected} className="mt-2 w-full px-3 py-2 bg-[#F8F9FA] border border-[#D0D5DD] rounded-md text-sm text-[#343A40] hover:bg-white cursor-pointer">Download Selected</button>
                   </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
         )}
+
+        
   
         {/* Market Data Tab Content */}
         {activeTab === 'market-data' && (
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-white rounded-lg p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Equipment Market Comparable Analysis</h2>
             <div className="overflow-x-auto">
-              <table className="min-w-full">
+              <table className="min-w-full table-fixed border-collapse">
                 <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Description</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Year</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Hours</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Serial No.</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Dealer</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Location</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Phone</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Price</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700">Listing</th>
+                  <tr>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Description</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Year</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Hours</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Serial No.</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Dealer</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Location</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Phone</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Price</th>
+                    <th className="text-left py-3 px-4 text-[14px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Listing</th>
                   </tr>
                 </thead>
                 <tbody>
                   {marketDataRows.map((row, idx) => (
-                    <tr key={idx} className="border-b border-gray-100">
-                      <td className="py-3 px-4 text-gray-900">{row.description}</td>
-                      <td className="py-3 px-4 text-gray-900">{row.year}</td>
-                      <td className="py-3 px-4 text-gray-900">{row.hours}</td>
-                      <td className="py-3 px-4 text-gray-900">{row.serialNo}</td>
-                      <td className="py-3 px-4 text-gray-900">{row.dealer}</td>
-                      <td className="py-3 px-4 text-gray-900">{row.location}</td>
-                      <td className="py-3 px-4 text-gray-900">{row.phone}</td>
-                      <td className="py-3 px-4 text-gray-900">{`$${row.price.toLocaleString()}`}</td>
-                      <td className="py-3 px-4 text-red-600 underline cursor-pointer">
+                    <tr key={idx} className={idx % 2 === 0 ? "bg-white" : "bg-[#F8F9FA]"}>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.description}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.year}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.hours}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.serialNo}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.dealer}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.location}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{row.phone}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] border border-[#D0D5DD]">{`$${row.price.toLocaleString()}`}</td>
+                      <td className="py-3 text-[14px] px-4 text-[#343A40] underline cursor-pointer border border-[#D0D5DD]">
                         <a href={row.listing} target="_blank" rel="noreferrer">View Listing</a>
                       </td>
                     </tr>
@@ -378,18 +473,20 @@ export default function ProjectReportPage() {
         {/* Utilization Tab Content */}
         {activeTab === 'utilization' && (
           <>
-            <div className=" rounded-lg w-[800px] mx-auto p-6">
-              <h2 className="text-xl font-semibold text-gray-900 text-center mb-6">Equipment Utilization vs Residual Values</h2>
+            <div className=" rounded-lg w-[950px] mx-auto p-6">
+              <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Equipment Utilization vs Residual Values</h2>
               <div className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={utilizationData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+                  <LineChart data={utilizationData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}>
                     <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                    <XAxis dataKey="hoursYear" tick={{ fill: '#6b7280', fontSize: 12 }} label={{ value: 'Hours per Year', position: 'insideBottom', offset: -2, fill: '#6b7280', fontSize: 12 }} />
-                    <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'insideLeft', offset: -5, fill: '#6b7280' }} />
-                    <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[10, 14]}
-                      label={{ value: 'Effective Age', angle: -90, position: 'insideRight', offset: -5, fill: '#ef4444' }} />
+
+                    <XAxis dataKey="hoursYear" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={6} label={{ value: 'Hours per Year', position: 'insideBottom', offset: -2, fill: '#6b7280', fontSize: 12 }} />
+                    <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={10} width={60} domain={[0, 50]} label={{ value: 'Residual %', angle: -90, position: 'left', offset: 15, fontSize: 12, fill: '#6b7280' }} />
+                    <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={12} width={80} domain={[10, 14]}
+                      label={{ value: 'Effective Age', angle: 90, position: 'right', offset: 28, fontSize: 12, fill: '#ef4444' }} />
+                      
                     <Tooltip formatter={(val: number | string, name: string) => name === 'Residual %' ? [`${val}%`, name] : [val, name]} labelFormatter={(l) => `Hours/Year: ${l}`} />
-                    <Legend verticalAlign="bottom" height={36} />
+                    <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80 }} />
 
                     <Line yAxisId="left" type="monotone" dataKey="residual" name="Residual %" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
                     <Line yAxisId="right" type="monotone" dataKey="effectiveAge" name="Effective Age" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
@@ -399,35 +496,35 @@ export default function ProjectReportPage() {
             </div>
 
             {/* Residual Analysis Data Details table */}
-            <div className="bg-white rounded-lg shadow-sm p-6">
+            <div className="bg-white rounded-lg p-6">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">Residual Analysis Data Details</h2>
               <div className="overflow-x-auto">
-                <table className="min-w-full">
+                <table className="min-w-full table-fixed border-collapse">
                   <thead>
-                    <tr className="border-b border-gray-200">
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Source</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Make/Model</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Year</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Age</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Total Hours</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Hours/Year</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Current Price</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Residual %</th>
-                      <th className="text-left py-3 px-4 font-medium text-gray-700">Effective Age</th>
+                    <tr>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Source</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Make/Model</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Year</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Age</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Total Hours</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Hours/Year</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Current Price</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Residual %</th>
+                      <th className="text-left py-3 px-4 text-[16px] font-medium text-[#343A40] border border-[#D0D5DD] bg-[#F8F9FA]">Effective Age</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {utilizationTable.map((row) => (
-                      <tr key={row.source} className="border-b border-gray-100">
-                        <td className="py-3 px-4 text-gray-900">{row.source}</td>
-                        <td className="py-3 px-4 text-gray-900">{row.makeModel}</td>
-                        <td className="py-3 px-4 text-gray-900">{row.year}</td>
-                        <td className="py-3 px-4 text-gray-900">{row.age}</td>
-                        <td className="py-3 px-4 text-gray-900">{row.totalHours}</td>
-                        <td className="py-3 px-4 text-gray-900">{row.hoursYear}</td>
-                        <td className="py-3 px-4 text-gray-900">{`$${row.currentPrice.toLocaleString()}`}</td>
-                        <td className="py-3 px-4 text-gray-900">{`${row.residual}%`}</td>
-                        <td className="py-3 px-4 text-gray-900">{row.effectiveAge}</td>
+                    {utilizationTable.map((row, idx) => (
+                      <tr key={row.source} className={idx % 2 === 0 ? "bg-white" : "bg-[#F8F9FA]"}>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.source}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.makeModel}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.year}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.age}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.totalHours}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.hoursYear}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{`$${row.currentPrice.toLocaleString()}`}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{`${row.residual}%`}</td>
+                        <td className="py-3 px-4 text-[#343A40] border text-[14px] border-[#D0D5DD]">{row.effectiveAge}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -439,16 +536,16 @@ export default function ProjectReportPage() {
 
         {/* Depreciation Tab Content */}
         {activeTab === 'depreciation' && (
-          <div className="rounded-lg w-[800px] mx-auto p-6">
-            <h2 className="text-xl font-semibold text-gray-900 text-center mb-6">Depreciation Methods Comparison</h2>
+          <div className="rounded-lg w-[950px]  mx-auto p-6">
+            <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Depreciation Methods Comparison</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={depreciationData} margin={{ top: 10, right: 20, left: 10, bottom: 10 }}>
+                <LineChart data={depreciationData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                  <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} tickFormatter={(v) => `$${v.toLocaleString()}`} domain={[0, 500000]} />
+                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={6} />
+                  <YAxis tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={10} width={60} tickFormatter={(v) => `$${v.toLocaleString()}`} domain={[0, 500000]} />
                   <Tooltip formatter={(val: number | string) => `$${Number(val).toLocaleString()}`} />
-                  <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value === 'sl' ? 'Straight-Line Methods' : value === 'ddb' ? 'Double Declining Balance' : value === 'syd' ? 'Sum-of-Years-Digits' : 'MACRS'}</span>} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80 }} formatter={(value) => <span className="text-sm text-gray-700">{value === 'sl' ? 'Straight-Line Methods' : value === 'ddb' ? 'Double Declining Balance' : value === 'syd' ? 'Sum-of-Years-Digits' : 'MACRS'}</span>} />
 
                   <Line type="monotone" dataKey="sl" name="Straight-Line Methods" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
                   <Line type="monotone" dataKey="ddb" name="Double Declining Balance" stroke="#111827" strokeWidth={2} dot={{ r: 2 }} />
@@ -462,23 +559,23 @@ export default function ProjectReportPage() {
 
         {/* Inflation Tab Content */}
         {activeTab === 'inflation' && (
-          <div className="rounded-lg w-[800px] mx-auto p-6">
+          <div className="rounded-lg w-[950px] mx-auto p-6">
             <h2 className="text-xl font-semibold text-gray-900 text-start mb-6">Inflation Analysis (Last 10 Years)</h2>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={inflationData} margin={{ top: 10, right: 40, left: 10, bottom: 10 }}>
+                <LineChart data={inflationData} margin={{ top: 10, right: 40, left: 40, bottom: 0 }}>
                   <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
-                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} />
-                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} domain={[0, 8]}
-                    label={{ value: 'Residual %', angle: -90, position: 'center', offset: -5, fill: '#6b7280' }} />
-                  <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }}
+                  <XAxis dataKey="year" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={6} />
+                  <YAxis yAxisId="left" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={10} width={60} domain={[0, 8]}
+                    label={{ value: 'Residual %', angle: -90, position: 'left', offset: 15, fontSize: 12, fill: '#6b7280' }} />
+                  <YAxis yAxisId="right" orientation="right" tick={{ fill: '#6b7280', fontSize: 12 }} tickMargin={12} width={80}
                     domain={[5.6, 7.4]}
-                    label={{ value: 'Residuals Value ($)', angle: 90, position: 'center', offset: -5, fill: '#ef4444' }} />
+                    label={{ value: 'Residual Value ($)', angle: 90, position: 'right', offset: 28, fontSize: 12, fill: '#ef4444' }} />
                   <Tooltip formatter={(val: number | string, name: string) => {
                     if (name.includes('Value')) return [`$${Number(val).toLocaleString()}k`, name];
                     return [`${val}%`, name];
                   }} />
-                  <Legend verticalAlign="bottom" height={36} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
+                  <Legend verticalAlign="bottom" height={36} wrapperStyle={{ marginTop: 80  }} formatter={(value) => <span className="text-sm text-gray-700">{value}</span>} />
 
                   <Line yAxisId="left" type="monotone" dataKey="residualHigh" name="Residual % (High)" stroke="#ef4444" strokeWidth={2} dot={{ r: 2 }} />
                   <Line yAxisId="left" type="monotone" dataKey="residualLow" name="Residual % (Low)" stroke="#ef4444" strokeDasharray="5 5" strokeWidth={2} dot={{ r: 2 }} />
@@ -492,7 +589,7 @@ export default function ProjectReportPage() {
 
         {/* Analysis Data Points Table - only for Summary */}
         {activeTab === 'summary' && (
-          <div className="rounded-lg p-6">
+          <div className="rounded-lg bg-white p-6">
             <h2 className="text-xl font-semibold text-gray-900 mb-6">Analysis Data Points</h2>
 
             {/* Haircut control */}
@@ -519,15 +616,15 @@ export default function ProjectReportPage() {
               <table className="min-w-full table-fixed border-collapse">
                 <thead>
                   <tr>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Term Month</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (High)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (Low)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (High)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (Low)</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual %</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual Value</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap">Adjusted <span className="inline-block w-14 text-right tabular-nums">({formatSignedPercent(haircutPct)})</span></th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap w-28">Action</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Term Month</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (High)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual % (Low)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (High)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Residual Value (Low)</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual %</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA]">Average Residual Value</th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap">Adjusted <span className="inline-block w-14 text-right tabular-nums">({formatSignedPercent(haircutPct)})</span></th>
+                    <th className="text-left py-3 px-4 text-[16px] font-medium text-gray-700 border border-[#D0D5DD] bg-[#F8F9FA] whitespace-nowrap w-28">Action</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -535,16 +632,16 @@ export default function ProjectReportPage() {
                     const adjusted = Math.round(row.avgValue * (1 + haircutPct / 100));
                     const isArchived = archivedTerms.has(row.termMonth);
                     return (
-                      <tr key={index}>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{row.termMonth}</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{row.residualHigh}%</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{row.residualLow}%</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{formatCurrency(row.valueHigh)}</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{formatCurrency(row.valueLow)}</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{row.avgResidual}%</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{formatCurrency(row.avgValue)}</td>
-                        <td className="py-3 px-4 text-gray-900 tabular-nums border border-[#D0D5DD] bg-white">{formatCurrency(adjusted)}</td>
-                        <td className="py-3 px-4 w-28 border border-[#D0D5DD] bg-white">
+                      <tr key={index} className={index % 2 === 0 ? "bg-white" : "bg-[#F8F9FA]"}>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{row.termMonth}</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{row.residualHigh}%</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{row.residualLow}%</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{formatCurrency(row.valueHigh)}</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{formatCurrency(row.valueLow)}</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{row.avgResidual}%</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{formatCurrency(row.avgValue)}</td>
+                        <td className="py-3 px-4 text-gray-900 tabular-nums border text-[14px] border-[#D0D5DD]">{formatCurrency(adjusted)}</td>
+                        <td className="py-3 px-4 w-28 border border-[#D0D5DD]">
                           <button
                             onClick={() =>
                               setArchivedTerms(prev => {
@@ -609,12 +706,14 @@ export default function ProjectReportPage() {
         )}
       </div>
 
-      {/* Next Button */}
-      <div className="flex justify-end mt-8">
-        <button onClick={goNext} disabled={activeTab === 'overview'} className={`px-6 py-2 rounded-md transition-colors ${activeTab === 'overview' ? 'bg-gray-300 text-white cursor-not-allowed' : 'bg-red-500 text-white hover:bg-red-600 cursor-pointer'}`}>
-          Next
-        </button>
-      </div>
+      {/* Next Button for all tabs except Overview */}
+      {activeTab !== 'overview' && (
+        <div className="flex justify-end mt-8">
+          <button onClick={goNext} className="px-6 py-2 rounded-md bg-red-500 text-white hover:bg-red-600 cursor-pointer transition-colors">
+            Next
+          </button>
+        </div>
+      )}
     </div>
   );
 }

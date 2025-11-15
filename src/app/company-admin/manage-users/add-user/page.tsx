@@ -21,7 +21,7 @@ interface FormData {
 
 export default function AddUserPage() {
   const router = useRouter();
-  const [invitationCode, setInvitationCode] = useState('A7K3D');
+  const [invitationCode, setInvitationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -123,6 +123,7 @@ export default function AddUserPage() {
         role: roleMapping[formData.role] || 'CUSTOMER_USER',
         source: formData.source || 'Company Admin',
         invitationCode: invitationCode,
+        title: formData.title.trim(),
       };
 
       console.log('Sending invitation data:', invitationData);
@@ -368,13 +369,16 @@ export default function AddUserPage() {
 
       {/* Image & Links */}
       <div className="w-full lg:w-2/5 flex flex-col items-center justify-end p-4 min-w-0">
-        <Image
-          src="/invitation-img.png"
-          alt="Dashboard Illustration"
-          width={400}
-          height={800}
-          className="w-full h-auto max-w-full max-h-[1000px] object-contain"
-        />
+        <div style={{ width: '450px', maxHeight: '600px', position: 'relative', aspectRatio: '1/2' }}>
+          <Image
+            src="/invitation-img.png"
+            alt="Dashboard Illustration"
+            fill
+            priority
+            className="object-cover"
+            sizes="450px"
+          />
+        </div>
 
         <div className="w-full mt-6 text-sm text-end text-black flex flex-wrap justify-end gap-4">
           <a href="#" className="underline hover:text-gray-600">Terms of Use</a>{' '}

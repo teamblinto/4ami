@@ -36,7 +36,6 @@ export default function FilterDropdown() {
 
   const handleConfirm = () => {
     // do whatever filtering logic you need
-    console.log("Filter:", filterType, order);
     setIsOpen(false);
   };
 

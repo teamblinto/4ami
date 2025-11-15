@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { getAuthHeaders, config, getApiUrlForEnvironment } from "@/lib/config";
+import { getAuthHeaders, config, getApiUrl } from "@/lib/config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,7 +19,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(getApiUrlForEnvironment(config.endpoints.auth.signin), {
+      const response = await fetch(getApiUrl(config.endpoints.auth.signin), {
         method: "POST",
         headers: getAuthHeaders(),
         body: JSON.stringify({
@@ -32,13 +32,6 @@ export default function LoginPage() {
       const isJson = contentType && contentType.includes("application/json");
       const data = isJson ? await response.json() : { message: await response.text() };
 
-      // Enhanced logging for debugging login issues
-      console.log("=== LOGIN DEBUG INFO ===");
-      console.log("Email:", email.trim());
-      console.log("Response Status:", response.status);
-      console.log("Response Data:", data);
-      console.log("Response Headers:", Object.fromEntries(response.headers.entries()));
-      console.log("=========================");
       if (response.ok) {
         // Store token and user data in localStorage
         const token =
@@ -70,7 +63,12 @@ export default function LoginPage() {
         if (data.user && data.user.role === "ADMIN") {
           router.push("/dashboard");
         } else if (data.user && data.user.role === "CUSTOMER_ADMIN") {
-          router.push("/company-admin");
+          // Check if companyId is null, redirect to register-company page
+          if (!data.user.companyId || data.user.companyId === null) {
+            router.push("/register-company");
+          } else {
+            router.push("/company-admin");
+          }
         } else if (data.user && data.user.role === "CUSTOMER_USER") {
           router.push("/user-dashboard");
         } else {
@@ -89,16 +87,23 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex flex-col items-center pt-2 bg-gray-100">
-      <div className="w-full max-w-[1200px] mx-auto ">
-      <header className="px-12 py-4">
-        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
-      </header>
+      <div className="w-full max-w-[1200px] mx-auto">
+        <header className="px-12 py-4" style={{ height: '60px' }}>
+          <Image 
+            src="/AMILogo.svg" 
+            alt="AMI Logo" 
+            width={230} 
+            height={35}
+            priority
+            style={{ width: "230px", height: "35px" }}
+          />
+        </header>
 
         {/* Main Content */}
         <main className="flex-grow flex max-w-[1000px] mx-auto items-center justify-center bg-gray-100 pt-6 pb-6">
-          <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-10 gap-4">
+          <div className="bg-white rounded-lg grid md:flex items-center justify-center w-full m-14 p-6 ">
             {/* Left Section - Login Form */}
-            <div className="w-full md:w-2/5 p-6">
+            <div className="w-full md:w-2/5 ">
               <h2 className="text-[24px] text-[#080607] font-medium mb-2">Log In</h2>
               <p className="text-[#6C757D] mb-6">
                 <span className="font-semibold text-red-500">
@@ -221,14 +226,17 @@ export default function LoginPage() {
             </div>
 
             {/* Right Section - Image */}
-            <div className="w-full md:w-3/5 flex items-center justify-end p-6">
-              <Image
-                src="/login-img.jpg"
-                alt="Dashboard Illustration"
-                width={600}
-                height={1000}
-                style={{ width: "600px", height: "auto" }}
-              />
+            <div className="w-full md:w-3/5 flex items-center justify-end">
+              <div style={{ width: '420px', maxHeight: '600px', position: 'relative', aspectRatio: '1/1' }}>
+                <Image
+                  src="/login-img.jpg"
+                  alt="Dashboard Illustration"
+                  fill
+                  priority
+                  className="object-contain"
+                  sizes="600px"
+                />
+              </div>
             </div>
           </div>
         </main>

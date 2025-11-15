@@ -1,9 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 // import { ChevronDownIcon } from "@heroicons/react/24/outline";
+
+interface ProjectType {
+  id?: string;
+  name: string;
+  type?: string;
+}
 
 export default function UserProjectDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -11,35 +17,116 @@ export default function UserProjectDropdown() {
   const [showProjectList, setShowProjectList] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
   const [selectedPrintItems, setSelectedPrintItems] = useState<string[]>([]);
+  const [items, setItems] = useState<string[]>([]);
+  const [, setLoading] = useState(true);
   const router = useRouter();
 
-  const handleNext = () => {
-    if (selected === "Residual Analysis") {
-      const projectType = "Residual Analysis";
-      router.push(`/company-admin/residual-analysis?type=${encodeURIComponent(projectType)}`);
-    }
+  // Fetch project types from API
+  useEffect(() => {
+    const fetchProjectTypes = async () => {
+      try {
+        setLoading(true);
+        const authToken = localStorage.getItem('authToken');
+        
+        const response = await fetch('/api/projects/types', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log('Project types API response:', data);
+          
+          // Handle different possible response structures
+          let projectTypes: ProjectType[] = [];
+          if (Array.isArray(data)) {
+            projectTypes = data;
+          } else if (data.data && Array.isArray(data.data)) {
+            projectTypes = data.data;
+          } else if (data.projectTypes && Array.isArray(data.projectTypes)) {
+            projectTypes = data.projectTypes;
+          } else if (data.types && Array.isArray(data.types)) {
+            projectTypes = data.types;
+          }
+
+          // Extract names from project types
+          const names = projectTypes.map((type: ProjectType) => type.name || type.type || String(type));
+          setItems(names);
+        } else {
+          console.error('Failed to fetch project types:', response.status);
+          // Fallback to default items on error
+          setItems([
+            "Appraisal – Valuation",
+            "Credit Risk",
+            "Condition Report",
+            "Existing Project",
+            "Extended Warranty",
+            "Inspection",
+            "Insurance",
+            "Transportation",
+            "Maintenance Provisions",
+            "Portfolio Monitoring",
+            "Property Tax Assessment",
+            "Residual Analysis",
+            "Repossession",
+            "Residual Insurance",
+            "Return Provisions",
+            "Tax Title & License",
+            "VIN & Serial Number Verification",
+            "Others - Schedule a Call",
+          ]);
+        }
+      } catch (error) {
+        console.error('Error fetching project types:', error);
+        // Fallback to default items on error
+        setItems([
+          "Appraisal – Valuation",
+          "Credit Risk",
+          "Condition Report",
+          "Existing Project",
+          "Extended Warranty",
+          "Inspection",
+          "Insurance",
+          "Transportation",
+          "Maintenance Provisions",
+          "Portfolio Monitoring",
+          "Property Tax Assessment",
+          "Residual Analysis",
+          "Repossession",
+          "Residual Insurance",
+          "Return Provisions",
+          "Tax Title & License",
+          "VIN & Serial Number Verification",
+          "Others - Schedule a Call",
+        ]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjectTypes();
+  }, []);
+
+  // Convert project type name to route-friendly slug
+  const getRouteFromProjectType = (projectType: string): string => {
+    // Convert to lowercase and replace special characters with hyphens
+    const slug = projectType
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-') // Replace non-alphanumeric with hyphens
+      .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    
+    return `/company-admin/${slug}`;
   };
 
-  const items = [
-    "Appraisal – Valuation",
-    "Credit Risk",
-    "Condition Report",
-    "Existing Project",
-    "Extended Warranty",
-    "Inspection",
-    "Insurance",
-    "Transportation",
-    "Maintenance Provisions",
-    "Portfolio Monitoring",
-    "Property Tax Assessment",
-    "Residual Analysis",
-    "Repossession",
-    "Residual Insurance",
-    "Return Provisions",
-    "Tax Title & License",
-    "VIN & Serial Number Verification",
-    "Others - Schedule a Call",
-  ];
+  const handleNext = () => {
+    if (!selected) return;
+    
+    const route = getRouteFromProjectType(selected);
+    router.push(`${route}?type=${encodeURIComponent(selected)}`);
+  };
 
   const printItems = [
     "Burleson Sand Volvo A40G Water Truck",
@@ -191,7 +278,12 @@ export default function UserProjectDropdown() {
           <div className="p-2">
             <button
               onClick={handleNext}
-              className="w-full bg-red-500 text-white px-4 py-2 rounded-lg cursor-pointer"
+              disabled={!selected}
+              className={`w-full px-4 py-2 rounded-lg ${
+                selected
+                  ? 'bg-red-500 text-white cursor-pointer hover:bg-red-600'
+                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              }`}
             >
               Next
             </button>

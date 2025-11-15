@@ -21,8 +21,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "4AMI",
+  title: "Asset Management International",
   description: "Super Admin Dashboard for Asset Management International",
+  icons: {
+    icon: "/logo.svg",
+  },
 };
 
 export default function RootLayout({

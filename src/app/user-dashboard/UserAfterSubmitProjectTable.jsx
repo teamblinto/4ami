@@ -1,41 +1,59 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AddFilterDropDown from "../components/CompanyAdminModules/DashboardContent/AddFilterDropDown";
 import UserFilterDropdown from "../user-dashboard/UserFilterDropdown";
 import UserFilterProjectStatus from "../user-dashboard/UserFilterProjectStatus";
 import { useRouter } from "next/navigation";
+import { getApiUrl, getAuthHeaders } from "@/lib/config";
 
 export default function AfterSubmitProjectTable() {
   const router = useRouter();
-  const [projects] = useState([
-    {
-      id: "P101",
-      type: "Residual Analysis",
-      time: "12 June - 25 June",
-      status: "Completed",
-    },
-    {
-      id: "P101",
-      type: "Comparative Analysis",
-      time: "11 June - 22 June",
-      status: "Completed",
-    },
-    {
-      id: "P101",
-      type: "Transportation Quotation",
-      time: "25 July - 12 August",
-      status: "In Process",
-    },
-  ]);
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const statusColors = {
-    Completed: "bg-red-100 text-red-600",
-    "In Process": "bg-gray-200 text-gray-700",
+    pending: "bg-yellow-100 text-yellow-800",
+    active: "bg-red-100 text-red-800",
+    approved: "bg-green-100 text-green-800",
+    cancelled: "bg-gray-100 text-gray-800",
+    completed: "bg-blue-100 text-blue-800",
   };
 
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : undefined;
+
+        const url = getApiUrl(`/projects?page=1&limit=3`);
+        const response = await fetch(url, {
+          method: "GET",
+          headers: getAuthHeaders(authToken || undefined),
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const result = await response.json();
+        setProjects((result && result.projects) || []);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Failed to fetch projects");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   return (
-    <div className="w-full">
+    <div className="w-full bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] p-4">
+      <h2 className="text-lg font-semibold text-[#080607] mb-6 text-left">Projects</h2>
       {/* Filter Bar */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
         <select className="border border-gray-300 text-black rounded-lg px-4 py-2 text-sm">
@@ -96,74 +114,59 @@ export default function AfterSubmitProjectTable() {
 
       {/* Table */}
       <div className="overflow-x-auto bg-white">
-        <table className="w-full text-sm text-left border border-gray-200 text-black">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="px-4 py-4 border border-gray-200">
-                <div className="flex items-center justify-between">
-                  <span>Project ID</span>
-                  <img
-                    src="/Sort.svg"
-                    alt=""
-                    className="w-5 h-5 cursor-pointer "
-                  />
-                </div>
-              </th>
-              <th className="px-4 py-4 border border-gray-200">
-                <div className="flex items-center justify-between">
-                  <span>Project Type</span>
-                  <img
-                    src="/Sort.svg"
-                    alt=""
-                    className="w-5 h-5 cursor-pointer "
-                  />
-                </div>
-              </th>
-              <th className="px-4 py-4 border border-gray-200">
-                <div className="">
-                  <span>
-                    <UserFilterDropdown />
-                  </span>
-                </div>
-              </th>
-              <th className="px-4 py-4 border border-gray-200">
-                <div className="">
-                  {/* <span>Status</span> */}
-                  <span>
-                    <UserFilterProjectStatus />
-                  </span>
-                </div>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {projects.map((p, i) => (
-              <tr
-                key={i}
-                className="odd:bg-white even:bg-gray-50 hover:bg-gray-100"
-              >
-                <td className="px-4 py-4 border border-gray-200 cursor-pointer">
-                  {p.id}
-                </td>
-                <td className="px-4 py-4 border border-gray-200 cursor-pointer">
-                  {p.type}
-                </td>
-                <td className="px-4 py-4 border border-gray-200 cursor-pointer">
-                  {p.time}
-                </td>
-                <td className="px-4 py-4 border border-gray-200 cursor-pointer">
-                  <span
-                    className={`px-3 py-1 rounded-full text-xs font-medium ${
-                      statusColors[p.status]
-                    }`}
-                  >
-                    {p.status}
-                  </span>
-                </td>
+        {loading ? (
+          <div className="text-center py-6 text-gray-600">Loading projects...</div>
+        ) : error ? (
+          <div className="text-center py-6 text-red-600 text-sm">{error}</div>
+        ) : (
+          <table className="w-full text-sm text-left border border-gray-200 text-black">
+            <thead className="bg-gray-50">
+              <tr>
+                <th className="px-4 py-4 border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span>Project ID</span>
+                  </div>
+                </th>
+                <th className="px-4 py-4 border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span>Asset Type</span>
+                  </div>
+                </th>
+                <th className="px-4 py-4 border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span>Start Date</span>
+                  </div>
+                </th>
+                <th className="px-4 py-4 border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span>Submit Date</span>
+                  </div>
+                </th>
+                <th className="px-4 py-4 border border-gray-200">
+                  <div className="flex items-center justify-between">
+                    <span>Status</span>
+                  </div>
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {projects.slice(0, 3).map((project, i) => {
+                const statusKey = (project.status || "").toLowerCase();
+                return (
+                  <tr key={project.id || i} className="odd:bg-white even:bg-gray-50 hover:bg-gray-100">
+                    <td className="px-4 py-4 border border-gray-200 cursor-pointer">{project.projectNumber || project.id}</td>
+                    <td className="px-4 py-4 border border-gray-200 cursor-pointer">{project.metadata?.category || 'N/A'}</td>
+                    <td className="px-4 py-4 border border-gray-200 cursor-pointer">{new Date(project.startDate).toLocaleDateString()}</td>
+                    <td className="px-4 py-4 border border-gray-200 cursor-pointer">{project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}</td>
+                    <td className="px-4 py-4 border border-gray-200 cursor-pointer">
+                      <span className={`px-3 py-1 rounded-full text-xs font-medium ${statusColors[statusKey] || 'bg-gray-100 text-gray-800'}`}>{project.status}</span>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
       <div className="mt-3 text-right">
         <button

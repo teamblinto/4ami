@@ -5,6 +5,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { config, getAuthHeaders } from '@/lib/config';
 import SendInvitationForm from './SendInvitationForm';
+import { ShimmerTable } from '@/app/Animations/shimmereffect';
 
 interface ManageUsersProps {
   autoShowInvitation?: boolean;
@@ -158,6 +159,7 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
     setCurrentPage(1); // Reset to first page when changing items per page
   };
 
+  // Render invitation form when toggled
   if (showSendInvitation) {
     return (
       <div>
@@ -170,13 +172,6 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
     );
   }
 
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-64">
-        <div className="text-lg text-gray-600">Loading users...</div>
-      </div>
-    );
-  }
 
   return (
     <div>
@@ -238,68 +233,72 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
 
       {/* Users Table */}
       <div className="bg-white overflow-x-auto">
-        {usersData.length === 0 && !loading ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-2">No users found</div>
-            <div className="text-gray-400 text-sm">
-              {error ? 'Unable to load users from the server.' : 'Start by adding your first user.'}
-            </div>
-            {!error && (
-              <button 
-                onClick={() => router.push('/dashboard/manage-users/send-invitation')}
-                className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
-              >
-                Add First User
-              </button>
-            )}
-          </div>
-        ) : (
-          <table className="min-w-full border-collapse">
-            <thead className="bg-white">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-white">
+            <tr>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between">
+                  <span>Company Name</span>
+                  <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
+                </div>
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">First Name</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Last Name</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Role</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">E-Mail</th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <ShimmerTable rows={Math.min(itemsPerPage, 10)} cols={7} />
+            ) : usersData.length === 0 ? (
               <tr>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
-                  Select
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  <div className="flex items-center justify-between">
-                    <span>companyName</span>
-                    <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  <div className="text-gray-500 text-lg mb-2">No users found</div>
+                  <div className="text-gray-400 text-sm">
+                    {error ? 'Unable to load users from the server.' : 'Start by adding your first user.'}
                   </div>
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">First Name</th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Last Name</th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Role</th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">E-Mail</th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
+                  {!error && (
+                    <button 
+                      onClick={() => router.push('/dashboard/manage-users/send-invitation')}
+                      className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
+                    >
+                      Add First User
+                    </button>
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {usersData.map((user, index) => {
+            ) : (
+              usersData.map((user, index) => {
                 const isStriped = index % 2 === 0;
                 return (
                   <tr key={index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
                     <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
-                      <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
+                      <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{user.companyName}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.firstName}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.lastName}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.role}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/pencil.svg" alt="Edit" width={16} height={16} />
+                    <td className="px-6  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{user.companyName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.firstName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.lastName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.role}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD]">
+                      <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                       </button>
-                      <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
-                        <Image src="/bin.svg" alt="Delete" width={16} height={16} />
+                      <button className="p-2 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <Image src="/bin.svg" alt="Delete" width={12} height={12} />
                       </button>
                     </td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        )}
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       {error && (

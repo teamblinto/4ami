@@ -25,28 +25,71 @@ function ClientContent() {
 
   const searchParams = useSearchParams();
   const router = useRouter();
-console.log(role);
+  
+  // Valid API roles
+  const validApiRoles = ['ADMIN', 'CUSTOMER_ADMIN', 'CUSTOMER_USER', 'APPRAISER'];
+  
+  // Function to fix partial/truncated roles
+  const fixPartialRole = (role: string): string => {
+    if (!role) return "";
+    // If it's already a valid role, return it
+    if (validApiRoles.includes(role)) {
+      return role;
+    }
+    // Try to match partial role to full role (e.g., "CUSTOMER_ADMI" -> "CUSTOMER_ADMIN")
+    // Find all roles that start with the partial role, then pick the longest (most specific) match
+    const matchingRoles = validApiRoles.filter(validRole => validRole.startsWith(role));
+    if (matchingRoles.length > 0) {
+      // Return the longest match (most specific)
+      const matchedRole = matchingRoles.reduce((longest, current) => 
+        current.length > longest.length ? current : longest
+      );
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Fixed partial role "${role}" to "${matchedRole}"`);
+      }
+      return matchedRole;
+    }
+    // If no match found, return the original role
+    return role;
+  };
+  
+  // Keep only the enum-like role token (e.g., CUSTOMER_USER) and strip email signatures/extras
+  const sanitizeRoleParam = (value: string): string => {
+    if (!value) return "";
+    // First, try to match the full role enum (CUSTOMER_ADMIN, CUSTOMER_USER, etc.)
+    // Match one or more uppercase letters/underscores - this should capture the full enum
+    const match = value.match(/[A-Z_]+/g);
+    if (match && match.length > 0) {
+      // Return the longest match (in case there are multiple matches, take the full role)
+      const extractedRole = match.reduce((longest, current) => current.length > longest.length ? current : longest);
+      // Fix any partial/truncated roles
+      return fixPartialRole(extractedRole);
+    }
+    // Fallback: split by whitespace/newlines and take the first part
+    const fallbackRole = value.split(/[\s,\n]+/)[0]?.trim() || "";
+    return fixPartialRole(fallbackRole);
+  };
   
   useEffect(() => {
     const emailParam = searchParams.get("email");
     const codeParam = searchParams.get("code");
     const token = searchParams.get("token");
-    const roleParam = searchParams.get("role");
-    setRole(roleParam || "");
+    const rawRoleParam = searchParams.get("role");
+    const roleParam = sanitizeRoleParam(rawRoleParam || "");
+    setRole(roleParam);
 
     // Console log all URL parameters (only in development)
     if (process.env.NODE_ENV === 'development') {
-      console.log("=== URL Parameters ===");
-      console.log("email:", emailParam);
-      console.log("code:", codeParam);
-      console.log("token:", token);
-      console.log("role:", roleParam);
       console.log("All search params:", Object.fromEntries(searchParams.entries()));
-      console.log("=====================");
+
     }
 
     if (emailParam) setEmail(emailParam);
-    if (codeParam) setInvitationCode(codeParam);
+    if (codeParam) {
+      setInvitationCode(codeParam);
+      // Fetch invitation data to auto-fill form fields
+      fetchInvitationData(codeParam);
+    }
     
     // Set role from URL parameter if provided, otherwise keep default
     if (roleParam) {
@@ -69,6 +112,7 @@ console.log(role);
     if (!codeParam && token) {
       setInvitationCode(token);
       setIsAutoPopulated(true);
+      fetchInvitationData(token);
       return;
     }
 
@@ -110,6 +154,42 @@ console.log(role);
       'Appraiser': 'APPRAISER'
     };
     return reverseMapping[formRole] || '';
+  };
+
+  const fetchInvitationData = async (invitationCode: string) => {
+    try {
+      const response = await fetch(`/api/users/invitation?invitationCode=${encodeURIComponent(invitationCode)}`);
+      
+      if (response.ok) {
+        const data = await response.json();
+        if (process.env.NODE_ENV === 'development') {
+          console.log('Invitation data:', data);
+        }
+        
+        // Auto-fill form fields from invitation data
+        setFormData(prev => ({
+          ...prev,
+          firstName: data.firstName || prev.firstName,
+          lastName: data.lastName || prev.lastName,
+          title: data.title || prev.title,
+          company: data.companyName || prev.company,
+          source: data.source || prev.source,
+        }));
+        
+        // Auto-fill email if available and not already set
+        if (data.email && !email) {
+          setEmail(data.email);
+        }
+        
+        setIsAutoPopulated(true);
+      } else {
+        // Silently fail - don't show error if invitation data fetch fails
+        console.warn('Failed to fetch invitation data:', response.status);
+      }
+    } catch (error) {
+      // Silently fail - don't show error if invitation data fetch fails
+      console.warn('Error fetching invitation data:', error);
+    }
   };
 
   const fetchVerificationData = async (token: string) => {
@@ -268,8 +348,15 @@ console.log(role);
 
   return (
     <div className="min-h-screen  bg-[#FBFBFB] flex flex-col">
-      <header className="px-12 py-4">
-        <Image src="/AMILogo.svg" alt="AMI Logo" width={230} height={35} />
+      <header className="px-12 py-4" style={{ height: '60px' }}>
+        <Image 
+          src="/AMILogo.svg" 
+          alt="AMI Logo" 
+          width={230} 
+          height={35}
+          priority
+          style={{ width: "230px", height: "35px", display: "block" }}
+        />
       </header>
       <main className="flex-grow flex items-center  mt-4 justify-center">
         <div
@@ -429,7 +516,7 @@ console.log(role);
                         onChange={handleInputChange}
                         required
                         placeholder="Enter phone number"
-                        className="flex-1 p-2 border-t border-b border-r border-gray-300 rounded-r-md bg-white"
+                        className="flex-1 p-2 border-t w-[50%] border-b border-r border-gray-300 rounded-r-md bg-white"
                       />
                     </div>
                   </div>
@@ -503,7 +590,7 @@ console.log(role);
                       checked={formData.agreeTerms}
                       onChange={handleInputChange}
                       required
-                      className="mt-1 mr-2 h-4 w-4"
+                      className="mt-1 mr-2 h-4 w-4 accent-[#ED272C]"
                     />
                     <span className="text-sm text-gray-600">
                       I acknowledge that I have read and agree to the{" "}
@@ -552,35 +639,45 @@ console.log(role);
             {/* Gap - 64px */}
             {/* <div style={{ width: "64px" }}></div> */}
 
-            {/* Image & Links */}
-            <div className=" flex flex-col items-center justify-center">
-              <Image
-                src="/banner.svg"
-                alt="Dashboard Illustration"
-                width={400}
-                height={200}
-                className="w-full h-auto"
-              />
+            {/* Right Side - Illustration */}
+            <div className="flex flex-col items-center justify-between">
+              <div className="flex-grow flex items-center">
+                {/* Image & Links */}
+                <div className="flex flex-col items-center justify-center">
+                  <div style={{ width: '400px', height: '600px', position: 'relative' }}>
+                    <Image
+                      src="/banner.svg"
+                      alt="Dashboard Illustration"
+                      fill
+                      priority
+                      className="object-cover"
+                      sizes="400px"
+                    />
+                  </div>
+                </div>
+              </div>
+              {/* Footer */}
+              <footer className="p-6">
+                <div className="flex justify-end space-x-6 text-sm text-gray-500">
+                  <a href="#" className="hover:text-gray-700">
+                    Terms of Use
+                  </a>
+                  <a href="#" className="hover:text-gray-700">
+                    Privacy Policy
+                  </a>
+                  <a href="#" className="hover:text-gray-700">
+                    Cookie Policy
+                  </a>
+                  <a href="#" className="hover:text-gray-700">
+                    Anti Bribery Policy
+                  </a>
+                </div>
+              </footer>
             </div>
+            
           </div>
 
-          {/* Footer */}
-          <footer className="p-6 ">
-            <div className="flex justify-end space-x-6 text-sm text-gray-500">
-              <a href="#" className="hover:text-gray-700">
-                Terms of Use
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Privacy Policy
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Cookie Policy
-              </a>
-              <a href="#" className="hover:text-gray-700">
-                Anti Bribery Policy
-              </a>
-            </div>
-          </footer>
+
         </div>
       </main>
     </div>
