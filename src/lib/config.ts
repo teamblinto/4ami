@@ -1,25 +1,26 @@
 // Environment configuration
 export const config = {
   // Backend API Base URL
-  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://4ami.morshadunnur.me/api/v1",
-  
-  
+  API_BASE_URL:
+    process.env.NEXT_PUBLIC_API_BASE_URL ||
+    "https://4ami.morshadunnur.me/api/v1",
+
   // API Endpoints
   endpoints: {
     auth: {
-      signin: '/auth/signin',
-      customerAdminSignup: '/auth/customer-admin-signup',
-      verifyEmail: '/auth/verify-email',
-      forgotPassword: '/auth/forgot-password',
-      resetPassword: '/auth/reset-password',
+      signin: "/auth/signin",
+      customerAdminSignup: "/auth/customer-admin-signup",
+      verifyEmail: "/auth/verify-email",
+      forgotPassword: "/auth/forgot-password",
+      resetPassword: "/auth/reset-password",
     },
     users: {
-      invite: '/users/invite',
+      invite: "/users/invite",
     },
     companies: {
-      register: '/companies/register',
-    }
-  }
+      register: "/companies/register",
+    },
+  },
 };
 
 // Helper function to get full API URL
@@ -30,24 +31,28 @@ export const getApiUrl = (endpoint: string): string => {
 // Helper function to get auth headers
 export const getAuthHeaders = (authToken?: string) => {
   const headers: Record<string, string> = {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   };
-  
+
   // Only include ngrok header when targeting an ngrok URL to avoid CORS issues elsewhere
   try {
-    if (config.API_BASE_URL.includes('ngrok')) {
-      headers['ngrok-skip-browser-warning'] = 'true';
+    if (config.API_BASE_URL.includes("ngrok")) {
+      headers["ngrok-skip-browser-warning"] = "true";
     }
   } catch {}
 
   if (authToken) {
-    headers['Authorization'] = authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}`;
+    headers["Authorization"] = authToken.startsWith("Bearer ")
+      ? authToken
+      : `Bearer ${authToken}`;
   }
-  
+
   return headers;
 };
 
 // Helper function to check if we're in development mode
 export const isDevelopment = () => {
-  return process.env.NODE_ENV === 'development' || process.env.NODE_ENV === undefined;
+  return (
+    process.env.NODE_ENV === "development" || process.env.NODE_ENV === undefined
+  );
 };
