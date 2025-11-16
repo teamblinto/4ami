@@ -4,10 +4,38 @@ A comprehensive Next.js application for asset management, user administration, a
 
 ## 🚀 **Live Deployment**
 
-- **Production URL**: [https://project4ami.com](https://project4ami.com) (AWS Amplify)
-- **Backend API**: [http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1](http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1)
+- **Production URL**: [https://main-prod.d3olqsph6lodsn.amplifyapp.com](https://main-prod.d3olqsph6lodsn.amplifyapp.com)
+- **Custom Domain**: [https://project4ami.com](https://project4ami.com) *(Coming Soon)*
+- **Backend API (Current)**: `http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1`
+- **Backend API (Future)**: `https://api.project4ami.com/api/v1` *(HTTPS - Coming Soon)*
 - **Status**: ✅ Deployed and Running
 - **Last Updated**: November 16, 2025
+
+## 🏗️ **AWS Resources**
+
+### **Frontend Infrastructure**
+- **Service**: AWS Amplify
+- **Region**: us-east-1
+- **Branch**: main-prod
+- **Domain**: `main-prod.d3olqsph6lodsn.amplifyapp.com`
+- **Build Specs**: 8GiB Memory, 4vCPUs, 128GB Disk Space
+- **IAM Role**: Banfield-AWS-Amplify (or custom Amplify role)
+- **CI/CD**: Auto-deploy from GitHub on push to `main-prod`
+
+### **Backend Infrastructure**
+- **Service**: Application Load Balancer (ALB)
+- **Load Balancer**: `ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com`
+- **Region**: us-east-1 (N. Virginia)
+- **Protocol**: HTTP (Port 80) - *HTTPS coming with custom domain*
+- **Health Check**: `/api/v1/health` returns `{"status":"ok"}`
+- **Backend Platform**: Docker containers on AWS ECS/Elastic Beanstalk
+
+### **Environment Variables (Amplify)**
+```bash
+NEXT_PUBLIC_API_BASE_URL=http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1
+NEXT_PUBLIC_API_URL=http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1
+NODE_ENV=production
+```
 
 ## 📋 **Project Overview**
 
@@ -35,16 +63,30 @@ The 4AMI Frontend is a modern web application built with Next.js 15, providing:
 ### **Architecture Overview**
 
 ```
-┌─────────────────┐    HTTPS     ┌─────────────────┐    HTTPS     ┌─────────────────┐
-│   Frontend      │ ──────────► │   Backend API   │ ──────────► │   AWS Database  │
-│   (Amplify)     │             │  (Elastic       │             │   (RDS + Redis) │
-│                 │             │   Beanstalk)    │             │                 │
-└─────────────────┘             └─────────────────┘             └─────────────────┘
+┌─────────────────────┐   HTTPS    ┌──────────────────┐   HTTP    ┌─────────────────┐
+│   Browser/Client    │ ────────► │   Next.js API    │ ────────► │   Backend ALB   │
+│                     │           │   Proxy Routes   │           │  (ECS/Docker)   │
+│   AWS Amplify       │           │   (Server-Side)  │           │                 │
+│   CDN/Edge          │           │                  │           │  Port 80 (HTTP) │
+└─────────────────────┘           └──────────────────┘           └─────────────────┘
+         ▲                                                                │
+         │                                                                ▼
+         │                                                        ┌─────────────────┐
+         │                                                        │   AWS Database  │
+         └────────── Deployment via GitHub Actions ──────────────│   (RDS/Redis)   │
+                                                                  └─────────────────┘
 ```
+
+**Architecture Notes**:
+- Frontend deployed on AWS Amplify with HTTPS enabled
+- Backend uses HTTP ALB (HTTPS coming with custom domain `api.project4ami.com`)
+- Mixed content issues avoided by using Next.js API proxy routes
+- All browser requests go through `/api/*` routes which call backend server-side
 
 ### **API Integration**
 
-**Base URL**: `https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1`
+**Current Base URL**: `http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1`  
+**Future Base URL**: `https://api.project4ami.com/api/v1` *(HTTPS with custom domain)*
 
 **Authentication Flow**:
 ```typescript
@@ -73,11 +115,17 @@ const loginResponse = await fetch(`${API_BASE_URL}/auth/signin`, {
 
 ### **Environment Configuration**
 
-**Production Environment Variables**:
+**Production Environment Variables (Amplify)**:
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
-NEXT_PUBLIC_FRONTEND_URL=https://your-app.amplifyapp.com
+# Current Configuration (HTTP Backend)
+NEXT_PUBLIC_API_BASE_URL=http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1
+NEXT_PUBLIC_API_URL=http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1
 NODE_ENV=production
+
+# Future Configuration (HTTPS Backend)
+# NEXT_PUBLIC_API_BASE_URL=https://api.project4ami.com/api/v1
+# NEXT_PUBLIC_API_URL=https://api.project4ami.com/api/v1
+# NODE_ENV=production
 ```
 
 **Local Development Environment**:
@@ -85,6 +133,13 @@ NODE_ENV=production
 NEXT_PUBLIC_API_BASE_URL=http://localhost:3001/api/v1
 NODE_ENV=development
 ```
+
+**How to Update Amplify Environment Variables**:
+1. Go to AWS Amplify Console
+2. Select your app → `main-prod` branch
+3. Navigate to **Hosting** → **Environment variables**
+4. Add/Update variables
+5. Save and redeploy
 
 ## 🚀 **Quick Start**
 
@@ -135,31 +190,56 @@ NODE_ENV=development
 
 ### **API Connectivity Testing**
 
-**1. Health Check**
+**1. Backend Health Check**
 ```bash
-# Test backend health
-curl https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/health
+# Test backend ALB health endpoint
+curl http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1/health
 
-# Expected response: {"status": "ok", "timestamp": "..."}
+# Expected response: {"status":"ok"}
 ```
 
-**2. Authentication Testing**
+**2. Frontend Health Check**
 ```bash
-# Test login endpoint
-curl -X POST https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1/auth/signin \
+# Test Next.js frontend health
+curl https://main-prod.d3olqsph6lodsn.amplifyapp.com/api/health
+
+# Expected response: 
+# {
+#   "status": "healthy",
+#   "timestamp": "2025-11-16T...",
+#   "uptime": 1234.56,
+#   "environment": "production",
+#   "version": "1.0.0"
+# }
+```
+
+**3. Authentication Testing**
+```bash
+# Test login endpoint through Next.js proxy
+curl -X POST https://main-prod.d3olqsph6lodsn.amplifyapp.com/api/auth/signin \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@4ami.com","password":"Admin@123456"}'
 
 # Expected response: JWT token and user data
 ```
 
-**3. Frontend-Backend Integration Test**
+**4. Frontend-Backend Integration Test**
 ```javascript
-// Test in browser console
+// Test in browser console at https://main-prod.d3olqsph6lodsn.amplifyapp.com
 fetch('/api/health')
   .then(response => response.json())
-  .then(data => console.log('Backend connected:', data))
-  .catch(error => console.error('Backend connection failed:', error));
+  .then(data => console.log('Frontend healthy:', data))
+  .catch(error => console.error('Frontend health check failed:', error));
+```
+
+**5. Check Amplify Deployment Logs**
+```bash
+# View logs in AWS Console
+AWS Console → Amplify → 4ami-frontend → Monitoring → Logging
+
+# Or use AWS CLI
+aws amplify list-apps
+aws logs tail /aws/amplify/<app-id> --follow
 ```
 
 ### **Data Persistence Testing**
@@ -220,55 +300,161 @@ src/
     └── SidebarContext.tsx # UI state management
 ```
 
-## 🌐 **AWS Integration**
+## 🌐 **AWS Deployment & Infrastructure**
 
-### **AWS Amplify Deployment**
+### **Frontend - AWS Amplify**
 
-The frontend is automatically deployed to AWS Amplify:
+**Deployment Configuration**:
+- **Service**: AWS Amplify Hosting
+- **Region**: us-east-1 (N. Virginia)
+- **Branch**: `main-prod` (production)
+- **Build Settings**: Configured in `amplify.yml`
+- **Compute**: 8GiB Memory, 4vCPUs, 128GB Disk
+- **Auto-Deploy**: Enabled on push to `main-prod`
+- **SSL/TLS**: Automatic HTTPS with AWS Certificate Manager
 
-1. **Automatic Deployment**: Push to `main` branch triggers deployment
-2. **Environment Variables**: Configured in Amplify Console
-3. **Custom Domain**: Supports custom domain configuration
-4. **SSL Certificate**: Automatically provisioned
+**Amplify Build Specification** (`amplify.yml`):
+```yaml
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm install
+    build:
+      commands:
+        - echo "API URL - $NEXT_PUBLIC_API_BASE_URL"
+        - npm run build
+  artifacts:
+    baseDirectory: .next
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - .next/cache/**/*
+```
 
-### **Backend Integration**
+**IAM Role Requirements**:
+- Role Name: `Banfield-AWS-Amplify` (or custom)
+- Policies: `AdministratorAccess-Amplify`, `AmplifyBackendDeployFullAccess`
+- Trust Relationship: `amplify.amazonaws.com`
 
-**Production Backend**: AWS Elastic Beanstalk with Docker
-- **URL**: `https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com`
+### **Backend - Application Load Balancer**
+
+**Current Configuration**:
+- **Service**: Application Load Balancer (ALB)
+- **DNS**: `ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com`
+- **Region**: us-east-1
+- **Protocol**: HTTP (Port 80)
+- **Target**: ECS/Docker containers
+- **Health Check**: `/api/v1/health` → `{"status":"ok"}`
+
+**Future Configuration** (HTTPS):
+- **Custom Domain**: `api.project4ami.com`
+- **Protocol**: HTTPS (Port 443)
+- **Certificate**: AWS Certificate Manager (ACM)
+- **SSL/TLS**: TLS 1.2+
+
+**Backend Infrastructure**:
+- **Container Platform**: AWS ECS or Elastic Beanstalk
 - **Database**: AWS RDS PostgreSQL
 - **Cache**: AWS ElastiCache Redis
-- **Health Check**: `/api/health`
+- **Deployment**: Docker containers
 
-### **Environment Variables**
+### **Environment Variables (Production)**
 
-Required environment variables for production:
-
+**Set in AWS Amplify Console**:
 ```bash
-NEXT_PUBLIC_API_BASE_URL=https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com/api/v1
-NEXT_PUBLIC_FRONTEND_URL=https://your-app.amplifyapp.com
+# Current (HTTP Backend)
+NEXT_PUBLIC_API_BASE_URL=http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1
+NEXT_PUBLIC_API_URL=http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1
 NODE_ENV=production
+
+# Future (HTTPS Backend with Custom Domain)
+# NEXT_PUBLIC_API_BASE_URL=https://api.project4ami.com/api/v1
+# NEXT_PUBLIC_API_URL=https://api.project4ami.com/api/v1
 ```
+
+**How to Update**:
+1. AWS Console → Amplify → Select App
+2. Hosting → Environment variables
+3. Add/Edit variables
+4. Save changes
+5. Redeploy application
 
 ## 🔄 **CI/CD Pipeline**
 
-### **GitHub Actions Workflow**
+### **Automated Deployment Flow**
 
-- **Trigger**: Push to `main` or `develop` branches
-- **Process**: 
-  1. Checkout code
-  2. Setup Node.js 18
-  3. Install dependencies
-  4. Run linting and type checking
-  5. Build application
-  6. Deploy to AWS Amplify
+```
+┌─────────────────┐
+│  Developer      │
+│  Push Code      │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  GitHub         │
+│  main-prod      │
+│  branch         │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  AWS Amplify    │
+│  Auto-Deploy    │
+│  Triggered      │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Build Process  │
+│  - npm install  │
+│  - npm build    │
+│  - Deploy       │
+└────────┬────────┘
+         │
+         ▼
+┌─────────────────┐
+│  Production     │
+│  Live @ Amplify │
+│  URL            │
+└─────────────────┘
+```
 
 ### **Deployment Process**
 
 ```bash
-# Deploy to production
+# 1. Make changes locally
 git add .
-git commit -m "Your changes"
-git push origin main
+git commit -m "Your feature or fix"
+
+# 2. Push to GitHub (triggers auto-deploy)
+git push origin main-prod
+
+# 3. Monitor deployment in AWS Amplify Console
+# AWS Console → Amplify → 4ami-frontend → Deployments
+
+# 4. View logs for any issues
+# Click on deployment to see build logs
+```
+
+### **Manual Redeploy**
+If you need to redeploy without code changes:
+1. Go to AWS Amplify Console
+2. Select your app → main-prod branch
+3. Click "Redeploy this version"
+
+### **Deployment Verification**
+```bash
+# Check frontend health
+curl https://main-prod.d3olqsph6lodsn.amplifyapp.com/api/health
+
+# Check backend connectivity through frontend
+curl -X POST https://main-prod.d3olqsph6lodsn.amplifyapp.com/api/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"password"}'
 ```
 
 ## 🐳 **Docker Support**
@@ -302,6 +488,97 @@ docker-compose -f docker-compose.prod.yml down
 # View production logs
 docker-compose -f docker-compose.prod.yml logs -f
 ```
+
+## 🔧 **Troubleshooting**
+
+### **Common Issues**
+
+#### **1. Amplify Build Failures - IAM Role Error**
+```
+Error: Unable to assume specified IAM Role
+```
+**Solution**:
+- Go to IAM Console → Roles
+- Find or create Amplify service role
+- Ensure policies: `AdministratorAccess-Amplify`, `AmplifyBackendDeployFullAccess`
+- Check Trust Relationship includes: `amplify.amazonaws.com`
+- Update role in Amplify Console → App Settings → General → Service role
+
+#### **2. Login Returns "Internal Server Error"**
+**Possible Causes**:
+- Backend ALB is down or unreachable
+- Environment variables not set in Amplify
+- CORS issues or mixed content blocking
+
+**Debug Steps**:
+```bash
+# 1. Check backend health
+curl http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1/health
+
+# 2. Check frontend health
+curl https://main-prod.d3olqsph6lodsn.amplifyapp.com/api/health
+
+# 3. View Amplify logs
+AWS Console → Amplify → Monitoring → Logging
+
+# 4. Check browser console for errors
+Open DevTools (F12) → Console tab → Network tab
+```
+
+#### **3. Mixed Content Errors (HTTP/HTTPS)**
+```
+Blocked loading mixed active content
+```
+**Solution**:
+- All API calls use Next.js proxy routes (`/api/*`)
+- Proxy routes run server-side (no browser CORS/mixed content issues)
+- Backend can stay HTTP until HTTPS is enabled
+
+#### **4. Environment Variables Not Working**
+**Check**:
+```bash
+# In Amplify Console
+Hosting → Environment variables → Verify all variables are set
+
+# In browser console (frontend)
+console.log(process.env.NEXT_PUBLIC_API_BASE_URL) // Should NOT work (client-side)
+
+# In Next.js API routes (server-side)
+console.log(process.env.NEXT_PUBLIC_API_BASE_URL) // Should work
+```
+
+**Fix**:
+- Environment variables must start with `NEXT_PUBLIC_` for client-side
+- Server-side API routes can access any env variable
+- Redeploy after updating env vars in Amplify Console
+
+#### **5. Deployment Stuck or Cancelled**
+**Solution**:
+- Check build specifications in `amplify.yml`
+- Verify IAM role has proper permissions
+- Check CloudWatch logs for specific errors
+- Try manual redeploy: Amplify Console → Redeploy this version
+
+### **Logging & Monitoring**
+
+**View Real-time Logs**:
+```bash
+# AWS CLI method
+aws logs tail /aws/amplify/<app-id> --follow
+
+# Console method
+AWS Console → Amplify → Monitoring → Logging
+```
+
+**Check Deployment Status**:
+- Amplify Console → Deployments tab
+- View build logs for each deployment
+- Check Deploy phase for errors
+
+**Monitor Performance**:
+- Amplify Console → Monitoring tab
+- View metrics: requests, latency, errors
+- Set up CloudWatch alarms
 
 ## 🔐 **Authentication**
 
