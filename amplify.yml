@@ -8,6 +8,7 @@ frontend:
     build:
       commands:
         - echo "Building the app..."
+        - echo "API URL - $NEXT_PUBLIC_API_BASE_URL"
         - npm run build
   artifacts:
     baseDirectory: .next

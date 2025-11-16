@@ -3,7 +3,7 @@ export const config = {
   // Backend API Base URL
   API_BASE_URL:
     process.env.NEXT_PUBLIC_API_BASE_URL ||
-    "http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1",
+    "https://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1",
 
   // API Endpoints
   endpoints: {
