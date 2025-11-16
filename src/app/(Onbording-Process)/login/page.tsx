@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
-import { getAuthHeaders, config, getApiUrl } from "@/lib/config";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,9 +18,12 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(getApiUrl(config.endpoints.auth.signin), {
+      // Use internal API route to avoid CORS/mixed content issues
+      const response = await fetch("/api/auth/signin", {
         method: "POST",
-        headers: getAuthHeaders(),
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           email: email.trim(),
           password: password,
