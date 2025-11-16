@@ -4,9 +4,10 @@ A comprehensive Next.js application for asset management, user administration, a
 
 ## 🚀 **Live Deployment**
 
-- **Production URL**: [https://your-app.amplifyapp.com](https://your-app.amplifyapp.com) (AWS Amplify)
-- **Backend API**: [https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com](https://4ami-backend-docker.eba-5euwtfrt.us-east-1.elasticbeanstalk.com)
+- **Production URL**: [https://project4ami.com](https://project4ami.com) (AWS Amplify)
+- **Backend API**: [http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1](http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1)
 - **Status**: ✅ Deployed and Running
+- **Last Updated**: November 16, 2025
 
 ## 📋 **Project Overview**
 
