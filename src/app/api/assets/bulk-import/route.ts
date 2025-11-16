@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
       // Only include ngrok header when targeting an ngrok URL
       const apiBaseUrl =
         process.env.NEXT_PUBLIC_API_BASE_URL ||
-        "https://4ami.morshadunnur.me/api/v1";
+        "http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1";
       if (apiBaseUrl.includes("ngrok")) {
         headers["ngrok-skip-browser-warning"] = "true";
       }

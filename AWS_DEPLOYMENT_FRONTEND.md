@@ -56,7 +56,7 @@ The frontend connects to the backend through a centralized configuration system:
 ```typescript
 // src/lib/config.ts
 export const config = {
-  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "https://4ami.morshadunnur.me/api/v1",
+  API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || "http://ami-backend-alb-1784045037.us-east-1.elb.amazonaws.com/api/v1",
   
   endpoints: {
     auth: {
