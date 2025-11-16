@@ -16,9 +16,12 @@ export default function UserDashboardPage() {
   const fetchProjects = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-      const response = await fetch(getApiUrl('/projects'), {
+      const response = await fetch('/api/projects', {
         method: 'GET',
-        headers: getAuthHeaders(authToken || undefined),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}` })
+        },
       });
 
       if (response.ok) {

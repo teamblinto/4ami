@@ -42,9 +42,12 @@ export default function CompanyAdminContent() {
   const fetchUsers = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-      const response = await fetch(getApiUrl('/users'), {
+      const response = await fetch('/api/users', {
         method: 'GET',
-        headers: getAuthHeaders(authToken || undefined),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}` })
+        },
       });
 
       if (response.ok) {

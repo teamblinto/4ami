@@ -84,9 +84,12 @@ export default function CompanyAdminContent() {
         }
       }
 
-      const response = await fetch(getApiUrl('/users?page=1&limit=1'), {
+      const response = await fetch('/api/users?page=1&limit=1', {
         method: 'GET',
-        headers: getAuthHeaders(authToken || undefined),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}` })
+        },
       });
 
       if (response.ok) {

@@ -243,11 +243,15 @@ const ProjectsTable = () => {
       setError(null);
 
       const authToken = localStorage.getItem('authToken');
-      const url = getApiUrl(`/projects?page=1&limit=3`); // Limit to 3 for dashboard
+      // Use Next.js API proxy route to avoid mixed content errors
+      const url = `/api/projects?page=1&limit=3`; // Limit to 3 for dashboard
 
       const response = await fetch(url, {
         method: 'GET',
-        headers: getAuthHeaders(authToken || undefined),
+        headers: {
+          'Content-Type': 'application/json',
+          ...(authToken && { 'Authorization': authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}` })
+        },
       });
 
       if (!response.ok) {
