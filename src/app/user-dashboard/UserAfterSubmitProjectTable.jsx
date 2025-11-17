@@ -31,7 +31,10 @@ export default function AfterSubmitProjectTable() {
 
         const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : undefined;
 
-        const url = getApiUrl(`/projects?page=1&limit=3`);
+        // Fetch all projects for the user using /projects/user/projects
+        const url = getApiUrl(`/projects/user/projects`);
+        console.log('[UserAfterSubmitProjectTable] Fetching projects from:', url);
+        
         const response = await fetch(url, {
           method: "GET",
           headers: getAuthHeaders(authToken || undefined),
@@ -42,7 +45,19 @@ export default function AfterSubmitProjectTable() {
         }
 
         const result = await response.json();
-        setProjects((result && result.projects) || []);
+        console.log('[UserAfterSubmitProjectTable] Projects data received:', result);
+        
+        // Handle response - could be array or object with projects array
+        let projectsList = [];
+        if (Array.isArray(result)) {
+          projectsList = result;
+        } else if (result.projects && Array.isArray(result.projects)) {
+          projectsList = result.projects;
+        } else if (result.data && Array.isArray(result.data)) {
+          projectsList = result.data;
+        }
+        
+        setProjects(projectsList);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch projects");
       } finally {
@@ -68,7 +83,7 @@ export default function AfterSubmitProjectTable() {
               </th>
               <th className="px-6 py-2  w-[200px] border border-gray-200">
                 <div className="flex items-center justify-between">
-                  <span>Asset Type</span>
+                  <span>Asset Class</span>
                 </div>
               </th>
               <th className="px-6 py-2  w-[200px] border border-gray-200">
@@ -127,7 +142,11 @@ export default function AfterSubmitProjectTable() {
                   >
                     
                     <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>{project.projectNumber || project.id}</td>
-                    <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>{project.metadata?.category || 'N/A'}</td>
+                    <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>
+                      {project.equipments && project.equipments.length > 0 
+                        ? project.equipments[0]?.assetClass || 'N/A'
+                        : project.metadata?.category || 'N/A'}
+                    </td>
                     <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>{new Date(project.startDate).toLocaleDateString()}</td>
                     <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>{project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}</td>
                     <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>
