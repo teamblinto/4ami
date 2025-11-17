@@ -33,14 +33,18 @@ interface Project {
   };
   assets: unknown[];
   reports: unknown[];
+  equipments?: Array<{
+    assetClass?: string;
+    [key: string]: unknown;
+  }>;
 }
 
-interface ProjectsResponse {
-  projects: Project[];
-  total: number;
-  page: number;
-  limit: number;
-}
+// interface ProjectsResponse {
+//   projects: Project[];
+//   total: number;
+//   page: number;
+//   limit: number;
+// }
 
 const ProjectsPage = () => {
   const router = useRouter();
@@ -52,37 +56,19 @@ const ProjectsPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch projects for user dashboard
-  const fetchProjects = async (page: number = 1, limit: number = 10) => {
+  const fetchProjects = async () => {
     try {
       setLoading(true);
       setError(null);
 
       const authToken = localStorage.getItem('authToken');
 
-      // Get user data from localStorage
-      const userDataString = localStorage.getItem('userData');
-      let userProfile: Record<string, unknown> = {};
-
-      if (userDataString) {
-        try {
-          userProfile = JSON.parse(userDataString);
-        } catch (e) {
-          console.error('Failed to parse userData:', e);
-        }
-      }
-
-      const userId = userProfile.id as string;
-
-      if (!userId) {
-        throw new Error('User ID not found in user profile. Please ensure you are logged in.');
-      }
-
-      // The backend should filter projects by the authenticated user
-      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      // Fetch all projects for the user using /projects/user/projects
+      const url = getApiUrl(`/projects/user/projects`);
      
-      
+      console.log('[fetchProjects] Fetching user projects from:', url);
 
-      const response = await fetch(url, {
+      const response = await fetch(url, { 
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
@@ -91,11 +77,22 @@ const ProjectsPage = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result: ProjectsResponse = await response.json();
+      const result = await response.json();
+      console.log('[fetchProjects] Projects data received:', result);
  
-      setProjects(result.projects || []);
-      setTotalItems(result.total || 0);
-      setCurrentPage(result.page || 1);
+      // Handle response - could be array or object with projects array
+      let projectsList: Project[] = [];
+      if (Array.isArray(result)) {
+        projectsList = result;
+      } else if (result.projects && Array.isArray(result.projects)) {
+        projectsList = result.projects;
+      } else if (result.data && Array.isArray(result.data)) {
+        projectsList = result.data;
+      }
+
+      setProjects(projectsList);
+      setTotalItems(projectsList.length);
+      setCurrentPage(1);
     } catch (err) {
       console.error('Error fetching user projects:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch projects');
@@ -105,8 +102,8 @@ const ProjectsPage = () => {
   };
 
   useEffect(() => {
-    fetchProjects(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+    fetchProjects();
+  }, []);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -137,7 +134,7 @@ const ProjectsPage = () => {
             <option>Project ID All</option>
           </select>
           <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 cursor-pointer">
-            <option>Asset Type All</option>
+            <option>Asset Class All</option>
           </select>
           <select className="h-8 px-2 border border-gray-300 rounded-md text-xs bg-white text-gray-700 cursor-pointer">
             <option>Status All</option>
@@ -225,7 +222,7 @@ const ProjectsPage = () => {
                   </div>
                 </th>
                 <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Asset Type
+                  Asset Class
                 </th>
                 <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                   Start Date
@@ -260,7 +257,9 @@ const ProjectsPage = () => {
                       {project.projectNumber || project.id}
                     </td>
                     <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {project.metadata?.category || 'N/A'}
+                      {project.equipments && project.equipments.length > 0 
+                        ? project.equipments[0]?.assetClass || 'N/A'
+                        : project.metadata?.category || 'N/A'}
                     </td>
                     <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {new Date(project.startDate).toLocaleDateString()}
@@ -312,7 +311,7 @@ const ProjectsPage = () => {
             Please check your connection and try again. If the problem persists, contact your administrator.
           </div>
           <button
-            onClick={() => fetchProjects(currentPage, itemsPerPage)}
+            onClick={() => fetchProjects()}
             className="mt-3 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 text-sm"
           >
             Retry

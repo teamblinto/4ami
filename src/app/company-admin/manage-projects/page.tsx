@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
@@ -37,12 +37,12 @@ interface Project {
   reports: unknown[];
 }
 
-interface ProjectsResponse {
-  projects: Project[];
-  total: number;
-  page: number;
-  limit: number;
-}
+// interface ProjectsResponse {
+//   projects: Project[];
+//   total: number;
+//   page: number;
+//   limit: number;
+// }
 
 export default function CompanyAdminManageProjectsPage() {
   const router = useRouter();
@@ -54,45 +54,17 @@ export default function CompanyAdminManageProjectsPage() {
   const [totalItems, setTotalItems] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Fetch projects for company admin
-  const fetchProjects = async (page: number = 1, limit: number = 10) => {
+  // Fetch projects with pagination
+  const fetchProjects = useCallback(async (page: number = currentPage, limit: number = itemsPerPage) => {
     try {
       setLoading(true);
       setError(null);
       
       const authToken = localStorage.getItem('authToken');
       
-      // Check all localStorage keys to see what's available
-      console.log('All localStorage keys:', Object.keys(localStorage));
-      console.log('Auth token:', authToken);
-      
-      // Get user data from localStorage (the app uses 'userData' key)
-      const userDataString = localStorage.getItem('userData');
-      let userProfile: Record<string, unknown> = {};
-      
-      if (userDataString) {
-        try {
-          userProfile = JSON.parse(userDataString);
-          console.log('User Data:', userProfile);
-          console.log('Available keys:', Object.keys(userProfile));
-        } catch (e) {
-          console.error('Failed to parse userData:', e);
-        }
-      } else {
-        console.log('No userData found in localStorage');
-      }
-      
-      // Since the user data doesn't have companyId, we'll use the user's ID
-      // The backend should filter projects by the authenticated user's company
-      const userId = userProfile.id as string;
-      
-      if (!userId) {
-        console.error('User ID not found. Available profile data:', userProfile);
-        throw new Error('User ID not found in user profile. Please ensure you are logged in.');
-      }
-      
-      // Try different API approaches - the backend should filter by authenticated user's company
-      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      // Fetch projects with pagination
+      const url = getApiUrl(`/projects/user/projects?page=${page}&limit=${limit}`);
+      console.log('[CompanyAdmin] Fetching projects from:', url);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -103,22 +75,37 @@ export default function CompanyAdminManageProjectsPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result: ProjectsResponse = await response.json();
-      console.log('Company Admin Projects Response:', result);
-      setProjects(result.projects || []);
-      setTotalItems(result.total || 0);
-      setCurrentPage(result.page || 1);
+      const result = await response.json();
+      console.log('[CompanyAdmin] Projects data received:', result);
+      
+      // Handle response - could be array or object with projects array
+      let projectsList: Project[] = [];
+      let totalCount = 0;
+      
+      if (Array.isArray(result)) {
+        projectsList = result;
+        totalCount = result.length;
+      } else if (result.projects && Array.isArray(result.projects)) {
+        projectsList = result.projects;
+        totalCount = result.total || result.projects.length;
+      } else if (result.data && Array.isArray(result.data)) {
+        projectsList = result.data;
+        totalCount = result.total || result.data.length;
+      }
+      
+      setProjects(projectsList);
+      setTotalItems(totalCount);
     } catch (err) {
       console.error('Error fetching company projects:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch projects');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchProjects(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+    fetchProjects();
+  }, [fetchProjects]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
