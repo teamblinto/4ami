@@ -18,18 +18,19 @@ function ResetPasswordPageContent() {
   const [showConfirm, setShowConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const passwordStrength = (() => {
-    let score = 0;
-    if (password.length >= 8) score++;
-    if (/[A-Z]/.test(password)) score++;
-    if (/[0-9]/.test(password)) score++;
-    if (/[^A-Za-z0-9]/.test(password)) score++;
-    return score >= 3 ? "Strong" : score === 2 ? "Medium" : "Weak";
-  })();
+  // Password requirements validation
+  const passwordRequirements = {
+    has8Chars: password.length >= 8,
+    hasUppercase: /[A-Z]/.test(password),
+    hasLowercase: /[a-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+  };
+
+  const isPasswordValid = Object.values(passwordRequirements).every(req => req);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!password || password !== confirmPassword || !token) return;
+    if (!password || password !== confirmPassword || !token || !isPasswordValid) return;
     setIsSubmitting(true);
     try {
       const response = await fetch('/api/auth/reset-password', {
@@ -73,8 +74,11 @@ function ResetPasswordPageContent() {
           <div className="bg-white  rounded-lg grid md:flex items-center justify-center w-full h-full m-14 p-6">
             {/* Left Section - Reset Form */}
             <div className="w-full md:w-2/5">
-              <h1 className="text-[24px] font-medium text-[#080607] mb-2">Reset Password</h1>
-              <p className="text-[#6C757D] mb-6">Please enter your new password below</p>
+              <div className="flex justify-between items-center mb-4">
+                <h1 className="text-[24px] font-medium text-[#080607]">Reset Password</h1>
+                <span className="text-red-500 text-sm font-medium">Step 2 of 2</span>
+              </div>
+              
               {!token && (
                 <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-md">
                   <p className="text-sm text-red-600">Invalid or missing reset token. Please use the link from your email.</p>
@@ -83,7 +87,64 @@ function ResetPasswordPageContent() {
 
               <form onSubmit={handleSubmit}>
                 <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-700 mb-1">New Password</label>
+                  <h2 className="text-base font-semibold text-[#080607] mb-3">Password must include at least:</h2>
+                  
+                  {/* Password Requirements List */}
+                  <div className="mb-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.has8Chars ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">8 Characters</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.hasUppercase ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">1 uppercase letter</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.hasLowercase ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">1 lowercase letter</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.hasNumber ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">1 Number</span>
+                    </div>
+                  </div>
+
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
@@ -91,7 +152,7 @@ function ResetPasswordPageContent() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       className="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10 rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
-                      placeholder="Enter new password"
+                      placeholder="Password"
                     />
                     <button
                       type="button"
@@ -99,8 +160,6 @@ function ResetPasswordPageContent() {
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
                     >
                       {showPassword ? (
-                        // Eye OFF icon
-
                         <svg
                           className="h-5 w-5 text-gray-500 cursor-pointer "
                           fill="none"
@@ -121,7 +180,6 @@ function ResetPasswordPageContent() {
                           />
                         </svg>
                       ) : (
-                        // Eye ON icon
                         <svg
                           className="h-5 w-5 text-gray-500 cursor-pointer "
                           fill="none"
@@ -144,9 +202,6 @@ function ResetPasswordPageContent() {
                       )}
                     </button>
                   </div>
-                  <p className="text-xs text-[#6C757D] mt-1">
-                    Password strength: <span className="text-red-500 font-medium">{passwordStrength}</span>
-                  </p>
                 </div>
 
                 <div className="mb-6">
@@ -158,7 +213,7 @@ function ResetPasswordPageContent() {
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
                       className="appearance-none w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline pr-10 rounded-[8px] border-[1.4px] border-[#CED4DA] bg-[#FBFBFB]"
-                      placeholder="Confirm new password"
+                      placeholder="Confirm Password"
                     />
                     <button
                       type="button"
@@ -166,8 +221,6 @@ function ResetPasswordPageContent() {
                       className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5 cursor-pointer"
                     >
                       {showConfirm ? (
-                        // Eye with slash (hide icon)
-
                         <svg
                           className="h-5 w-5 text-gray-500 cursor-pointer "
                           fill="none"
@@ -188,7 +241,6 @@ function ResetPasswordPageContent() {
                           />
                         </svg>
                       ) : (
-                        // Eye without slash (show icon)
                         <svg
                           className="h-5 w-5 text-gray-500 cursor-pointer "
                           fill="none"
@@ -213,16 +265,25 @@ function ResetPasswordPageContent() {
                   </div>
                 </div>
 
-                <button
-                  type="submit"
-                  disabled={isSubmitting || !password || password !== confirmPassword || !token}
-                  className={`px-5 py-2 rounded-md text-white font-medium cursor-pointer ${isSubmitting || !password || password !== confirmPassword || !token
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-red-500 hover:bg-red-600"
-                    }`}
-                >
-                  {isSubmitting ? "Resetting..." : "Reset Password"}
-                </button>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => router.back()}
+                    className="px-5 py-2 rounded-md text-gray-700 font-medium cursor-pointer bg-white border border-gray-300 hover:bg-gray-50"
+                  >
+                    Back
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || !password || password !== confirmPassword || !token || !isPasswordValid}
+                    className={`flex-1 px-5 py-2 rounded-md text-white font-medium cursor-pointer ${isSubmitting || !password || password !== confirmPassword || !token || !isPasswordValid
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-red-500 hover:bg-red-600"
+                      }`}
+                  >
+                    {isSubmitting ? "Resetting..." : "Reset Password"}
+                  </button>
+                </div>
               </form>
             </div>
 
