@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
 import ProtectedRoute from "../components/ProtectedRoute";
+import ScrollStyles from "../Animations/Scroll";
 import toast from "react-hot-toast";
 import { useEffect, useState } from "react";
 
@@ -274,7 +275,7 @@ export default function CompanyAdminLayout({
         </aside>
 
         {/* Main Content Common */}
-        <main className="flex-grow flex flex-col bg-[#FAFAFA] min-w-0 overflow-y-auto">
+        <main className="flex-grow flex flex-col bg-[#FAFAFA] min-w-0 overflow-y-auto dashboard-scroll">
           {/* Top Bar */}
           <div className="sticky top-0 z-40 bg-[#FAFAFA] px-8 pt-[24px] pb-6 flex items-center justify-between">
             <div className="relative w-[320px] ">
@@ -416,6 +417,7 @@ export default function CompanyAdminLayout({
             {children}
           </div>
         </main>
+        <ScrollStyles />
       </div>
     </ProtectedRoute>
   );
