@@ -100,10 +100,10 @@ export default function UserDashboardLayout({
 
   return (
     <ProtectedRoute requiredRole="CUSTOMER_USER">
-      <div className="flex min-h-screen  bg-gray-100">
+      <div className="flex h-screen bg-gray-100 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${
+          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 h-screen sticky top-0 dashboard-sidebar flex-shrink-0 ${
             isSidebarCollapsed ? 'collapsed' : ''
           }`}
           style={{ 
@@ -226,10 +226,10 @@ export default function UserDashboardLayout({
           </div>
         </aside>
 
-        {/* Main Content */},
-        <main className="flex-grow px-8 bg-[#FAFAFA] -ml-1 pt-[24px] pb-[24px] overflow-x-auto min-w-0">
+        {/* Main Content */}
+        <main className="flex-grow flex flex-col bg-[#FAFAFA] min-w-0 overflow-y-auto">
           {/* Top Bar */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="sticky top-0 z-40 bg-[#FAFAFA] px-8 pt-[24px] pb-6 flex items-center justify-between">
             <div className="relative w-[320px]">
               <input
                 type="text"
@@ -364,7 +364,10 @@ export default function UserDashboardLayout({
             </div>
           </div>
 
-          {children}
+          {/* Content Area */}
+          <div className="flex-1 px-8 pb-[24px] pt-0">
+            {children}
+          </div>
         </main>
       </div>
     </ProtectedRoute>
