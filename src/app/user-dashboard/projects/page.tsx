@@ -1,8 +1,9 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
 import Image from "next/image";
+import { ShimmerEffect } from '@/app/Animations/shimmereffect';
 
 interface Project {
   id: string;
@@ -55,16 +56,16 @@ const ProjectsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch projects for user dashboard
-  const fetchProjects = async () => {
+  // Fetch projects for user dashboard with pagination
+  const fetchProjects = useCallback(async (page: number = currentPage, limit: number = itemsPerPage) => {
     try {
       setLoading(true);
       setError(null);
 
       const authToken = localStorage.getItem('authToken');
 
-      // Fetch all projects for the user using /projects/user/projects
-      const url = getApiUrl(`/projects/user/projects`);
+      // Fetch projects with pagination
+      const url = getApiUrl(`/projects/user/projects?page=${page}&limit=${limit}`);
      
       console.log('[fetchProjects] Fetching user projects from:', url);
 
@@ -82,28 +83,32 @@ const ProjectsPage = () => {
  
       // Handle response - could be array or object with projects array
       let projectsList: Project[] = [];
+      let totalCount = 0;
+      
       if (Array.isArray(result)) {
         projectsList = result;
+        totalCount = result.length;
       } else if (result.projects && Array.isArray(result.projects)) {
         projectsList = result.projects;
+        totalCount = result.total || result.projects.length;
       } else if (result.data && Array.isArray(result.data)) {
         projectsList = result.data;
+        totalCount = result.total || result.data.length;
       }
 
       setProjects(projectsList);
-      setTotalItems(projectsList.length);
-      setCurrentPage(1);
+      setTotalItems(totalCount);
     } catch (err) {
       console.error('Error fetching user projects:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch projects');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchProjects();
-  }, []);
+    fetchProjects(currentPage, itemsPerPage);
+  }, [currentPage, itemsPerPage, fetchProjects]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -195,79 +200,98 @@ const ProjectsPage = () => {
 
       {/* Projects Table */}
       <div className="bg-white overflow-x-auto">
-        {loading ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg">Loading projects...</div>
-          </div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-2">No projects found</div>
-            <div className="text-gray-400 text-sm">
-              {error ? 'Unable to load projects from the server.' : 'No residual analysis projects available.'}
-            </div>
-          </div>
-        ) : (
-          <table className="min-w-full border-collapse">
-            <thead className="bg-white">
+        <table className="min-w-full border-collapse">
+          <thead className="bg-white">
+            <tr>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between">
+                  <span>Project ID</span>
+                  <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+                  </svg>
+                </div>
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Asset Class
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Start Date
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Submit Date
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Status
+              </th>
+              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Action
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <>
+                {Array.from({ length: Math.min(itemsPerPage, 10) }).map((_, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
+                  >
+                    <td colSpan={7} className="px-6 pt-4 pb-4 align-middle border border-[#D0D5DD]" style={{ height: '64px' }}>
+                      <ShimmerEffect className="h-5 w-full" />
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ) : error ? (
               <tr>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
-                  Select
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  <div className="flex items-center justify-between">
-                    <span>Project ID</span>
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
-                    </svg>
-                  </div>
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Asset Class
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Start Date
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Submit Date
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Status
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Action
-                </th>
+                <td colSpan={7} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
+                  Error: {error}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => {
+            ) : projects.length === 0 ? (
+              <tr>
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  <div className="text-gray-500 text-lg mb-2">No projects found</div>
+                  <div className="text-gray-400 text-sm">
+                    {error ? 'Unable to load projects from the server.' : 'No residual analysis projects available.'}
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
        
                 return (
                   <tr
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
                   >
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center align-middle" style={{ height: '64px' }}>
                       <input
                         type="checkbox"
                         className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer"
                       />
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.projectNumber || project.id}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.equipments && project.equipments.length > 0 
                         ? project.equipments[0]?.assetClass || 'N/A'
                         : project.metadata?.category || 'N/A'}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {new Date(project.startDate).toLocaleDateString()}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <span className={`px-2 py-1 rounded-full text-xs ${project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
                           project.status === 'active' ? 'bg-red-100 text-red-800' :
                             project.status === 'approved' ? 'bg-green-100 text-green-800' :
@@ -278,7 +302,7 @@ const ProjectsPage = () => {
                         {project.status}
                       </span>
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="flex items-center justify-center gap-4">
                         <button
                           onClick={() => router.push(`/user-dashboard/projects/project-report?projectId=${project.id}`)}
@@ -296,10 +320,10 @@ const ProjectsPage = () => {
                     </td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        )}
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       {error && (
@@ -311,7 +335,7 @@ const ProjectsPage = () => {
             Please check your connection and try again. If the problem persists, contact your administrator.
           </div>
           <button
-            onClick={() => fetchProjects()}
+            onClick={() => fetchProjects(currentPage, itemsPerPage)}
             className="mt-3 bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600 text-sm"
           >
             Retry
