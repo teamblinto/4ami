@@ -115,9 +115,13 @@ export default function AfterSubmitProjectTable() {
               </tr>
             ) : projects.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-4 py-6 text-center text-gray-500 border border-gray-200">
-                  No projects found
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  <div className="text-gray-500 text-lg mb-2">No projects found</div>
+                  <div className="text-gray-400 text-sm">
+                    Start by creating your first project.
+                  </div>
                 </td>
+                
               </tr>
             ) : (
               projects.slice(0, 3).map((p, i) => {
