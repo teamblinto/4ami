@@ -134,7 +134,7 @@ export default function CompanyAdminLayout({
       <div className="flex h-screen bg-gray-100 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 h-screen sticky top-0 dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? 'collapsed' : ''
+          className={`bg-white flex flex-col justify-between transition-all duration-300 h-screen sticky top-0 dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? 'collapsed' : ''
             }`}
           style={{
             width: isSidebarCollapsed ? '64px' : '230px',
@@ -170,9 +170,9 @@ export default function CompanyAdminLayout({
                 </button>
 
                 {/* Hover tooltip */}
-                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
+                {/* <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
                   {isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
-                </div>
+                </div> */}
               </div>
 
             </div>
