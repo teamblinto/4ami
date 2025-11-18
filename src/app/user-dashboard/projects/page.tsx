@@ -257,7 +257,7 @@ const ProjectsPage = () => {
                 <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
                   <div className="text-gray-500 text-lg mb-2">No projects found</div>
                   <div className="text-gray-400 text-sm">
-                    {error ? 'Unable to load projects from the server.' : 'No residual analysis projects available.'}
+                    {error ? 'Unable to load projects from the server.' : 'Start by creating your first project.'}
                   </div>
                 </td>
               </tr>

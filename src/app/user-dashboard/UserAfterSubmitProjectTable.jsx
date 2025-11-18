@@ -21,7 +21,7 @@ export default function AfterSubmitProjectTable() {
     cancelled: "bg-gray-100 text-gray-800",
     completed: "bg-blue-100 text-blue-800",
   };
-    console.log(projects);
+  console.log(projects);
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -34,7 +34,7 @@ export default function AfterSubmitProjectTable() {
         // Fetch all projects for the user using /projects/user/projects
         const url = getApiUrl(`/projects/user/projects`);
         console.log('[UserAfterSubmitProjectTable] Fetching projects from:', url);
-        
+
         const response = await fetch(url, {
           method: "GET",
           headers: getAuthHeaders(authToken || undefined),
@@ -46,7 +46,7 @@ export default function AfterSubmitProjectTable() {
 
         const result = await response.json();
         console.log('[UserAfterSubmitProjectTable] Projects data received:', result);
-        
+
         // Handle response - could be array or object with projects array
         let projectsList = [];
         if (Array.isArray(result)) {
@@ -56,7 +56,7 @@ export default function AfterSubmitProjectTable() {
         } else if (result.data && Array.isArray(result.data)) {
           projectsList = result.data;
         }
-        
+
         setProjects(projectsList);
       } catch (err) {
         setError(err instanceof Error ? err.message : "Failed to fetch projects");
@@ -126,13 +126,16 @@ export default function AfterSubmitProjectTable() {
               </tr>
             ) : projects.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-6 text-center text-gray-500 border border-gray-200">
-                  No projects found
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  <div className="text-gray-500 text-lg mb-2">No projects found</div>
+                  <div className="text-gray-400 text-sm">
+                    Start by creating your first project.
+                  </div>
                 </td>
               </tr>
             ) : (
               projects.slice(0, 3).map((project, i) => {
-              
+
                 const statusKey = (project.status || "").toLowerCase();
                 return (
                   <tr
@@ -140,10 +143,10 @@ export default function AfterSubmitProjectTable() {
                     className="odd:bg-white even:bg-gray-50"
                     style={{ height: '64px' }}
                   >
-                    
+
                     <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>{project.projectNumber || project.id}</td>
                     <td className="px-4 py-4 border border-gray-200 cursor-pointer align-middle" style={{ height: '64px' }}>
-                      {project.equipments && project.equipments.length > 0 
+                      {project.equipments && project.equipments.length > 0
                         ? project.equipments[0]?.assetClass || 'N/A'
                         : project.metadata?.category || 'N/A'}
                     </td>
