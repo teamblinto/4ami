@@ -389,7 +389,7 @@ function ClientContent() {
       <main className="flex-grow flex items-center  mt-4 justify-center">
         <div
           className="rounded-lg "
-          style={{ width: "1210px", maxWidth: "1210px" }}
+          style={{ width: "1210px", maxWidth: "1211px" }}
         >
           <div className="flex gap-[64px] p-6 bg-white text-black min-h-[600px]">
             {/* Form Section */}
