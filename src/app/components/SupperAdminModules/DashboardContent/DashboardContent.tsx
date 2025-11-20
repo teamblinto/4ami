@@ -5,28 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CountUp from 'react-countup';
-import { getApiUrl, getAuthHeaders, config } from '@/lib/config';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 import { ShimmerCard, ShimmerTable } from '@/app/Animations/shimmereffect';
 
-// --- INTERFACES ---
-interface ApiUserData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
-interface ApiResponse {
-  data?: ApiUserData[];
-  users?: ApiUserData[];
-  total?: number;
-  page?: number;
-  limit?: number;
-}
 
 // --- MOCK DATA ---
 const getStatsData = (userCount: number) => [
@@ -514,7 +496,7 @@ export default function DashboardContent() {
       setUserCountError(null);
 
       const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-      const url = `${config.API_BASE_URL}/users?page=1&limit=1`; // Only need total count
+      const url = getApiUrl('/users/dashboard/stats');
 
       const response = await fetch(url, {
         method: 'GET',
@@ -525,12 +507,16 @@ export default function DashboardContent() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result: ApiResponse = await response.json();
-      console.log('User count API Response:', result);
+      const result = await response.json();
+      console.log('User stats API Response:', result);
 
-      // Handle different possible response structures
-      const total = result.total || result.data?.length || result.users?.length || 0;
-      setUserCount(total);
+      if (typeof result.totalUsers === 'number') {
+        setUserCount(result.totalUsers);
+      } else {
+        // Fallback for unexpected shapes
+        const fallbackTotal = result.total || result.data?.length || result.users?.length || 0;
+        setUserCount(fallbackTotal);
+      }
     } catch (err) {
       console.error('Error fetching user count:', err);
       setUserCountError(err instanceof Error ? err.message : 'Failed to fetch user count');
