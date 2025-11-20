@@ -12,10 +12,8 @@ export default function CompanyAdminContent() {
   const [onGoingProjects, setOnGoingProjects] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [, setLoading] = useState(true);
-  console.log(totalProjects)
 
-  // Fetch projects data for this company admin
-  const fetchProjects = async () => {
+  const fetchCompanyStats = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
       const response = await fetch(getApiUrl('/users/customer-admin/stats'), {
@@ -41,40 +39,22 @@ export default function CompanyAdminContent() {
         } else {
           setOnGoingProjects(0);
         }
-      }
-    } catch (error) {
-      console.error('Error fetching projects:', error);
-    }
-  };
-
-  // Fetch users data for this company admin
-  const fetchUsers = async () => {
-    try {
-      const authToken = localStorage.getItem('authToken');
-      const response = await fetch(getApiUrl('/users/customer-admin/stats'), {
-        method: 'GET',
-        headers: getAuthHeaders(authToken || undefined),
-      });
-
-      if (response.ok) {
-        const data = await response.json();
         const totalUsersValue =
           data.totalCompanyUsers ??
           data.totalUsers ??
           data.total ??
           (data.users?.length || data.data?.length || 0);
         setTotalUsers(typeof totalUsersValue === 'number' ? totalUsersValue : 0);
-        console.log(data);
       }
     } catch (error) {
-      console.error('Error fetching users:', error);
+      console.error('Error fetching company stats:', error);
     }
   };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
-      await Promise.all([fetchProjects(), fetchUsers()]);
+      await fetchCompanyStats();
       setLoading(false);
     };
 
@@ -120,13 +100,15 @@ export default function CompanyAdminContent() {
                 </div>
                 <p className="text-2xl font-bold text-gray-900 mt-1">
                   {stat.title === "Total Projects" || stat.title === "Total Users" ? (
-                    <CountUp
-                      end={stat.value as number}
-                      duration={2.5}
-                      separator="," 
-                      enableScrollSpy
-                      scrollSpyOnce
-                    />
+                    <>
+                      <CountUp
+                        end={Number(stat.value) || 0}
+                        duration={2.5}
+                        separator=","
+                        enableScrollSpy
+                        scrollSpyOnce
+                      />
+                    </>
                   ) : (
                     stat.value
                   )}
