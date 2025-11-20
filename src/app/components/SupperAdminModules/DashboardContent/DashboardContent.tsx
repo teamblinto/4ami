@@ -243,7 +243,7 @@ const ProjectsTable = () => {
       setError(null);
 
       const authToken = localStorage.getItem('authToken');
-      const url = getApiUrl(`/projects?page=1&limit=3`); // Limit to 3 for dashboard
+      const url = getApiUrl(`/projects/user/projects?page=1&limit=3`);
 
       const response = await fetch(url, {
         method: 'GET',
