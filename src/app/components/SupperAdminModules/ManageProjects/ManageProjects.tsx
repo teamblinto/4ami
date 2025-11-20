@@ -81,7 +81,7 @@ export default function ManageProjects() {
       setError(null);
       
       const authToken = localStorage.getItem('authToken');
-      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      const url = getApiUrl(`/projects/user/projects?page=${page}&limit=${limit}`);
       
       const response = await fetch(url, {
         method: 'GET',
