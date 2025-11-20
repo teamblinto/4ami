@@ -129,7 +129,7 @@ export default function CompanyAdminContent() {
   const statsData = [
     { title: "Total Projects", value: totalProjects, icon: "/sv1.svg" },
     { title: "On Going Projects", value: onGoingProjects, icon: "/sv2.svg" },
-    { title: "Total Users", value: totalUsers, icon: "/sv3.svg", hasDropdown: true },
+    { title: "Total Users", value: totalUsers, icon: "/sv3.svg"},
     { title: "Token Left", value: 10, icon: "/sv4.svg" },
   ];
 
@@ -162,16 +162,6 @@ export default function CompanyAdminContent() {
                   <p className="text-sm font-medium text-[#6C757D]">
                     {stat.title}
                   </p>
-                  {stat.hasDropdown && (
-                    <Image
-                      className="ml-3"
-                      src="/arrow.svg"
-                      alt="dropdown"
-                      width={12}
-                      height={12}
-                      style={{ width: "auto", height: "auto" }}
-                    />
-                  )}
                 </div>
                 <p className="text-2xl font-bold text-gray-900 mt-1">
                   {stat.title === "Total Projects" || stat.title === "Total Users" ? (
