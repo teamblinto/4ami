@@ -18,49 +18,29 @@ export default function CompanyAdminContent() {
   const fetchProjects = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-
-      // Get user data to ensure we're filtering by company
-      const userDataString = localStorage.getItem('userData');
-      let userProfile: Record<string, unknown> = {};
-
-      if (userDataString) {
-        try {
-          userProfile = JSON.parse(userDataString);
-        } catch (e) {
-          console.error('Failed to parse userData:', e);
-        }
-      }
-
-      const userId = userProfile.id as string;
-      if (!userId) {
-        console.error('User ID not found in user profile');
-        return;
-      }
-
-      // The backend should automatically filter projects by the authenticated user's company
-      // Use pagination so we can reliably read the total count from the response
-      const response = await fetch(getApiUrl('/projects?page=1&limit=1'), {
+      const response = await fetch(getApiUrl('/users/customer-admin/stats'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const projects = data.projects || data.data || [];
+        const totalProjectsValue =
+          data.totalCompanyProjects ??
+          data.totalProjects ??
+          data.total ??
+          (data.projects?.length || data.data?.length || 0);
+        setTotalProjects(typeof totalProjectsValue === 'number' ? totalProjectsValue : 0);
 
-        // Prefer the API-provided total (matches Manage Projects page totalItems)
-        if (typeof data.total === 'number') {
-          setTotalProjects(data.total);
+        const ongoingCount =
+          data.onGoingProjects ??
+          data.activeProjects ??
+          0;
+        if (typeof ongoingCount === 'number') {
+          setOnGoingProjects(ongoingCount);
         } else {
-          // Fallback to length if total isn't provided
-          setTotalProjects(projects.length);
+          setOnGoingProjects(0);
         }
-
-        // Count ongoing projects (active status)
-        const ongoingCount = projects.filter((project: { status: string }) =>
-          project.status === 'active' || project.status === 'in_progress'
-        ).length;
-        setOnGoingProjects(ongoingCount);
       }
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -71,45 +51,20 @@ export default function CompanyAdminContent() {
   const fetchUsers = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-
-      // Get user data to ensure we're filtering by company
-      const userDataString = localStorage.getItem('userData');
-      let userProfile: Record<string, unknown> = {};
-
-      if (userDataString) {
-        try {
-          userProfile = JSON.parse(userDataString);
-        } catch (e) {
-          console.error('Failed to parse userData:', e);
-        }
-      }
-
-      const response = await fetch(getApiUrl('/users?page=1&limit=1'), {
+      const response = await fetch(getApiUrl('/users/customer-admin/stats'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
 
       if (response.ok) {
         const data = await response.json();
-        const users = data.users || data.data || [];
-
-        // Filter users by role (Customer User role only) and by company
-        // The backend should already filter by company, but we can add additional filtering here
-        const filteredUsers = users.filter((user: { role?: string; companyId?: string; invitedBy?: string }) => {
-          const userRole = user.role?.toLowerCase();
-          const isCustomerUser = userRole === 'customer user' ||
-            userRole === 'customer_user' ||
-            userRole === 'customer' ||
-            userRole === 'user';
-
-          // Additional company filtering if needed
-          const isFromSameCompany = !userProfile.companyId || user.companyId === userProfile.companyId;
-
-          return isCustomerUser && isFromSameCompany;
-        });
-
-        // Match Manage Users page behavior: use filtered count
-        setTotalUsers(filteredUsers.length);
+        const totalUsersValue =
+          data.totalCompanyUsers ??
+          data.totalUsers ??
+          data.total ??
+          (data.users?.length || data.data?.length || 0);
+        setTotalUsers(typeof totalUsersValue === 'number' ? totalUsersValue : 0);
+        console.log(data);
       }
     } catch (error) {
       console.error('Error fetching users:', error);
