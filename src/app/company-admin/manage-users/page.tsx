@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import Image from "next/image";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from "next/navigation";
 import { config, getAuthHeaders } from '@/lib/config';
 import { ShimmerEffect } from '@/app/Animations/shimmereffect';
@@ -49,9 +49,27 @@ export default function CompanyAdminManageUsersPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const getStoredUserData = (): {
+    id?: string;
+    _id?: string;
+    userId?: string;
+    email?: string;
+    companyId?: string;
+    role?: string;
+  } => {
+    if (typeof window === 'undefined') return {};
+    const localData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+    if (!localData) return {};
+    try {
+      return JSON.parse(localData);
+    } catch (error) {
+      console.error('Failed to parse stored userData', error);
+      return {};
+    }
+  };
 
   // Fetch users invited by current company admin
-  const fetchInvitedUsers = async (page: number = 1, limit: number = 10) => {
+  const fetchInvitedUsers = useCallback(async (page: number = 1, limit: number = 10) => {
     try {
       setLoading(true);
       setError(null);
@@ -122,7 +140,9 @@ export default function CompanyAdminManageUsersPage() {
 
       // Filter users by role on frontend if backend doesn't support role filtering
       console.log('Available user roles:', usersArray.map(u => u.role)); // Debug log
-
+      const currentUser = getStoredUserData();
+      const currentUserEmail = currentUser.email?.toLowerCase();
+      
       const filteredUsers = usersArray.filter((user: ApiUserData) => {
         // Filter for Customer User role only
         // Support different role naming conventions
@@ -132,8 +152,13 @@ export default function CompanyAdminManageUsersPage() {
           userRole === 'customer' ||
           userRole === 'user';
 
-        console.log(`User ${user.email} with role "${user.role}" - ${isCustomerUser ? 'INCLUDED' : 'FILTERED OUT'}`);
-        return isCustomerUser;
+        const isCurrentUser = currentUserEmail
+          ? user.email?.toLowerCase() === currentUserEmail
+          : false;
+
+        const shouldInclude = isCustomerUser || isCurrentUser;
+        console.log(`User ${user.email} with role "${user.role}" - ${shouldInclude ? 'INCLUDED' : 'FILTERED OUT'}`);
+        return shouldInclude;
       });
 
       console.log(`Filtered ${filteredUsers.length} Customer Users from ${usersArray.length} total users`);
@@ -174,12 +199,12 @@ export default function CompanyAdminManageUsersPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   // Load data on component mount
   useEffect(() => {
     fetchInvitedUsers(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+  }, [currentPage, itemsPerPage, fetchInvitedUsers]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
