@@ -32,7 +32,7 @@ export default function AfterSubmitProjectTable() {
         const authToken = typeof window !== "undefined" ? localStorage.getItem("authToken") : undefined;
 
         // Fetch all projects for the user using /projects/user/projects
-        const url = getApiUrl(`/projects/user/projects`);
+        const url = getApiUrl(`/projects/user/projects?page=1&limit=3`);
         console.log('[UserAfterSubmitProjectTable] Fetching projects from:', url);
 
         const response = await fetch(url, {
