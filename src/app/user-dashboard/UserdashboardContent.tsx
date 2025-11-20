@@ -12,11 +12,11 @@ export default function UserDashboardPage() {
   const [inProgressProjects, setInProgressProjects] = useState(0);
   const [, setLoading] = useState(true);
 
-  // Fetch projects data
+  // Fetch user dashboard stats
   const fetchProjects = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-      const response = await fetch(getApiUrl('/projects'), {
+      const response = await fetch(getApiUrl('/users/customer-user/stats'), {
         method: 'GET',
         headers: getAuthHeaders(authToken || undefined),
       });
@@ -24,13 +24,24 @@ export default function UserDashboardPage() {
       if (response.ok) {
         const data = await response.json();
         const projects = data.projects || data.data || [];
-        setTotalProjects(projects.length);
+        console.log(data);
 
-        // Count in progress projects
-        const inProgressCount = projects.filter((project: { status: string }) =>
-          project.status === 'active' || project.status === 'in_progress' || project.status === 'pending'
-        ).length;
-        setInProgressProjects(inProgressCount);
+        const totalFromStats =
+          data.totalPersonalProjects ??
+          data.totalProjects ??
+          data.total ??
+          projects.length;
+        setTotalProjects(typeof totalFromStats === 'number' ? totalFromStats : 0);
+
+        const inProgressFromStats = data.inProgressProjects ?? data.activeProjects;
+        if (typeof inProgressFromStats === 'number') {
+          setInProgressProjects(inProgressFromStats);
+        } else {
+          const inProgressCount = projects.filter((project: { status: string }) =>
+            project.status === 'active' || project.status === 'in_progress' || project.status === 'pending'
+          ).length;
+          setInProgressProjects(inProgressCount);
+        }
       }
     } catch (error) {
       console.error('Error fetching projects:', error);
