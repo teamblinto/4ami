@@ -305,16 +305,21 @@ export default function DashboardLayout({
 
           <div className="p-4 border-t">
             <Link
-              href="#"
-              className="flex items-center p-2 text-[#080607] hover:bg-gray-100"
+              href="/dashboard/settings"
+              className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/settings")
+                  ? "bg-[#ED272C] text-[#FFFFFF]"
+                  : "text-gray-700 hover:bg-gray-100"
+                }`}
             >
-              <Image
-                src="/Module-Icons/settings.svg"
-                alt="Settings"
-                width={20}
-                height={20}
-              />
-              {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
+              <div className={isActive("/dashboard/settings") ? "brightness-0 invert" : ""}>
+                <Image
+                  src="/Module-Icons/settings.svg"
+                  alt="Settings"
+                  width={20}
+                  height={20}
+                />
+              </div>
+              {!isSidebarCollapsed && <span className="ml-3 whitespace-nowrap overflow-hidden">Settings</span>}
             </Link>
           </div>
         </aside>
@@ -486,7 +491,11 @@ export default function DashboardLayout({
                         View profile
                       </button>
 
-                      <button className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer">
+                      <Link
+                        href="/dashboard/settings"
+                        className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
                         <svg
                           className="w-4 h-4 text-gray-400"
                           fill="none"
@@ -507,7 +516,7 @@ export default function DashboardLayout({
                           />
                         </svg>
                         Settings
-                      </button>
+                      </Link>
 
                       <button
                         onClick={handleLogout}
