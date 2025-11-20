@@ -40,7 +40,7 @@ export default function UserDashboardLayout({
 
   const isActive = (path: string) => {
     if (path === "/user-dashboard") {
-      return pathname === "/user-dashboard";
+      return pathname === "/user-dashboard" || pathname.startsWith("/user-dashboard/notifications");
     }
     return pathname.startsWith(path);
   };
@@ -297,7 +297,13 @@ export default function UserDashboardLayout({
                       ))}
                     </ul>
                     <div className="px-4 py-3">
-                      <button className="w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer">See all notifications</button>
+                      <Link
+                        href="/user-dashboard/notifications"
+                        className="block w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
+                        See all notifications
+                      </Link>
                     </div>
                   </div>
                 )}

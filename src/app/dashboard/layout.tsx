@@ -62,7 +62,7 @@ export default function DashboardLayout({
 
   const isActive = (path: string) => {
     if (path === "/dashboard") {
-      return pathname === "/dashboard";
+      return pathname === "/dashboard" || pathname.startsWith("/dashboard/notifications");
     }
     return pathname.startsWith(path);
   };
@@ -397,9 +397,13 @@ export default function DashboardLayout({
                       ))}
                     </ul>
                     <div className="px-4 py-3">
-                      <button className="w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer">
+                      <Link
+                        href="/dashboard/notifications"
+                        className="block w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
                         See all notifications
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 )}

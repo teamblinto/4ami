@@ -11,13 +11,22 @@ import { useEffect, useState } from "react";
 
 export default function CompanyAdminLayout({
   children,
+}: {
+  children: React.ReactNode;
 }) {
   const { isSidebarCollapsed, toggleSidebar } = useSidebar();
   const pathname = usePathname();
   const router = useRouter();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
-  const [notifications, setNotifications] = useState([
+  const [notifications, setNotifications] = useState<{
+    id: string;
+    title: string;
+    description?: string;
+    date: string;
+    read?: boolean;
+    avatar?: string;
+  }[]>([
     {
       id: '1',
       title: 'There are pending service approvals that need your attention. Please review the service details to approve or reject',
@@ -45,11 +54,16 @@ export default function CompanyAdminLayout({
       read: true,
     },
   ]);
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState<{
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    companyId?: string | null;
+  } | null>(null);
 
-  const isActive = (path) => {
+  const isActive = (path: string) => {
     if (path === "/company-admin") {
-      return pathname === "/company-admin";
+      return pathname === "/company-admin" || pathname.startsWith("/company-admin/notifications");
     }
     return pathname.startsWith(path);
   };
@@ -111,8 +125,8 @@ export default function CompanyAdminLayout({
   };
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      const target = event.target;
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
       if (!target.closest('.dropdown-container')) {
         setIsDropdownOpen(false);
       }
@@ -344,7 +358,13 @@ export default function CompanyAdminLayout({
                       ))}
                     </ul>
                     <div className="px-4 py-3">
-                      <button className="w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer">See all notifications</button>
+                      <Link
+                        href="/company-admin/notifications"
+                        className="block w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
+                        See all notifications
+                      </Link>
                     </div>
                   </div>
                 )}
