@@ -58,6 +58,9 @@ interface Project {
   };
   companyId: string;
   projectTypeId: string;
+  projectType?: {
+    name: string;
+  };
   createdById: string;
   createdAt: string;
   updatedAt: string;
@@ -145,18 +148,25 @@ interface QuickAction {
 const getStatusClass = (status: string) => {
   switch (status.toLowerCase()) {
     case 'completed':
-      return "bg-[#FEF0F0] text-[#ED272C]";
+      return "text-[#ED272C]";
     case 'pending':
-      return "bg-[#FFF7E6] text-[#FF8800]";
+      return "text-[#FF8800]";
     case 'active':
-      return "bg-[#E6F7FF] text-[#1890FF]";
+      return "text-[#1890FF]";
     case 'approved':
-      return "bg-[#F6FFED] text-[#52C41A]";
+      return "text-[#52C41A]";
     case 'cancelled':
-      return "bg-[#F5F5F5] text-[#8C8C8C]";
+      return "text-[#8C8C8C]";
     default:
-      return "bg-[#EDEDED] text-[#4B4F58]";
+      return "text-[#4B4F58]";
   }
+};
+
+const getActionClass = (status: string) => {
+  if (status === 'approved' || status === 'cancelled' || status === 'completed') {
+    return 'bg-gray-200 text-gray-800';
+  }
+  return 'bg-red-500 text-white';
 };
 
 // --- SUB-COMPONENTS ---
@@ -215,6 +225,7 @@ const StatCard = ({
 );
 
 const ProjectsTable = () => {
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -250,18 +261,6 @@ const ProjectsTable = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  const formatDateRange = (startDate: string, endDate: string | null) => {
-    const start = new Date(startDate).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-    const end = endDate ? new Date(endDate).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    }) : 'Ongoing';
-    return `${start} - ${end}`;
-  };
 
   return (
     <div className="bg-white p-4 rounded-lg ">
@@ -306,66 +305,112 @@ const ProjectsTable = () => {
         </div>
       </div> */}
       <div className="overflow-x-auto">
-        <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD] ">
-          <thead>
-            <tr className="bg-white">
-              <th className="px-6 py-2 w-1/7 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">
-                Project ID
+        <table className="min-w-full text-sm border-collapse">
+        <thead className="bg-white">
+            <tr>
+              {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th> */}
+              <th className="px-6 py-2 text-left w-[150px] text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Project ID
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
               </th>
-              <th className="px-6 py-2 w-1/3 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
-                Project
+              <th className="px-6 py-2 w-[200px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Project type
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
               </th>
-              <th className="px-6 py-2 w-1/5 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">
-                Time (Start to End)
+              <th className="px-6 py-2 w-[400px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Project Name
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
               </th>
-              <th className="px-6 py-2 w-1/5  text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
-                Status
+              <th className="px-6 py-2 w-[150px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Submit Date
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex w-[120px] items-center justify-between gap-1">
+                  Status
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-6 py-2 w-[130px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Action
               </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <ShimmerTable rows={3} cols={4} />
+              <ShimmerTable rows={3} cols={7} />
             ) : error ? (
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center text-red-500">
+                <td colSpan={7} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
                   Error: {error}
                 </td>
               </tr>
             ) : projects.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={7} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
                   No projects found
                 </td>
               </tr>
             ) : (
               projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
+                const submissionDate = project.submitDate 
+                  ? new Date(project.submitDate).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })
+                  : 'N/A';
                 return (
                   <tr
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
                     style={{ height: '64px' }}
                   >
-                    <td className="px-6  text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r align-middle" style={{ height: '64px' }}>
+                    <td className="px-6 text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.projectNumber || project.id}
                     </td>
-                    <td className="px-6  text-gray-700 border-b border-[#D0D5DD]  border-r align-middle" style={{ height: '64px' }}>
+                    <td className="px-6  text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      {project.projectType?.name || 'N/A'}
+                    </td>
+                    <td className="px-6  text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       {project.name}
                     </td>
-                    <td className="px-6  text-gray-700 border-b border-[#D0D5DD] border-r align-middle" style={{ height: '64px' }}>
-                      {formatDateRange(project.startDate, project.endDate)}
+                    <td className="px-6 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      {submissionDate}
                     </td>
-                    <td className="px-6  border-b border-[#D0D5DD] border-r align-middle" style={{ height: '64px' }}>
-                      <div className="flex justify-center items-center">
-                        <span
-                          className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(
-                            project.status
-                          )}`}
-                        >
-                          {project.status}
-                        </span>
-                      </div>
+                    <td className={`px-6  text-sm font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`} style={{ height: '64px' }}>
+                      {project.status}
+                    </td>
+                    <td className="px-6  w-[120px] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <button
+                        onClick={() => {
+                          router.push('/dashboard/manage-projects/project-report');
+                        }}
+                        className={`px-4 cursor-pointer py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                      >
+                        {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
+                      </button>
                     </td>
                   </tr>
                 );
