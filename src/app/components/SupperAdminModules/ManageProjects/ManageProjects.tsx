@@ -261,19 +261,19 @@ export default function ManageProjects() {
                     {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center align-middle">
                       <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
                     </td> */}
-                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {project.projectNumber || project.id}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {project.projectType?.name || 'N/A'}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
                       {project.name}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
                       {submissionDate}
                     </td>
-                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>
+                    <td className={`px-6 py-3 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>
                       {project.status}
                     </td>
                     <td className="px-6 w-[120px] whitespace-nowrap border border-[#D0D5DD]">
@@ -281,7 +281,7 @@ export default function ManageProjects() {
                         onClick={() => {
                           router.push('/dashboard/manage-projects/project-report');
                         }}
-                        className={`px-4 cursor-pointer py-2 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                        className={`px-4 cursor-pointer py-3 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
                       >
                         {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
                       </button>
