@@ -164,7 +164,6 @@ export default function ManageProjects() {
             Add Filter
           </button>
           <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600">Clear Filter</button>
-          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600">Edit Column</button>
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           Rows per page:
@@ -187,7 +186,7 @@ export default function ManageProjects() {
               {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
                 Select
               </th> */}
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left w-[150px] text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between gap-1">
                   Project ID
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -195,7 +194,7 @@ export default function ManageProjects() {
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 w-[250px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between gap-1">
                   Project type
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -203,7 +202,7 @@ export default function ManageProjects() {
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 w-[400px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between gap-1">
                   Project Name
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -211,7 +210,7 @@ export default function ManageProjects() {
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 w-[150px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between gap-1">
                   Submission Date
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -220,14 +219,14 @@ export default function ManageProjects() {
                 </div>
               </th>
               <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between gap-1">
+                <div className="flex w-[100px] items-center justify-between gap-1">
                   Status
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 w-[120px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 Action
               </th>
             </tr>
@@ -277,7 +276,7 @@ export default function ManageProjects() {
                     <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>
                       {project.status}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 w-[120px] whitespace-nowrap border border-[#D0D5DD]">
                       <button
                         onClick={() => {
                           router.push('/dashboard/manage-projects/project-report');
