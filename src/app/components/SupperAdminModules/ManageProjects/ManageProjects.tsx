@@ -19,6 +19,9 @@ interface Project {
   };
   companyId: string;
   projectTypeId: string;
+  projectType?: {
+    name: string;
+  };
   createdById: string;
   createdAt: string;
   updatedAt: string;
@@ -180,57 +183,101 @@ export default function ManageProjects() {
       <div className="bg-white overflow-x-auto">
         <table className="min-w-full border-collapse">
           <thead className="bg-white">
-            <tr className=''>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+            <tr>
+              {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
                 Select
-              </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+              </th> */}
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between gap-1">
-                  Service Name
+                  Project ID
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">Description</th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Project type
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Project Name
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                <div className="flex items-center justify-between gap-1">
+                  Submission Date
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between gap-1">
                   Status
                   <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-gray-600 border border-[#D0D5DD]">Action</th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+                Action
+              </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <ShimmerTable rows={Math.min(limit, 10)} cols={5} />
+              <ShimmerTable rows={Math.min(limit, 10)} cols={6} />
             ) : error ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-red-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
                   Error: {error}
                 </td>
               </tr>
             ) : projects.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
                   No projects found
                 </td>
               </tr>
             ) : (
               projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
+                const submissionDate = project.submitDate 
+                  ? new Date(project.submitDate).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })
+                  : 'N/A';
                 return (
                   <tr key={project.id || index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center align-middle">
                       <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
+                    </td> */}
+                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                      {project.projectNumber || project.id}
                     </td>
-                    <td className="px-6  whitespace-nowrap text-gray-900 font-medium border border-[#D0D5DD]">{project.name}</td>
-                    <td className="px-6  whitespace-nowrap text-gray-900 border border-[#D0D5DD]">{project.description || 'No description'}</td>
-                    <td className={`px-6 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>{project.status}</td>
-                    <td className="px-6  whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                      {project.projectType?.name || 'N/A'}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
+                      {project.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
+                      {submissionDate}
+                    </td>
+                    <td className={`px-6 py-4 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>
+                      {project.status}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap border border-[#D0D5DD]">
                       <button
                         onClick={() => {
                           router.push('/dashboard/manage-projects/project-report');
