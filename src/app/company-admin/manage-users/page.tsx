@@ -306,9 +306,6 @@ export default function CompanyAdminManageUsersPage() {
           <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">
             Clear Filter
           </button>
-          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">
-            Edit Column
-          </button>
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           Rows per page:
@@ -329,28 +326,28 @@ export default function CompanyAdminManageUsersPage() {
         <table className="min-w-full border-collapse">
           <thead className="bg-white">
             <tr>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+              {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
                 Select
-              </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              </th> */}
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Company Name</span>
                   <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 First Name
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 Last Name
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 Role
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 E-Mail
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 Action
               </th>
             </tr>
@@ -403,35 +400,35 @@ export default function CompanyAdminManageUsersPage() {
                   <tr
                     key={index}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
-                    style={{ height: '64px' }}
+                
                   >
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center align-middle" style={{ height: '64px' }}>
+                    {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center align-middle" style={{ height: '64px' }}>
                       <input
                         type="checkbox"
                         className="rounded border-gray-300 accent-[#ED272C] w-4 h-4 cursor-pointer"
                       />
-                    </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                    </td> */}
+                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD] align-middle" >
                       {user.companyName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" >
                       {user.firstName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" >
                       {user.lastName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle">
                       {user.role}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle">
                       {user.email}
                     </td>
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] align-middle">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer">
                           <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                         </button>
-                        <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                        <button className="p-2 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
                           <Image src="/bin.svg" alt="Delete" width={12} height={12} />
                         </button>
                       </div>
