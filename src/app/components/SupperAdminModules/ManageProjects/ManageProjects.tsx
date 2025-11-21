@@ -281,7 +281,7 @@ export default function ManageProjects() {
                         onClick={() => {
                           router.push('/dashboard/manage-projects/project-report');
                         }}
-                        className={`px-4 cursor-pointer py-3 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                        className={`px-4 cursor-pointer py-1 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
                       >
                         {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
                       </button>
