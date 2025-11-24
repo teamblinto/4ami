@@ -256,13 +256,13 @@ export default function CompanyAdminLayout({
 
                 <li className="mb-2">
                   <Link
-                    href="/company-admin/manage-profile"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-profile")
+                    href="/company-admin/manage-company-profile"
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-company-profile")
                       ? "bg-[#ED272C] text-[#FFFFFF]"
                       : "text-gray-700 hover:bg-gray-100"
                       }`}
                   >
-                    {isActive("/company-admin/manage-profile") ? (
+                    {isActive("/company-admin/manage-company-profile") ? (
                       <Image src="/Module-Icons/manage-a.svg" alt="Active Manage Profile" width={20} height={20} />
                     ) : (
                       <Image src="/Module-Icons/manage-assets.svg" alt="Manage Profile" width={20} height={20} />
