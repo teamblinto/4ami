@@ -22,6 +22,8 @@ interface Project {
   projectType?: {
     name: string;
   };
+  industry?: string;
+  assetType?: string;
   createdById: string;
   createdAt: string;
   updatedAt: string;
@@ -34,7 +36,16 @@ interface Project {
     id: string;
     companyName: string;
   };
-  assets: unknown[];
+  assets?: Array<{
+    id: string;
+    industry?: string;
+    assetClass?: string;
+  }>;
+  equipments?: Array<{
+    id: string;
+    industry?: string;
+    assetClass?: string;
+  }>;
   reports: unknown[];
 }
 
@@ -179,70 +190,86 @@ export default function ManageProjects() {
         </div>
       </div>
 
-      <div className="bg-white overflow-x-auto">
-        <table className="min-w-full border-collapse">
+      <div className="bg-white overflow-hidden">
+        <table className="w-full border-collapse table-fixed" style={{ tableLayout: 'fixed' }}>
           <thead className="bg-white">
             <tr>
               {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
                 Select
               </th> */}
-              <th className="px-6 py-2 text-left w-[150px] text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between gap-1">
-                  Project ID
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project ID</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
                     <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 w-[250px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between gap-1">
-                  Project type
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '13%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project type</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
                     <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 w-[400px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between gap-1">
-                  Project Name
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '18%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project Name</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
                     <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 w-[150px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex items-center justify-between gap-1">
-                  Submit Date
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Industry</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
                     <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                <div className="flex w-[100px] items-center justify-between gap-1">
-                  Status
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '11%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Asset Type</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
                     <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
                   </svg>
                 </div>
               </th>
-              <th className="px-6 py-2 w-[120px] text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                Action
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '10%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Submit Date</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '8%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Status</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '12%' }}>
+                <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Action</span>
               </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <ShimmerTable rows={Math.min(limit, 10)} cols={6} />
+              <ShimmerTable rows={Math.min(limit, 10)} cols={8} />
             ) : error ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
+                <td colSpan={8} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
                   Error: {error}
                 </td>
               </tr>
             ) : projects.length === 0 ? (
               <tr>
-                <td colSpan={6} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                <td colSpan={8} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
                   No projects found
                 </td>
               </tr>
@@ -256,32 +283,44 @@ export default function ManageProjects() {
                       day: 'numeric' 
                     })
                   : 'N/A';
+                
+                // Extract industry and assetClass from equipments or assets array
+                const equipmentData = project.equipments?.[0] || project.assets?.[0];
+                const industry = equipmentData?.industry || project.industry || 'N/A';
+                const assetType = equipmentData?.assetClass || project.assetType || 'N/A';
+                
                 return (
                   <tr key={project.id || index} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
                     {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center align-middle">
                       <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
                     </td> */}
-                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {project.projectNumber || project.id}
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD]">
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectNumber || project.id}</div>
                     </td>
-                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {project.projectType?.name || 'N/A'}
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD]">
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectType?.name || 'N/A'}</div>
                     </td>
-                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
-                      {project.name}
+                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD]">
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap max-w-full" title={project.name}>{project.name}</div>
                     </td>
-                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {submissionDate}
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD]">
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{industry}</div>
                     </td>
-                    <td className={`px-6 py-3 whitespace-nowrap text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>
-                      {project.status}
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD]">
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{assetType}</div>
                     </td>
-                    <td className="px-6 w-[120px] whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD]">
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{submissionDate}</div>
+                    </td>
+                    <td className={`px-4 py-3 text-sm font-medium border border-[#D0D5DD] ${getStatusClass(project.status)}`}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.status}</div>
+                    </td>
+                    <td className="px-4 py-3 border border-[#D0D5DD]">
                       <button
                         onClick={() => {
                           router.push('/dashboard/manage-projects/project-report');
                         }}
-                        className={`px-4 cursor-pointer py-1 rounded-md text-sm font-semibold ${getActionClass(project.status)}`}
+                        className={`px-2 cursor-pointer py-1 rounded-md text-xs font-semibold w-full truncate block overflow-hidden text-ellipsis whitespace-nowrap ${getActionClass(project.status)}`}
                       >
                         {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
                       </button>
