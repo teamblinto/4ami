@@ -140,41 +140,26 @@ export default function AfterSubmitProjectTable() {
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '12%' }}>
                 <div className="flex items-center justify-between gap-1 min-w-0">
                   <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project ID</span>
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
                 </div>
               </th>
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '33%' }}>
                 <div className="flex items-center justify-between gap-1 min-w-0">
                   <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project Name</span>
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
                 </div>
               </th>
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '12%' }}>
                 <div className="flex items-center justify-between gap-1 min-w-0">
                   <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Industry</span>
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
                 </div>
               </th>
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '13%' }}>
                 <div className="flex items-center justify-between gap-1 min-w-0">
                   <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Submit Date</span>
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
                 </div>
               </th>
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '10%' }}>
                 <div className="flex items-center justify-between gap-1 min-w-0">
                   <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Status</span>
-                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
-                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
                 </div>
               </th>
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '10%' }}>
