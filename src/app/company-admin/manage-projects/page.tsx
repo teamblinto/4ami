@@ -344,28 +344,28 @@ export default function CompanyAdminManageProjectsPage() {
                         className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer"
                       />
                     </td> */}
-                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] font-medium border border-[#D0D5DD] align-middle"  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectNumber || project.id}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectType?.name || 'N/A'}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] font-medium border border-[#D0D5DD] align-middle"  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap max-w-full" title={project.name}>{project.name}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{industry}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{assetType}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{submissionDate}</div>
                     </td>
-                    <td className={`px-4 py-3 text-sm font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`}  >
+                    <td className={`px-4 py-3 text-[14px] font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`}  >
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.status}</div>
                     </td>
-                    <td className="px-4 py-3 border border-[#D0D5DD] align-middle"  >
+                    <td className="px-4 py-3 text-[14px] font-medium  border border-[#D0D5DD] align-middle"  >
                       <button
                         onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
                         className={`px-2 cursor-pointer py-2 rounded-md text-xs font-semibold w-full truncate block overflow-hidden text-ellipsis whitespace-nowrap ${getActionClass(project.status)}`}

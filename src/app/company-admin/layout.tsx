@@ -269,7 +269,7 @@ export default function CompanyAdminLayout({
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Profile</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Company</span>
                     )}
                   </Link>
                 </li>
