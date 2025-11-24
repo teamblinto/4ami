@@ -408,22 +408,22 @@ export default function CompanyAdminManageUsersPage() {
                         className="rounded border-gray-300 accent-[#ED272C] w-4 h-4 cursor-pointer"
                       />
                     </td> */}
-                    <td className="px-6 py-3 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD] align-middle" >
+                    <td className="px-6 py-3 whitespace-nowrap text-[14px] text-[#343A40] font-medium border border-[#D0D5DD] align-middle" >
                       {user.companyName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" >
+                    <td className="px-6 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle" >
                       {user.firstName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle" >
+                    <td className="px-6 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle" >
                       {user.lastName}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle">
+                    <td className="px-6 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle">
                       {user.role}
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD] align-middle">
+                    <td className="px-6 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle">
                       {user.email}
                     </td>
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] align-middle">
+                    <td className="px-6 whitespace-nowrap text-[14px] font-medium border border-[#D0D5DD] align-middle">
                       <div className="flex items-center justify-center gap-2">
                         <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer">
                           <Image src="/pencil.svg" alt="Edit" width={12} height={12} />

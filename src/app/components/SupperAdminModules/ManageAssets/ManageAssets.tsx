@@ -250,11 +250,11 @@ export default function ManageAssets() {
                     {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
                     </td> */}
-                    <td className="px-6 py-3  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{asset.assetClassName || 'N/A'}</td>
-                    <td className="px-6  py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.industryName || 'N/A'}</td>
-                    <td className="px-6  py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.makeName || 'N/A'}</td>
-                    <td className="px-6  py-3 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.modelName || 'N/A'}</td>
-                    <td className="px-6  whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 py-3  whitespace-nowrap text-[14px] text-[#343A40] font-medium border border-[#D0D5DD]">{asset.assetClassName || 'N/A'}</td>
+                    <td className="px-6  py-3 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD]">{asset.industryName || 'N/A'}</td>
+                    <td className="px-6  py-3 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD]">{asset.makeName || 'N/A'}</td>
+                    <td className="px-6  py-3 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD]">{asset.modelName || 'N/A'}</td>
+                    <td className="px-6  whitespace-nowrap border text-[14px] border-[#D0D5DD]">
                       <button className="p-2 py-2  border border-[#D0D5DD] rounded-md cursor-pointer">
                         <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                       </button>

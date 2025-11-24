@@ -280,12 +280,12 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
                     {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input type="checkbox" className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer" />
                     </td> */}
-                    <td className="px-6 py-3  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{user.companyName}</td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.firstName}</td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.lastName}</td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.role}</td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{user.email}</td>
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD]">
+                    <td className="px-6 py-3  whitespace-nowrap text-[#343A40] text-[14px] font-medium border border-[#D0D5DD]">{user.companyName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] text-[14px] border border-[#D0D5DD]">{user.firstName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] text-[14px] border border-[#D0D5DD]">{user.lastName}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] text-[14px] border border-[#D0D5DD]">{user.role}</td>
+                    <td className="px-6 whitespace-nowrap text-[#343A40] text-[14px] border border-[#D0D5DD]">{user.email}</td>
+                    <td className="px-6 whitespace-nowrap border text-[14px] font-medium border-[#D0D5DD]">
                       <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer">
                         <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                       </button>
