@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { getApiUrl, getAuthHeaders } from "@/lib/config";
 import Link from "next/link";
-import { ShimmerEffect } from "@/app/Animations/shimmereffect";
+import { ShimmerTable } from "@/app/Animations/shimmereffect";
 import { useRouter } from "next/navigation";
 
 interface Project {
@@ -112,11 +112,16 @@ export default function AfterSubmitProjectTable() {
 
   return (
     <div className="w-full bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] p-4">
-      <h1 className="text-lg font-semibold mb-4 text-[#080607] ">Projects</h1>
+      <div className="flex items-center justify-between mb-4">
+        <h1 className="text-lg font-semibold text-[#080607]">Projects</h1>
+        <Link href="/company-admin/manage-projects" className="text-[#ED272C] text-sm font-medium">
+          View All
+        </Link>
+      </div>
 
       {/* Table */}
-      <div className="bg-white overflow-hidden">
-        <table className="w-full border-collapse table-fixed" style={{ tableLayout: 'fixed' }}>
+      <div className="overflow-hidden">
+        <table className="w-full text-sm border-collapse table-fixed" style={{ tableLayout: 'fixed' }}>
           <thead className="bg-white">
             <tr>
               <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
@@ -182,31 +187,17 @@ export default function AfterSubmitProjectTable() {
           </thead>
           <tbody>
             {loading ? (
-              <>
-                {Array.from({ length: 3 }).map((_, rowIndex) => (
-                  <tr
-                    key={rowIndex}
-                    className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
-                  >
-                    <td colSpan={8} className="px-4 py-4 align-middle border border-[#D0D5DD]">
-                      <ShimmerEffect className="h-5 w-full" />
-                    </td>
-                  </tr>
-                ))}
-              </>
+              <ShimmerTable rows={3} cols={8} />
             ) : error ? (
               <tr>
-                <td colSpan={8} className="px-4 py-6 text-center text-red-600 text-sm border border-[#D0D5DD]">
-                  {error}
+                <td colSpan={8} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
+                  Error: {error}
                 </td>
               </tr>
             ) : projects.length === 0 ? (
               <tr>
                 <td colSpan={8} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
-                  <div className="text-gray-500 text-lg mb-2">No projects found</div>
-                  <div className="text-gray-400 text-sm">
-                    Start by creating your first project.
-                  </div>
+                  No projects found
                 </td>
               </tr>
             ) : (
@@ -229,32 +220,33 @@ export default function AfterSubmitProjectTable() {
                   <tr
                     key={project.id || index}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
+                    style={{ height: '64px' }}
                   >
-                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectNumber || project.id}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectType?.name || 'N/A'}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap max-w-full" title={project.name}>{project.name}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{industry}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{assetType}</div>
                     </td>
-                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{submissionDate}</div>
                     </td>
-                    <td className={`px-4 py-3 text-sm font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`}>
+                    <td className={`px-4 py-3 text-sm font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`} style={{ height: '64px' }}>
                       <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.status}</div>
                     </td>
-                    <td className="px-4 py-3 border border-[#D0D5DD] align-middle">
+                    <td className="px-4 py-3 border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
                       <button
                         onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
-                        className={`px-2 cursor-pointer py-2 rounded-md text-xs font-semibold w-full truncate block overflow-hidden text-ellipsis whitespace-nowrap ${getActionClass(project.status)}`}
+                        className={`px-2 cursor-pointer py-2 hover:bg-red-600 rounded-md text-xs font-semibold w-full truncate block overflow-hidden text-ellipsis whitespace-nowrap ${getActionClass(project.status)}`}
                       >
                         {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
                       </button>
@@ -265,17 +257,6 @@ export default function AfterSubmitProjectTable() {
             )}
           </tbody>
         </table>
-      </div>
-
-
-      {/* Footer Link */}
-      <div className="mt-3 text-right">
-
-        <Link href="/company-admin/manage-projects" className="text-[#ED272C]  text-sm font-medium">
-          View All Projects
-        </Link>
-
-
       </div>
     </div>
   );
