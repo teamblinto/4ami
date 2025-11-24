@@ -192,7 +192,7 @@ export default function UserDashboardLayout({
                   </Link>
                 </li>
 
-                <li className="mb-2">
+                {/* <li className="mb-2">
                   <Link
                     href="/user-dashboard/profile"
                     className={`flex cursor-pointer items-center p-2 w-full text-left ${
@@ -211,7 +211,7 @@ export default function UserDashboardLayout({
                       <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Profile</span>
                     )}
                   </Link>
-                </li>
+                </li> */}
               </ul>
             </nav>
           </div>
