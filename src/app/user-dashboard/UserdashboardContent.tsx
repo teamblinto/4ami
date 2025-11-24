@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import CountUp from 'react-countup';
-import UserProjectDropdown from "./UserProjectDropdown";
-import UserAfterSubmitProjectTable from "./UserAfterSubmitProjectTable";
+import UserProjectDropdown from "./(Filters)/UserProjectDropdown";
+import UserAfterSubmitProjectTable from "./(Projects Table)/UserAfterSubmitProjectTable";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export default function UserDashboardPage() {
