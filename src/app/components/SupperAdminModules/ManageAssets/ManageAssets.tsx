@@ -230,7 +230,7 @@ export default function ManageAssets() {
                   <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
-              <th className="px-6 py-2text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
             </tr>
           </thead>
           <tbody>
