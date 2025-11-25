@@ -16,9 +16,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    console.log("Fetching verification data for token:", token);
     const externalUrl = `${getApiUrl("/auth/verify-email")}/${token}`;
-    console.log("External API URL:", externalUrl);
 
     // Forward the request to the external API
     const response = await fetch(externalUrl, {
@@ -29,8 +27,7 @@ export async function GET(request: NextRequest) {
     // Check if response is JSON
     const contentType = response.headers.get("content-type");
     if (!contentType || !contentType.includes("application/json")) {
-      const textResponse = await response.text();
-      console.log("Non-JSON response from external API:", textResponse);
+      await response.text();
       return NextResponse.json(
         { message: "Invalid response format from verification service" },
         { status: 500 },
@@ -40,7 +37,6 @@ export async function GET(request: NextRequest) {
     let data;
     try {
       data = await response.json();
-      console.log("External API response data:", data);
     } catch (jsonError) {
       console.error("Error parsing JSON response:", jsonError);
       return NextResponse.json(

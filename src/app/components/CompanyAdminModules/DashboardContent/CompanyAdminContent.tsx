@@ -12,7 +12,6 @@ export default function CompanyAdminContent() {
   const [onGoingProjects, setOnGoingProjects] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const [, setLoading] = useState(true);
-  console.log(totalProjects)
 
   // Fetch projects data for this company admin
   const fetchProjects = async () => {

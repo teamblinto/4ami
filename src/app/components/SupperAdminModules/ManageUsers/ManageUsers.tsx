@@ -79,7 +79,6 @@ export default function ManageUsers({ autoShowInvitation = false }: ManageUsersP
       }
 
       const result: ApiResponse = await response.json();
-      console.log('API Response:', result); // Debug log to see actual response structure
       
       // Handle different possible response structures
       let usersArray: ApiUserData[] = [];

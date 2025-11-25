@@ -77,16 +77,9 @@ export default function CompanyAdminManageUsersPage() {
       // Get auth token from localStorage or sessionStorage
       const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
 
-      // Debug: Check if auth token exists
-      console.log('Auth token exists:', !!authToken);
-      console.log('Auth token preview:', authToken ? authToken.substring(0, 20) + '...' : 'No token');
-
       // Use the available API endpoint: GET all users with pagination
       // This matches your available API: "GET Get all users with pagination"
       let url = `${config.API_BASE_URL}/users?page=${page}&limit=${limit}`;
-
-      console.log('Making request to:', url);
-      console.log('Headers:', getAuthHeaders(authToken || undefined));
 
       let response = await fetch(url, {
         method: 'GET',
@@ -95,7 +88,6 @@ export default function CompanyAdminManageUsersPage() {
 
       // If backend filtering fails (404 or 400), try without role filter
       if (!response.ok && (response.status === 404 || response.status === 400)) {
-        console.log('Backend role filtering not supported, trying without role filter...');
         url = `${config.API_BASE_URL}/users?page=${page}&limit=${limit}`;
         response = await fetch(url, {
           method: 'GET',
@@ -116,7 +108,6 @@ export default function CompanyAdminManageUsersPage() {
       }
 
       const result: ApiResponse = await response.json();
-      console.log('Company Admin API Response:', result); // Debug log
 
       // Handle different possible response structures
       let usersArray: ApiUserData[] = [];
@@ -139,7 +130,6 @@ export default function CompanyAdminManageUsersPage() {
       }
 
       // Filter users by role on frontend if backend doesn't support role filtering
-      console.log('Available user roles:', usersArray.map(u => u.role)); // Debug log
       const currentUser = getStoredUserData();
       const currentUserEmail = currentUser.email?.toLowerCase();
       
@@ -156,12 +146,8 @@ export default function CompanyAdminManageUsersPage() {
           ? user.email?.toLowerCase() === currentUserEmail
           : false;
 
-        const shouldInclude = isCustomerUser || isCurrentUser;
-        console.log(`User ${user.email} with role "${user.role}" - ${shouldInclude ? 'INCLUDED' : 'FILTERED OUT'}`);
-        return shouldInclude;
+        return isCustomerUser || isCurrentUser;
       });
-
-      console.log(`Filtered ${filteredUsers.length} Customer Users from ${usersArray.length} total users`);
 
       // Transform the filtered API data to match our frontend structure
       const transformedData: UserData[] = filteredUsers.map((user: ApiUserData) => ({

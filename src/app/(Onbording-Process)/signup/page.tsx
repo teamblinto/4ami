@@ -61,7 +61,6 @@ function ClientContent() {
       role
     });
   }, [searchParams]);
-  console.log(userInfo)
 
 
   return (
@@ -148,8 +147,6 @@ function ClientContent() {
                     role: roleMapping[userInfo.role] || userInfo.role,
                     agreeToTerms: 'true' // API expects string
                   };
-
-                  console.log('Sending signup data:', signupData);
 
                   // Call the customer admin signup API
                   const response = await fetch('/api/auth/customer-admin-signup', {

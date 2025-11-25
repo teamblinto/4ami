@@ -10,24 +10,16 @@ export async function GET(request: NextRequest) {
     const queryString = searchParams.toString();
     const endpoint = `/users${queryString ? `?${queryString}` : ''}`;
 
-    console.log("=== Users GET Proxy ===");
-    console.log("Endpoint:", endpoint);
-    console.log("Auth header present:", !!authHeader);
-
     const response = await fetch(getApiUrl(endpoint), {
       method: "GET",
       headers: getAuthHeaders(authHeader),
     });
-
-    console.log("Backend response status:", response.status);
 
     const contentType = response.headers.get("content-type");
     const isJson = contentType && contentType.includes("application/json");
     const data = isJson
       ? await response.json()
       : { message: await response.text() };
-
-    console.log("Backend response data:", data);
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {

@@ -6,19 +6,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const backendUrl = getApiUrl("/auth/signin");
 
-    console.log("=== API Proxy Debug ===");
-    console.log("Backend URL:", backendUrl);
-    console.log("Environment:", process.env.NODE_ENV);
-    console.log("API Base URL from env:", process.env.NEXT_PUBLIC_API_BASE_URL);
-    console.log("Login attempt for:", body.email);
-
     const response = await fetch(backendUrl, {
       method: "POST",
       headers: getAuthHeaders(),
       body: JSON.stringify(body),
     });
-
-    console.log("Backend response status:", response.status);
 
     const contentType = response.headers.get("content-type");
     let data;
@@ -27,11 +19,8 @@ export async function POST(request: NextRequest) {
       data = await response.json();
     } else {
       const text = await response.text();
-      console.log("Non-JSON response:", text);
       data = { message: text || "Invalid response from backend" };
     }
-
-    console.log("Backend response data:", data);
 
     // Forward Set-Cookie (if backend issues a session cookie) so browser stores it on our domain
     const setCookie = response.headers.get("set-cookie");
@@ -41,10 +30,7 @@ export async function POST(request: NextRequest) {
     }
     return nextResponse;
   } catch (error) {
-    console.error("=== Proxy Error ===");
-    console.error("Error type:", error instanceof Error ? error.constructor.name : typeof error);
-    console.error("Error message:", error instanceof Error ? error.message : String(error));
-    console.error("Full error:", error);
+    console.error("Signin proxy error:", error instanceof Error ? error.message : "Unknown error");
     
     return NextResponse.json(
       { 

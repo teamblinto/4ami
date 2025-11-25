@@ -257,7 +257,6 @@ const ProjectsTable = () => {
       }
 
       const result: ProjectsResponse = await response.json();
-      console.log('Dashboard Projects API Response:', result);
       setProjects(result.projects || []);
     } catch (err) {
       console.error('Error fetching dashboard projects:', err);
@@ -569,7 +568,6 @@ export default function DashboardContent() {
       }
 
       const result = await response.json();
-      console.log('User stats API Response:', result);
 
       if (typeof result.totalUsers === 'number') {
         setUserCount(result.totalUsers);

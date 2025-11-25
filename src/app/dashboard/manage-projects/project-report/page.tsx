@@ -124,11 +124,6 @@ export default function ProjectReportPage() {
     }
 
     setNoteErrors((prev) => ({ ...prev, [section]: '' }));
-    const selectedContent =
-      selectedOption === 'custom'
-        ? customNotes[section].trim()
-        : noteOptions.find((option) => option.value === selectedOption)?.body ?? '';
-    console.log(`Confirmed note [${section}]:`, selectedOption, selectedContent);
   };
 
   const renderNoteSection = (section: (typeof noteSections)[number]) => (

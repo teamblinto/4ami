@@ -109,8 +109,6 @@ export default function ManageProjects() {
       }
 
       const result: ProjectsResponse = await response.json();
-      console.log('API Response:', result);
-      console.log('Projects array:', result.projects);
       setProjects(result.projects || []);
       setTotalItems(result.total || 0);
       setCurrentPage(result.page || 1);

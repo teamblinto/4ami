@@ -24,7 +24,6 @@ export default function UserDashboardPage() {
       if (response.ok) {
         const data = await response.json();
         const projects = data.projects || data.data || [];
-        console.log(data);
 
         const totalFromStats =
           data.totalPersonalProjects ??

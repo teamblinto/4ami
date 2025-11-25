@@ -5,8 +5,6 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
-    console.log("Customer admin signup request:", body);
-
     // Forward the request to the external API
     const response = await fetch(getApiUrl("/auth/customer-admin-signup"), {
       method: "POST",
@@ -14,10 +12,7 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(body),
     });
 
-    console.log("External API response status:", response.status);
-
     const data = await response.json();
-    console.log("External API response data:", data);
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {

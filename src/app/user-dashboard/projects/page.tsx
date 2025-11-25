@@ -90,8 +90,6 @@ const ProjectsPage = () => {
 
       // Fetch projects with pagination
       const url = getApiUrl(`/projects/user/projects?page=${page}&limit=${limit}`);
-     
-      console.log('[fetchProjects] Fetching user projects from:', url);
 
       const response = await fetch(url, { 
         method: 'GET',
@@ -103,7 +101,6 @@ const ProjectsPage = () => {
       }
 
       const result = await response.json();
-      console.log('[fetchProjects] Projects data received:', result);
  
       // Handle response - could be array or object with projects array
       let projectsList: Project[] = [];

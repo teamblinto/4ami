@@ -8,11 +8,6 @@ export async function POST(request: NextRequest) {
     // Get the authorization header from the incoming request
     const authHeader = request.headers.get("authorization");
 
-    console.log(
-      "Forwarding invitation request with auth header:",
-      authHeader ? "Present" : "Not present",
-    );
-
     // Forward the request to the external API
     const response = await fetch(getApiUrl("/users/invite"), {
       method: "POST",
@@ -21,8 +16,6 @@ export async function POST(request: NextRequest) {
     });
 
     const data = await response.json();
-
-    console.log("External API response:", { status: response.status, data });
 
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
