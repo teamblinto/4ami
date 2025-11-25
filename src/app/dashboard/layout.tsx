@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSidebar } from "../contexts/SidebarContext";
 import ProtectedRoute from "../components/ProtectedRoute";
+import ScrollStyles from "../Animations/Scroll";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 
@@ -61,7 +62,7 @@ export default function DashboardLayout({
 
   const isActive = (path: string) => {
     if (path === "/dashboard") {
-      return pathname === "/dashboard";
+      return pathname === "/dashboard" || pathname.startsWith("/dashboard/notifications");
     }
     return pathname.startsWith(path);
   };
@@ -122,10 +123,10 @@ export default function DashboardLayout({
 
   return (
     <ProtectedRoute requiredRole="ADMIN">
-      <div className="flex min-h-screen bg-gray-100">
+      <div className="flex h-screen bg-gray-100 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col gap-[222px] transition-all duration-300 min-h-screen dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? "collapsed" : ""
+          className={`bg-white flex flex-col justify-between transition-all duration-300 h-screen sticky top-0 dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? "collapsed" : ""
             }`}
           style={{
             width: isSidebarCollapsed ? "64px" : "230px",
@@ -171,9 +172,9 @@ export default function DashboardLayout({
                 </button>
 
                 {/* Hover tooltip */}
-                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-600 whitespace-nowrap z-50 pointer-events-none">
+                {/* <div className="absolute right-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-600 whitespace-nowrap z-50 pointer-events-none">
                   {isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
-                </div>
+                </div> */}
               </div>
             </div>
 
@@ -304,24 +305,29 @@ export default function DashboardLayout({
 
           <div className="p-4 border-t">
             <Link
-              href="#"
-              className="flex items-center p-2 text-[#080607] hover:bg-gray-100"
+              href="/dashboard/settings"
+              className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/dashboard/settings")
+                  ? "bg-[#ED272C] text-[#FFFFFF]"
+                  : "text-gray-700 hover:bg-gray-100"
+                }`}
             >
-              <Image
-                src="/Module-Icons/settings.svg"
-                alt="Settings"
-                width={20}
-                height={20}
-              />
-              {!isSidebarCollapsed && <span className="ml-3">Settings</span>}
+              <div className={isActive("/dashboard/settings") ? "brightness-0 invert" : ""}>
+                <Image
+                  src="/Module-Icons/settings.svg"
+                  alt="Settings"
+                  width={20}
+                  height={20}
+                />
+              </div>
+              {!isSidebarCollapsed && <span className="ml-3 whitespace-nowrap overflow-hidden">Settings</span>}
             </Link>
           </div>
         </aside>
 
         {/* Main Content Common */}
-        <main className="flex-grow px-8 bg-[#FAFAFA] pt-[24px] pb-[24px] overflow-x-auto min-w-0">
+        <main className="flex-grow flex flex-col bg-[#FAFAFA] min-w-0 overflow-y-auto dashboard-scroll">
           {/* Top Bar */}
-          <div className="flex items-center justify-between mb-6">
+          <div className="sticky top-0 z-40 bg-[#FAFAFA] px-8 pt-[24px] pb-6 flex items-center justify-between ">
             <div className="relative w-[320px] ">
               <input
                 type="text"
@@ -391,9 +397,13 @@ export default function DashboardLayout({
                       ))}
                     </ul>
                     <div className="px-4 py-3">
-                      <button className="w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer">
+                      <Link
+                        href="/dashboard/notifications"
+                        className="block w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
+                        onClick={() => setIsNotificationsOpen(false)}
+                      >
                         See all notifications
-                      </button>
+                      </Link>
                     </div>
                   </div>
                 )}
@@ -485,7 +495,11 @@ export default function DashboardLayout({
                         View profile
                       </button>
 
-                      <button className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer">
+                      <Link
+                        href="/dashboard/settings"
+                        className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer"
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
                         <svg
                           className="w-4 h-4 text-gray-400"
                           fill="none"
@@ -506,7 +520,7 @@ export default function DashboardLayout({
                           />
                         </svg>
                         Settings
-                      </button>
+                      </Link>
 
                       <button
                         onClick={handleLogout}
@@ -534,8 +548,12 @@ export default function DashboardLayout({
             </div>
           </div>
 
-          {children}
+          {/* Content Area */}
+          <div className="flex-1 px-8 pb-[24px] pt-0">
+            {children}
+          </div>
         </main>
+        <ScrollStyles />
       </div>
     </ProtectedRoute>
   );

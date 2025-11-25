@@ -27,6 +27,16 @@ function ClientContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
+  // Password requirements validation
+  const passwordRequirements = {
+    has8Chars: password.length >= 8,
+    hasUppercase: /[A-Z]/.test(password),
+    hasLowercase: /[a-z]/.test(password),
+    hasNumber: /[0-9]/.test(password),
+  };
+
+  const isPasswordValid = Object.values(passwordRequirements).every(req => req);
+
   useEffect(() => {
     // Get user info from URL parameters
     const email = searchParams.get('email') || '';
@@ -57,10 +67,10 @@ function ClientContent() {
   return (
     <div className="min-h-screen bg-[#FBFBFB] flex flex-col">
       <header className="px-12 py-4" style={{ height: '60px' }}>
-        <Image 
-          src="/AMILogo.svg" 
-          alt="AMI Logo" 
-          width={230} 
+        <Image
+          src="/AMILogo.svg"
+          alt="AMI Logo"
+          width={230}
           height={35}
           priority
           style={{ width: "230px", height: "35px", display: "block" }}
@@ -110,8 +120,8 @@ function ClientContent() {
                     toast.error('Passwords do not match');
                     return;
                   }
-                  if (password.length < 6) {
-                    toast.error('Password must be at least 6 characters long');
+                  if (!isPasswordValid) {
+                    toast.error('Password must meet all requirements: 8 characters, uppercase, lowercase, and number');
                     return;
                   }
 
@@ -181,6 +191,63 @@ function ClientContent() {
 
                 {/* Password */}
                 <div className="mb-6">
+                  <h2 className="text-base font-semibold text-gray-700 mb-3">Password must include at least:</h2>
+
+                  {/* Password Requirements List */}
+                  <div className="mb-4 space-y-2">
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.has8Chars ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">8 Characters</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.hasUppercase ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">1 uppercase letter</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.hasLowercase ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">1 lowercase letter</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {passwordRequirements.hasNumber ? (
+                        <svg className="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                      ) : (
+                        <svg className="w-5 h-5 text-[#8B4513]" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      <span className="text-sm text-gray-700">1 Number</span>
+                    </div>
+                  </div>
+
                   <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
                     Password
                   </label>
@@ -192,6 +259,7 @@ function ClientContent() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                       className="shadow appearance-none border border-gray-300 bg-gray-50 rounded w-full py-2 px-3 pr-10 text-gray-700 focus:outline-none focus:shadow-outline"
+                      placeholder="Password"
                     />
                     <button
                       type="button"
@@ -242,11 +310,6 @@ function ClientContent() {
                       )}
                     </button>
                   </div>
-                  <p className="text-sm text-[#6C757D] mt-1">
-                    Password strength: <span className={password.length >= 8 ? "text-green-600" : password.length >= 6 ? "text-yellow-600" : "text-red-600"}>
-                      {password.length >= 8 ? "Strong" : password.length >= 6 ? "Medium" : "Weak"}
-                    </span>
-                  </p>
                 </div>
 
                 {/* Confirm Password */}
@@ -256,6 +319,7 @@ function ClientContent() {
                   </label>
                   <div className="relative">
                     <input
+                      placeholder="Confirm Password"
                       type={showConfirmPassword ? "text" : "password"}
                       id="confirmPassword"
                       value={confirmPassword}
@@ -331,10 +395,10 @@ function ClientContent() {
 
                   <button
                     type="submit"
-                    disabled={isLoading}
-                    className={`font-bold py-3 px-8 border rounded-lg focus:outline-none focus:shadow-outline w-full sm:w-auto flex items-center justify-center ${isLoading
-                        ? 'bg-gray-400 cursor-not-allowed text-white'
-                        : 'bg-red-500 hover:bg-red-700 text-white cursor-pointer'
+                    disabled={isLoading || !password || password !== confirmPassword || !isPasswordValid}
+                    className={`font-bold py-3 px-8 border rounded-lg focus:outline-none focus:shadow-outline w-full sm:w-auto flex items-center justify-center ${isLoading || !password || password !== confirmPassword || !isPasswordValid
+                      ? 'bg-gray-400 cursor-not-allowed text-white'
+                      : 'bg-red-500 hover:bg-red-700 text-white cursor-pointer'
                       }`}
                   >
                     {isLoading ? (

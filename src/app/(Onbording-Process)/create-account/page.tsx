@@ -87,23 +87,26 @@ function ClientContent() {
     if (emailParam) setEmail(emailParam);
     if (codeParam) {
       setInvitationCode(codeParam);
-      // Fetch invitation data to auto-fill form fields
+      // Fetch invitation data to auto-fill form fields (including role from database)
       fetchInvitationData(codeParam);
     }
     
-    // Set role from URL parameter if provided, otherwise keep default
-    if (roleParam) {
+    // Set role from URL parameter only if no invitation code is provided
+    // (Invitation data from database takes priority)
+    if (roleParam && !codeParam) {
       const mappedRole = mapApiRoleToFormRole(roleParam);
       if (mappedRole) {
         if (process.env.NODE_ENV === 'development') {
           console.log("Setting role from URL param:", roleParam, "->", mappedRole);
         }
+        setRole(roleParam);
         setFormData(prev => ({ ...prev, role: mappedRole }));
       } else {
         // If no mapping found, use the roleParam directly
         if (process.env.NODE_ENV === 'development') {
           console.log("Using roleParam directly:", roleParam);
         }
+        setRole(roleParam);
         setFormData(prev => ({ ...prev, role: roleParam }));
       }
     }
@@ -164,6 +167,31 @@ function ClientContent() {
         const data = await response.json();
         if (process.env.NODE_ENV === 'development') {
           console.log('Invitation data:', data);
+        }
+        
+        // Auto-fill role from invitation data (from database)
+        if (data.role) {
+          const mappedRole = mapApiRoleToFormRole(data.role);
+          if (mappedRole) {
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Setting role from invitation data:', data.role, '->', mappedRole);
+            }
+            setRole(data.role);
+            setFormData(prev => ({
+              ...prev,
+              role: mappedRole,
+            }));
+          } else {
+            // If no mapping found, use the role directly
+            if (process.env.NODE_ENV === 'development') {
+              console.log('Using role from invitation data directly:', data.role);
+            }
+            setRole(data.role);
+            setFormData(prev => ({
+              ...prev,
+              role: data.role,
+            }));
+          }
         }
         
         // Auto-fill form fields from invitation data

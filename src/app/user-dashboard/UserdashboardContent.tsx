@@ -3,8 +3,8 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import CountUp from 'react-countup';
-import UserProjectDropdown from "./UserProjectDropdown";
-import UserAfterSubmitProjectTable from "./UserAfterSubmitProjectTable";
+import UserProjectDropdown from "./(Filters)/UserProjectDropdown";
+import UserAfterSubmitProjectTable from "./(Projects Table)/UserAfterSubmitProjectTable";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
 
 export default function UserDashboardPage() {
@@ -12,28 +12,36 @@ export default function UserDashboardPage() {
   const [inProgressProjects, setInProgressProjects] = useState(0);
   const [, setLoading] = useState(true);
 
-  // Fetch projects data
+  // Fetch user dashboard stats
   const fetchProjects = async () => {
     try {
       const authToken = localStorage.getItem('authToken');
-      const response = await fetch('/api/projects', {
+      const response = await fetch(getApiUrl('/users/customer-user/stats'), {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(authToken && { 'Authorization': authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}` })
-        },
+        headers: getAuthHeaders(authToken || undefined),
       });
 
       if (response.ok) {
         const data = await response.json();
         const projects = data.projects || data.data || [];
-        setTotalProjects(projects.length);
+        console.log(data);
 
-        // Count in progress projects
-        const inProgressCount = projects.filter((project: { status: string }) =>
-          project.status === 'active' || project.status === 'in_progress' || project.status === 'pending'
-        ).length;
-        setInProgressProjects(inProgressCount);
+        const totalFromStats =
+          data.totalPersonalProjects ??
+          data.totalProjects ??
+          data.total ??
+          projects.length;
+        setTotalProjects(typeof totalFromStats === 'number' ? totalFromStats : 0);
+
+        const inProgressFromStats = data.inProgressProjects ?? data.activeProjects;
+        if (typeof inProgressFromStats === 'number') {
+          setInProgressProjects(inProgressFromStats);
+        } else {
+          const inProgressCount = projects.filter((project: { status: string }) =>
+            project.status === 'active' || project.status === 'in_progress' || project.status === 'pending'
+          ).length;
+          setInProgressProjects(inProgressCount);
+        }
       }
     } catch (error) {
       console.error('Error fetching projects:', error);
@@ -112,7 +120,7 @@ export default function UserDashboardPage() {
 
       {/* Projects Section (conditional) */}
       <div className="mb-6 mt-6">
-        {totalProjects === 0 ? (
+        {/* {totalProjects === 0 ? (
           <div className="bg-white rounded-lg shadow-[0_6px_25px_0_rgba(219,220,222,0.20)] flex flex-col  self-stretch pt:[75px] pb-[75px] gap-[21px]">
             <h2 className="text-lg font-semibold  text-[#080607] p-4 mb-6 text-start">Projects</h2>
             <div className="flex flex-col  items-center justify-center w-full h-full">
@@ -128,9 +136,9 @@ export default function UserDashboardPage() {
               </p>
             </div>
           </div>
-        ) : (
+        ) : ( */}
           <UserAfterSubmitProjectTable />
-        )}
+        {/* )} */}
       </div>
 
       {/* Bottom Sections */}

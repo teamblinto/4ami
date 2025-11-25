@@ -5,28 +5,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import CountUp from 'react-countup';
-import { getApiUrl, getAuthHeaders, config } from '@/lib/config';
+import { getApiUrl, getAuthHeaders } from '@/lib/config';
 import { ShimmerCard, ShimmerTable } from '@/app/Animations/shimmereffect';
 
-// --- INTERFACES ---
-interface ApiUserData {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  role: string;
-  status: string;
-  createdAt: string;
-  updatedAt: string;
-}
 
-interface ApiResponse {
-  data?: ApiUserData[];
-  users?: ApiUserData[];
-  total?: number;
-  page?: number;
-  limit?: number;
-}
 
 // --- MOCK DATA ---
 const getStatsData = (userCount: number) => [
@@ -76,6 +58,9 @@ interface Project {
   };
   companyId: string;
   projectTypeId: string;
+  projectType?: {
+    name: string;
+  };
   createdById: string;
   createdAt: string;
   updatedAt: string;
@@ -88,7 +73,16 @@ interface Project {
     id: string;
     companyName: string;
   };
-  assets: unknown[];
+  assets?: Array<{
+    id: string;
+    industry?: string;
+    assetClass?: string;
+  }>;
+  equipments?: Array<{
+    id: string;
+    industry?: string;
+    assetClass?: string;
+  }>;
   reports: unknown[];
 }
 
@@ -163,18 +157,25 @@ interface QuickAction {
 const getStatusClass = (status: string) => {
   switch (status.toLowerCase()) {
     case 'completed':
-      return "bg-[#FEF0F0] text-[#ED272C]";
+      return "text-[#ED272C]";
     case 'pending':
-      return "bg-[#FFF7E6] text-[#FF8800]";
+      return "text-[#FF8800]";
     case 'active':
-      return "bg-[#E6F7FF] text-[#1890FF]";
+      return "text-[#1890FF]";
     case 'approved':
-      return "bg-[#F6FFED] text-[#52C41A]";
+      return "text-[#52C41A]";
     case 'cancelled':
-      return "bg-[#F5F5F5] text-[#8C8C8C]";
+      return "text-[#8C8C8C]";
     default:
-      return "bg-[#EDEDED] text-[#4B4F58]";
+      return "text-[#4B4F58]";
   }
+};
+
+const getActionClass = (status: string) => {
+  if (status === 'approved' || status === 'cancelled' || status === 'completed') {
+    return 'bg-gray-200 text-gray-800';
+  }
+  return 'bg-red-500 text-white';
 };
 
 // --- SUB-COMPONENTS ---
@@ -233,6 +234,7 @@ const StatCard = ({
 );
 
 const ProjectsTable = () => {
+  const router = useRouter();
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -243,15 +245,11 @@ const ProjectsTable = () => {
       setError(null);
 
       const authToken = localStorage.getItem('authToken');
-      // Use Next.js API proxy route to avoid mixed content errors
-      const url = `/api/projects?page=1&limit=3`; // Limit to 3 for dashboard
+      const url = getApiUrl(`/projects/user/projects?page=1&limit=3`);
 
       const response = await fetch(url, {
         method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          ...(authToken && { 'Authorization': authToken.startsWith('Bearer ') ? authToken : `Bearer ${authToken}` })
-        },
+        headers: getAuthHeaders(authToken || undefined),
       });
 
       if (!response.ok) {
@@ -272,18 +270,6 @@ const ProjectsTable = () => {
   useEffect(() => {
     fetchProjects();
   }, []);
-
-  const formatDateRange = (startDate: string, endDate: string | null) => {
-    const start = new Date(startDate).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    });
-    const end = endDate ? new Date(endDate).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric'
-    }) : 'Ongoing';
-    return `${start} - ${end}`;
-  };
 
   return (
     <div className="bg-white p-4 rounded-lg ">
@@ -327,67 +313,120 @@ const ProjectsTable = () => {
           </button>
         </div>
       </div> */}
-      <div className="overflow-x-auto">
-        <table className="min-w-full text-sm border-separate border-spacing-0 border-t border-[#D0D5DD] ">
-          <thead>
-            <tr className="bg-white">
-              <th className="px-6 py-2 w-1/7 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-l border-r">
-                Project ID
+      <div className="overflow-hidden">
+        <table className="w-full text-sm border-collapse table-fixed" style={{ tableLayout: 'fixed' }}>
+        <thead className="bg-white">
+            <tr>
+              {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th> */}
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project ID</span>
+                </div>
               </th>
-              <th className="px-6 py-2 w-1/3 text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
-                Project
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '13%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project type</span>
+                </div>
               </th>
-              <th className="px-6 py-2 w-1/5 text-left text-xs font-medium text-[#6C757D] border-b border-[#D0D5DD]  border-r">
-                Time (Start to End)
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '18%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project Name</span>
+                </div>
               </th>
-              <th className="px-6 py-2 w-1/5  text-left text-xs font-medium text-[#6C757D]  border-b border-[#D0D5DD]  border-r">
-                Status
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Industry</span>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '11%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Asset Type</span>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '10%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Submit Date</span>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '8%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Status</span>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '12%' }}>
+                <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Action</span>
               </th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <ShimmerTable rows={3} cols={4} />
+              <ShimmerTable rows={3} cols={8} />
             ) : error ? (
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center text-red-500">
+                <td colSpan={8} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
                   Error: {error}
                 </td>
               </tr>
             ) : projects.length === 0 ? (
               <tr>
-                <td colSpan={4} className="px-6 py-8 text-center text-gray-500">
+                <td colSpan={8} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
                   No projects found
                 </td>
               </tr>
             ) : (
               projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
+                const submissionDate = project.submitDate 
+                  ? new Date(project.submitDate).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })
+                  : 'N/A';
+                
+                // Extract industry and assetClass from equipments or assets array
+                const equipmentData = project.equipments?.[0] || project.assets?.[0];
+                const industry = equipmentData?.industry || 'N/A';
+                const assetType = equipmentData?.assetClass || 'N/A';
+                
                 return (
                   <tr
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
                     style={{ height: '64px' }}
                   >
-                    <td className="px-6  text-gray-700 font-medium border-b border-[#D0D5DD] border-l border-r align-middle" style={{ height: '64px' }}>
-                      {project.projectNumber || project.id}
+                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectNumber || project.id}</div>
                     </td>
-                    <td className="px-6  text-gray-700 border-b border-[#D0D5DD]  border-r align-middle" style={{ height: '64px' }}>
-                      {project.name}
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectType?.name || 'N/A'}</div>
                     </td>
-                    <td className="px-6  text-gray-700 border-b border-[#D0D5DD] border-r align-middle" style={{ height: '64px' }}>
-                      {formatDateRange(project.startDate, project.endDate)}
+                    <td className="px-4 py-3 text-[#343A40] font-medium border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap max-w-full" title={project.name}>{project.name}</div>
                     </td>
-                    <td className="px-6  border-b border-[#D0D5DD] border-r align-middle" style={{ height: '64px' }}>
-                      <div className="flex justify-center items-center">
-                        <span
-                          className={`px-5 py-1 rounded-full text-[14px] font-regular ${getStatusClass(
-                            project.status
-                          )}`}
-                        >
-                          {project.status}
-                        </span>
-                      </div>
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{industry}</div>
+                    </td>
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{assetType}</div>
+                    </td>
+                    <td className="px-4 py-3 text-[#343A40] border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{submissionDate}</div>
+                    </td>
+                    <td className={`px-4 py-3 text-sm font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`} style={{ height: '64px' }}>
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.status}</div>
+                    </td>
+                    <td className="px-4 py-3 border border-[#D0D5DD] align-middle" style={{ height: '64px' }}>
+                      <button
+                        onClick={() => {
+                          router.push('/dashboard/manage-projects/project-report');
+                        }}
+                        className={`px-2 cursor-pointer py-2 hover:bg-red-600 rounded-md text-xs font-semibold w-full truncate block overflow-hidden text-ellipsis whitespace-nowrap ${getActionClass(project.status)}`}
+                      >
+                        {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
+                      </button>
                     </td>
                   </tr>
                 );
@@ -518,7 +557,7 @@ export default function DashboardContent() {
       setUserCountError(null);
 
       const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
-      const url = `${config.API_BASE_URL}/users?page=1&limit=1`; // Only need total count
+      const url = getApiUrl('/users/dashboard/stats');
 
       const response = await fetch(url, {
         method: 'GET',
@@ -529,12 +568,16 @@ export default function DashboardContent() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result: ApiResponse = await response.json();
-      console.log('User count API Response:', result);
+      const result = await response.json();
+      console.log('User stats API Response:', result);
 
-      // Handle different possible response structures
-      const total = result.total || result.data?.length || result.users?.length || 0;
-      setUserCount(total);
+      if (typeof result.totalUsers === 'number') {
+        setUserCount(result.totalUsers);
+      } else {
+        // Fallback for unexpected shapes
+        const fallbackTotal = result.total || result.data?.length || result.users?.length || 0;
+        setUserCount(fallbackTotal);
+      }
     } catch (err) {
       console.error('Error fetching user count:', err);
       setUserCountError(err instanceof Error ? err.message : 'Failed to fetch user count');

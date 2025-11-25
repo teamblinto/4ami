@@ -203,34 +203,34 @@ export default function ManageAssets() {
         <table className="min-w-full border-collapse">
           <thead className="bg-white">
             <tr className=''>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+              {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
                 Select
-              </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              </th> */}
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Asset</span>
                   <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Industry</span>
                   <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Make</span>
                   <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
                 <div className="flex items-center justify-between">
                   <span>Model</span>
                   <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
                 </div>
               </th>
-              <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
+              <th className="px-6 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">Action</th>
             </tr>
           </thead>
           <tbody>
@@ -247,18 +247,18 @@ export default function ManageAssets() {
                 const isStriped = index % 2 === 0;
                 return (
                   <tr key={asset.id} className={isStriped ? 'bg-gray-50' : 'bg-white'}>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    {/* <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD] text-center">
                       <input type="checkbox" className="rounded border-gray-300 w-4 h-4 cursor-pointer" />
-                    </td>
-                    <td className="px-6  whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">{asset.assetClassName || 'N/A'}</td>
-                    <td className="px-6  whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.industryName || 'N/A'}</td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.makeName || 'N/A'}</td>
-                    <td className="px-6  whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">{asset.modelName || 'N/A'}</td>
-                    <td className="px-6  whitespace-nowrap border border-[#D0D5DD]">
-                      <button className="p-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                    </td> */}
+                    <td className="px-6 py-3  whitespace-nowrap text-[14px] text-[#343A40] font-medium border border-[#D0D5DD]">{asset.assetClassName || 'N/A'}</td>
+                    <td className="px-6  py-3 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD]">{asset.industryName || 'N/A'}</td>
+                    <td className="px-6  py-3 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD]">{asset.makeName || 'N/A'}</td>
+                    <td className="px-6  py-3 whitespace-nowrap text-[14px] text-[#343A40] border border-[#D0D5DD]">{asset.modelName || 'N/A'}</td>
+                    <td className="px-6  whitespace-nowrap border text-[14px] border-[#D0D5DD]">
+                      <button className="p-2 py-2  border border-[#D0D5DD] rounded-md cursor-pointer">
                         <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
                       </button>
-                      <button className="p-3 ml-3 border border-[#D0D5DD] rounded-md cursor-pointer">
+                      <button className="p-2 ml-3 py-2   border border-[#D0D5DD] rounded-md cursor-pointer">
                         <Image src="/bin.svg" alt="Delete" width={12} height={12} />
                       </button>
                     </td>

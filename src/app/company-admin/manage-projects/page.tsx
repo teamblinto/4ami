@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { getApiUrl, getAuthHeaders } from '@/lib/config';
+import { ShimmerEffect } from '@/app/Animations/shimmereffect';
 
 interface Project {
   id: string;
@@ -32,16 +32,45 @@ interface Project {
     id: string;
     companyName: string;
   };
-  assets: unknown[];
+  projectType?: {
+    name: string;
+  };
+  assets?: Array<{
+    id: string;
+    industry?: string;
+    assetClass?: string;
+  }>;
+  equipments?: Array<{
+    id: string;
+    industry?: string;
+    assetClass?: string;
+  }>;
   reports: unknown[];
 }
 
-interface ProjectsResponse {
-  projects: Project[];
-  total: number;
-  page: number;
-  limit: number;
-}
+const getStatusClass = (status: string) => {
+  switch (status) {
+    case 'pending':
+      return 'text-yellow-600';
+    case 'active':
+      return 'text-red-600';
+    case 'approved':
+      return 'text-green-600';
+    case 'cancelled':
+      return 'text-gray-400';
+    case 'completed':
+      return 'text-blue-600';
+    default:
+      return 'text-gray-700';
+  }
+};
+
+const getActionClass = (status: string) => {
+  if (status === 'approved' || status === 'cancelled' || status === 'completed') {
+    return 'bg-gray-200 text-gray-800';
+  }
+  return 'bg-red-500 text-white';
+};
 
 export default function CompanyAdminManageProjectsPage() {
   const router = useRouter();
@@ -53,45 +82,17 @@ export default function CompanyAdminManageProjectsPage() {
   const [totalItems, setTotalItems] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
-  // Fetch projects for company admin
-  const fetchProjects = async (page: number = 1, limit: number = 10) => {
+  // Fetch projects with pagination
+  const fetchProjects = useCallback(async (page: number = currentPage, limit: number = itemsPerPage) => {
     try {
       setLoading(true);
       setError(null);
       
       const authToken = localStorage.getItem('authToken');
       
-      // Check all localStorage keys to see what's available
-      console.log('All localStorage keys:', Object.keys(localStorage));
-      console.log('Auth token:', authToken);
-      
-      // Get user data from localStorage (the app uses 'userData' key)
-      const userDataString = localStorage.getItem('userData');
-      let userProfile: Record<string, unknown> = {};
-      
-      if (userDataString) {
-        try {
-          userProfile = JSON.parse(userDataString);
-          console.log('User Data:', userProfile);
-          console.log('Available keys:', Object.keys(userProfile));
-        } catch (e) {
-          console.error('Failed to parse userData:', e);
-        }
-      } else {
-        console.log('No userData found in localStorage');
-      }
-      
-      // Since the user data doesn't have companyId, we'll use the user's ID
-      // The backend should filter projects by the authenticated user's company
-      const userId = userProfile.id as string;
-      
-      if (!userId) {
-        console.error('User ID not found. Available profile data:', userProfile);
-        throw new Error('User ID not found in user profile. Please ensure you are logged in.');
-      }
-      
-      // Try different API approaches - the backend should filter by authenticated user's company
-      const url = getApiUrl(`/projects?page=${page}&limit=${limit}`);
+      // Fetch projects with pagination
+      const url = getApiUrl(`/projects/user/projects?page=${page}&limit=${limit}`);
+      console.log('[CompanyAdmin] Fetching projects from:', url);
       
       const response = await fetch(url, {
         method: 'GET',
@@ -102,22 +103,37 @@ export default function CompanyAdminManageProjectsPage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result: ProjectsResponse = await response.json();
-      console.log('Company Admin Projects Response:', result);
-      setProjects(result.projects || []);
-      setTotalItems(result.total || 0);
-      setCurrentPage(result.page || 1);
+      const result = await response.json();
+      console.log('[CompanyAdmin] Projects data received:', result);
+      
+      // Handle response - could be array or object with projects array
+      let projectsList: Project[] = [];
+      let totalCount = 0;
+      
+      if (Array.isArray(result)) {
+        projectsList = result;
+        totalCount = result.length;
+      } else if (result.projects && Array.isArray(result.projects)) {
+        projectsList = result.projects;
+        totalCount = result.total || result.projects.length;
+      } else if (result.data && Array.isArray(result.data)) {
+        projectsList = result.data;
+        totalCount = result.total || result.data.length;
+      }
+      
+      setProjects(projectsList);
+      setTotalItems(totalCount);
     } catch (err) {
       console.error('Error fetching company projects:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch projects');
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentPage, itemsPerPage]);
 
   useEffect(() => {
-    fetchProjects(currentPage, itemsPerPage);
-  }, [currentPage, itemsPerPage]);
+    fetchProjects();
+  }, [fetchProjects]);
 
   // Handle page change
   const handlePageChange = (newPage: number) => {
@@ -186,9 +202,6 @@ export default function CompanyAdminManageProjectsPage() {
           <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">
             Clear Filter
           </button>
-          <button className="h-8 px-3 border border-gray-300 rounded-md text-xs bg-white text-red-600 cursor-pointer">
-            Edit Column
-          </button>
         </div>
         <div className="text-sm text-gray-500 flex items-center">
           Rows per page:
@@ -205,114 +218,167 @@ export default function CompanyAdminManageProjectsPage() {
       </div>
 
       {/* Projects Table */}
-      <div className="bg-white overflow-x-auto">
-        {loading ? (
-          <div className="text-center py-12 text-gray-600">Loading projects...</div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-2">No projects found</div>
-            <div className="text-gray-400 text-sm">
-              {error ? 'Unable to load projects from the server.' : 'Start by creating your first project.'}
-            </div>
-            {!error && (
-              <button 
-                className="mt-4 bg-red-500 text-white px-6 py-2 rounded-md hover:bg-red-600 cursor-pointer"
-              >
-                Create First Project
-              </button>
-            )}
-          </div>
-        ) : (
-          <table className="min-w-full border-collapse">
-            <thead className="bg-white">
+      <div className="bg-white overflow-hidden">
+        <table className="w-full border-collapse table-fixed" style={{ tableLayout: 'fixed' }}>
+          <thead className="bg-white">
+            <tr>
+              {/* <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
+                Select
+              </th> */}
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project ID</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '13%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project type</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '18%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Project Name</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '9%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Industry</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '11%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Asset Type</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '10%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Submit Date</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '8%' }}>
+                <div className="flex items-center justify-between gap-1 min-w-0">
+                  <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Status</span>
+                  <svg width="17" height="16" viewBox="0 0 17 16" fill="none" xmlns="http://www.w3.org/2000/svg" className="flex-shrink-0">
+                    <path d="M2.7334 5.16602H13.4001M4.40007 7.83268H11.7334M5.7334 10.4993H10.4001" stroke="#6C757D" strokeWidth="1.5" strokeLinecap="round"/>
+                  </svg>
+                </div>
+              </th>
+              <th className="px-4 py-2 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]" style={{ width: '12%' }}>
+                <span className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">Action</span>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {loading ? (
+              <>
+                {Array.from({ length: Math.min(itemsPerPage, 10) }).map((_, rowIndex) => (
+                  <tr
+                    key={rowIndex}
+                    className={rowIndex % 2 === 0 ? "bg-gray-50" : "bg-white"}
+                     
+                  >
+                    <td colSpan={8} className="px-6 pt-4 pb-4 align-middle border border-[#D0D5DD]"  >
+                      <ShimmerEffect className="h-5 w-full" />
+                    </td>
+                  </tr>
+                ))}
+              </>
+            ) : error ? (
               <tr>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD] w-12">
-                  Select
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  <div className="flex items-center justify-between">
-                    <span>Project ID</span>
-                    <Image src="/Sort.svg" alt="Sort" width={16} height={16} />
-                  </div>
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Description
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Status
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Start Date
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                Submit Date
-                </th>
-                <th className="px-6 pt-3 pb-3 text-left text-xs font-medium text-[#6C757D] border border-[#D0D5DD]">
-                  Action
-                </th>
+                <td colSpan={8} className="px-6 py-8 text-center text-red-500 border border-[#D0D5DD]">
+                  Error: {error}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => {
+            ) : projects.length === 0 ? (
+              <tr>
+                <td colSpan={8} className="px-6 py-8 text-center text-gray-500 border border-[#D0D5DD]">
+                  <div className="text-gray-500 text-lg mb-2">No projects found</div>
+                  <div className="text-gray-400 text-sm">
+                    Start by creating your first project.
+                  </div>
+                </td>
+              </tr>
+            ) : (
+              projects.map((project, index) => {
                 const isStriped = index % 2 === 0;
+                const submissionDate = project.submitDate 
+                  ? new Date(project.submitDate).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'short', 
+                      day: 'numeric' 
+                    })
+                  : 'N/A';
+                
+                // Extract industry and assetClass from equipments or assets array
+                const equipmentData = project.equipments?.[0] || project.assets?.[0];
+                const industry = equipmentData?.industry || 'N/A';
+                const assetType = equipmentData?.assetClass || 'N/A';
             
                 return (
                   <tr
                     key={project.id}
                     className={isStriped ? "bg-gray-50" : "bg-white"}
+                     
                   >
-                    <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center">
+                    {/* <td className="px-6 whitespace-nowrap border border-[#D0D5DD] text-center align-middle"  >
                       <input
                         type="checkbox"
                         className="rounded accent-[#ED272C] border-gray-300 w-4 h-4 cursor-pointer"
                       />
+                    </td> */}
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] font-medium border border-[#D0D5DD] align-middle"  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectNumber || project.id}</div>
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] font-medium border border-[#D0D5DD]">
-                      {project.projectNumber}
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.projectType?.name || 'N/A'}</div>
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {project.description || 'No description'}
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] font-medium border border-[#D0D5DD] align-middle"  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap max-w-full" title={project.name}>{project.name}</div>
                     </td>
-                    <td className="px-6 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      <span className={`px-2 py-1 rounded-full text-xs ${
-                        project.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        project.status === 'active' ? 'bg-red-100 text-red-800' :
-                        project.status === 'approved' ? 'bg-green-100 text-green-800' :
-                        project.status === 'cancelled' ? 'bg-gray-100 text-gray-800' :
-                        project.status === 'completed' ? 'bg-blue-100 text-blue-800' :
-                        'bg-gray-100 text-gray-800'
-                      }`}>
-                        {project.status}
-                      </span>
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{industry}</div>
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {new Date(project.startDate).toLocaleDateString()}
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{assetType}</div>
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap text-[#343A40] border border-[#D0D5DD]">
-                      {project.submitDate ? new Date(project.submitDate).toLocaleDateString() : 'N/A'}
+                    <td className="px-4 py-3 text-[14px] text-[#343A40] border border-[#D0D5DD] align-middle"  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{submissionDate}</div>
                     </td>
-                    <td className="px-6 pt-4 pb-4 whitespace-nowrap border border-[#D0D5DD]">
-                      <div className="flex items-center justify-center gap-4">
-                        <button 
-                          onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
-                          className="px-3 py-1 bg-red-500 text-white text-xs rounded-md hover:bg-red-600 cursor-pointer"
-                        >
-                          View Report
-                        </button>
-                        <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer hover:bg-gray-50">
-                          <Image src="/pencil.svg" alt="Edit" width={12} height={12} />
-                        </button>
-                        <button className="p-2 border border-[#D0D5DD] rounded-md cursor-pointer hover:bg-gray-50">
-                          <Image src="/bin.svg" alt="Delete" width={12} height={12} />
-                        </button>
-                      </div>
+                    <td className={`px-4 py-3 text-[14px] font-medium border border-[#D0D5DD] align-middle ${getStatusClass(project.status)}`}  >
+                      <div className="truncate block overflow-hidden text-ellipsis whitespace-nowrap">{project.status}</div>
+                    </td>
+                    <td className="px-4 py-3 text-[14px] font-medium  border border-[#D0D5DD] align-middle"  >
+                      <button
+                        onClick={() => router.push(`/company-admin/manage-projects/project-report?projectId=${project.id}`)}
+                        className={`px-2 cursor-pointer py-2 rounded-md text-xs font-semibold w-full truncate block overflow-hidden text-ellipsis whitespace-nowrap ${getActionClass(project.status)}`}
+                      >
+                        {project.status === 'approved' || project.status === 'cancelled' || project.status === 'completed' ? 'View Report' : 'Review'}
+                      </button>
                     </td>
                   </tr>
                 );
-              })}
-            </tbody>
-          </table>
-        )}
+              })
+            )}
+          </tbody>
+        </table>
       </div>
 
       {error && (

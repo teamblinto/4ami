@@ -7,9 +7,9 @@ import { useSidebar } from "../contexts/SidebarContext";
 import ProtectedRoute from "../components/ProtectedRoute";
 import ScrollStyles from "../Animations/Scroll";
 import toast from "react-hot-toast";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
-export default function UserDashboardLayout({
+export default function CompanyAdminLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -27,20 +27,43 @@ export default function UserDashboardLayout({
     read?: boolean;
     avatar?: string;
   }[]>([
-    { id: '1', title: 'There are pending service approvals that need your attention. Please review the service details to approve or reject', date: 'April 15, 2025', avatar: '/Display-Picture.svg' },
-    { id: '2', title: 'The residual value analysis for [Asset Name] has been completed. Please review the results', date: 'March 28, 2025', avatar: '/Display-Picture.svg', read: true },
-    { id: '3', title: 'A new service request has been submitted. Review the request details to proceed', date: 'March 20, 2025', avatar: '/Display-Picture.svg' },
-    { id: '4', title: 'A new user has registered on the platform. Please review their details and approve the account if necessary', date: 'March 20, 2025', avatar: '/Display-Picture.svg', read: true },
+    {
+      id: '1',
+      title: 'There are pending service approvals that need your attention. Please review the service details to approve or reject',
+      date: 'April 15, 2025',
+      avatar: '/Display-Picture.svg',
+    },
+    {
+      id: '2',
+      title: 'The residual value analysis for [Asset Name] has been completed. Please review the results',
+      date: 'March 28, 2025',
+      avatar: '/Display-Picture.svg',
+      read: true,
+    },
+    {
+      id: '3',
+      title: 'A new service request has been submitted. Review the request details to proceed',
+      date: 'March 20, 2025',
+      avatar: '/Display-Picture.svg',
+    },
+    {
+      id: '4',
+      title: 'A new user has registered on the platform. Please review their details and approve the account if necessary',
+      date: 'March 20, 2025',
+      avatar: '/Display-Picture.svg',
+      read: true,
+    },
   ]);
   const [userData, setUserData] = useState<{
     firstName?: string;
     lastName?: string;
     email?: string;
+    companyId?: string | null;
   } | null>(null);
 
   const isActive = (path: string) => {
-    if (path === "/user-dashboard") {
-      return pathname === "/user-dashboard" || pathname.startsWith("/user-dashboard/notifications");
+    if (path === "/company-admin") {
+      return pathname === "/company-admin" || pathname.startsWith("/company-admin/notifications");
     }
     return pathname.startsWith(path);
   };
@@ -48,28 +71,50 @@ export default function UserDashboardLayout({
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userData');
-      toast.success('Logged out successfully',{
-        position: 'top-center',
-        icon: null,
-        style: {
-          background: 'black',
-          color: 'white',
-          borderRadius: '4px',
+    toast.success('Logged out successfully', {
+      position: 'top-center',
+      icon: null,
+      style: {
+        background: 'black',
+        color: 'white',
+        borderRadius: '4px',
 
-        }
-      } 
-        
-      )
-    
+      }
+    })
     router.push('/login');
   };
 
   useEffect(() => {
     const userDataString = localStorage.getItem('userData');
     if (userDataString) {
-      setUserData(JSON.parse(userDataString));
+      try {
+        setUserData(JSON.parse(userDataString));
+      } catch { }
     }
   }, []);
+
+  // Redirect company admins to register-company if companyId is null
+  useEffect(() => {
+    try {
+      const userDataString = localStorage.getItem('userData');
+      if (userDataString) {
+        const userData = JSON.parse(userDataString);
+        // Check if companyId is null or undefined
+        // Also check the companyRegistered flag as a fallback
+        const isCompanyRegistered = localStorage.getItem('companyRegistered') === 'true';
+        const hasCompanyId = userData.companyId && userData.companyId !== null;
+        
+        if (!hasCompanyId && !isCompanyRegistered) {
+          // Only redirect if not already on register-company page
+          if (pathname !== '/register-company') {
+            router.push('/register-company');
+          }
+        }
+      }
+    } catch (error) {
+      console.error('Error checking companyId:', error);
+    }
+  }, [router, pathname]);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -100,14 +145,13 @@ export default function UserDashboardLayout({
   }, [isDropdownOpen, isNotificationsOpen]);
 
   return (
-    <ProtectedRoute requiredRole="CUSTOMER_USER">
+    <ProtectedRoute requiredRole="CUSTOMER_ADMIN">
       <div className="flex h-screen bg-gray-100 overflow-hidden">
         {/* Sidebar */}
         <aside
-          className={`bg-white flex flex-col justify-between transition-all duration-300 h-screen sticky top-0 dashboard-sidebar flex-shrink-0 ${
-            isSidebarCollapsed ? 'collapsed' : ''
-          }`}
-          style={{ 
+          className={`bg-white flex flex-col justify-between transition-all duration-300 h-screen sticky top-0 dashboard-sidebar flex-shrink-0 ${isSidebarCollapsed ? 'collapsed' : ''
+            }`}
+          style={{
             width: isSidebarCollapsed ? '64px' : '230px',
             minWidth: isSidebarCollapsed ? '64px' : '230px',
             maxWidth: isSidebarCollapsed ? '64px' : '230px'
@@ -115,9 +159,8 @@ export default function UserDashboardLayout({
         >
           <div>
             <div
-              className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${
-                isSidebarCollapsed ? "justify-center" : "justify-between"
-              }`}
+              className={`pt-[35px] px-3 pb-[80px] flex gap-3 items-center ${isSidebarCollapsed ? "justify-center" : "justify-between"
+                }`}
             >
               {!isSidebarCollapsed && (
                 <div className="flex items-center">
@@ -140,26 +183,26 @@ export default function UserDashboardLayout({
                     <Image src="/sidebar-left.svg" alt="Open sidebar" width={24} height={24} />
                   )}
                 </button>
-                
+
                 {/* Hover tooltip */}
                 {/* <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap z-50 pointer-events-none">
                   {isSidebarCollapsed ? "Open sidebar" : "Close sidebar"}
                 </div> */}
               </div>
+
             </div>
 
-            <nav className="flex-grow p-3">
+            <nav className="flex-grow p-3 ">
               <ul>
                 <li className="mb-2">
                   <Link
-                    href="/user-dashboard"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/user-dashboard")
-                        ? "text-[#FFFFFF] bg-[#ED272C]"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                    href="/company-admin"
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin")
+                      ? "text-[#FFFFFF] bg-[#ED272C]"
+                      : "text-gray-700 hover:bg-gray-100"
+                      }`}
                   >
-                    {isActive("/user-dashboard") ? (
+                    {isActive("/company-admin") ? (
                       <Image src="/Module-Icons/home.svg" alt="dashboard" width={20} height={20} />
                     ) : (
                       <Image src="/Module-Icons/home-b.svg" alt="dashboard" width={20} height={20} />
@@ -173,17 +216,16 @@ export default function UserDashboardLayout({
 
                 <li className="mb-2">
                   <Link
-                    href="/user-dashboard/projects"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/user-dashboard/projects")
-                        ? "bg-[#ED272C] text-[#FFFFFF]"
-                        : "text-[#080607] hover:bg-gray-100"
-                    }`}
+                    href="/company-admin/manage-projects"
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-projects")
+                      ? "bg-[#ED272C] text-[#FFFFFF]"
+                      : "text-[#080607] hover:bg-gray-100"
+                      }`}
                   >
-                    {isActive("/user-dashboard/projects") ? (
-                      <Image src="/Module-Icons/manage-p.svg" alt="projects" width={20} height={20} />
+                    {isActive("/company-admin/manage-projects") ? (
+                      <Image src="/Module-Icons/manage-p.svg" alt="manage-projects" width={20} height={20} />
                     ) : (
-                      <Image src="/Module-Icons/manage-projects.svg" alt="projects" width={20} height={20} />
+                      <Image src="/Module-Icons/manage-projects.svg" alt="manage-projects" width={20} height={20} />
                     )}
 
                     {!isSidebarCollapsed && (
@@ -192,39 +234,58 @@ export default function UserDashboardLayout({
                   </Link>
                 </li>
 
-                {/* <li className="mb-2">
+                <li className="mb-2">
                   <Link
-                    href="/user-dashboard/profile"
-                    className={`flex cursor-pointer items-center p-2 w-full text-left ${
-                      isActive("/user-dashboard/profile")
-                        ? "bg-[#ED272C] text-[#FFFFFF]"
-                        : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                    href="/company-admin/manage-users"
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-users")
+                      ? "bg-[#ED272C] text-[#FFFFFF]"
+                      : "text-[#080607] hover:bg-gray-100"
+                      }`}
                   >
-                    {isActive("/user-dashboard/profile") ? (
-                      <Image src="/Module-Icons/manage-a.svg" alt="profile" width={20} height={20} />
+                    {isActive("/company-admin/manage-users") ? (
+                      <Image src="/Module-Icons/manage-u.svg" alt="Active Manage Users" width={20} height={20} />
                     ) : (
-                      <Image src="/Module-Icons/manage-assets.svg" alt="profile" width={20} height={20} />
+                      <Image src="/Module-Icons/manage-users.svg" alt="Manage Users" width={20} height={20} />
                     )}
 
                     {!isSidebarCollapsed && (
-                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Profile</span>
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Users</span>
                     )}
                   </Link>
-                </li> */}
+                </li>
+
+                <li className="mb-2">
+                  <Link
+                    href="/company-admin/manage-company-profile"
+                    className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/manage-company-profile")
+                      ? "bg-[#ED272C] text-[#FFFFFF]"
+                      : "text-gray-700 hover:bg-gray-100"
+                      }`}
+                  >
+                    {isActive("/company-admin/manage-company-profile") ? (
+                      <Image src="/Module-Icons/manage-a.svg" alt="Active Manage Profile" width={20} height={20} />
+                    ) : (
+                      <Image src="/Module-Icons/manage-assets.svg" alt="Manage Profile" width={20} height={20} />
+                    )}
+
+                    {!isSidebarCollapsed && (
+                      <span className="ml-3 whitespace-nowrap overflow-hidden">Manage Company</span>
+                    )}
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>
 
           <div className="p-4 border-t">
             <Link
-              href="/user-dashboard/settings"
-              className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/user-dashboard/settings")
+              href="/company-admin/settings"
+              className={`flex cursor-pointer items-center p-2 w-full text-left ${isActive("/company-admin/settings")
                   ? "bg-[#ED272C] text-[#FFFFFF]"
                   : "text-gray-700 hover:bg-gray-100"
                 }`}
             >
-              <div className={isActive("/user-dashboard/settings") ? "brightness-0 invert" : ""}>
+              <div className={isActive("/company-admin/settings") ? "brightness-0 invert" : ""}>
                 <Image src="/Module-Icons/settings.svg" alt="" width={20} height={20} />
               </div>
               {!isSidebarCollapsed && <span className="ml-3 whitespace-nowrap overflow-hidden">Settings</span>}
@@ -232,15 +293,15 @@ export default function UserDashboardLayout({
           </div>
         </aside>
 
-        {/* Main Content */}
+        {/* Main Content Common */}
         <main className="flex-grow flex flex-col bg-[#FAFAFA] min-w-0 overflow-y-auto dashboard-scroll">
           {/* Top Bar */}
           <div className="sticky top-0 z-40 bg-[#FAFAFA] px-8 pt-[24px] pb-6 flex items-center justify-between">
-            <div className="relative w-[320px]">
+            <div className="relative w-[320px] ">
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full p-2 pl-12 rounded-lg border placeholder: text-[#ADB5BD] border-[#CED4DA] bg-[#FFFFFF] focus:outline-none"
+                className="w-full p-2 pl-12  rounded-lg border placeholder: text-[#ADB5BD] border-[#CED4DA] bg-[#FFFFFF] focus:outline-none "
               />
               <svg
                 className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400"
@@ -260,13 +321,13 @@ export default function UserDashboardLayout({
               <div className="relative notif-container">
                 <button
                   onClick={toggleNotifications}
-                  className="relative cursor-pointer text-gray-600 hover:text-gray-800"
+                  className="relative text-gray-600 hover:text-gray-800 cursor-pointer"
                   aria-haspopup="true"
                   aria-expanded={isNotificationsOpen}
                 >
                   <Image src="/notification-bell.svg" alt="Notifications" width={20} height={20} style={{ width: "auto", height: "auto" }} />
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                    {notifications.filter(n => !n.read).length || notifications.length}
+                    {(notifications.filter(n => !n.read).length) || notifications.length}
                   </span>
                 </button>
 
@@ -298,7 +359,7 @@ export default function UserDashboardLayout({
                     </ul>
                     <div className="px-4 py-3">
                       <Link
-                        href="/user-dashboard/notifications"
+                        href="/company-admin/notifications"
                         className="block w-full text-center text-sm text-gray-600 hover:text-gray-800 cursor-pointer"
                         onClick={() => setIsNotificationsOpen(false)}
                       >
@@ -311,16 +372,16 @@ export default function UserDashboardLayout({
 
               {/* User Profile Dropdown */}
               <div className="relative dropdown-container">
-                <button 
+                <button
                   onClick={toggleDropdown}
                   className="relative  flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-800"
                   title="User Menu"
                 >
-                <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
+                  <Image src="/Display-Picture.svg" alt="User Profile" width={28} height={28} style={{ width: "auto", height: "auto" }} />
                   {isDropdownOpen ? (
-                    <Image src="/arrow-up.svg"  alt="Close dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
+                    <Image src="/arrow-up.svg" alt="Close dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
                   ) : (
-                    <Image src="/arrow.svg"  alt="Open dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
+                    <Image src="/arrow.svg" alt="Open dropdown" width={16} height={16} style={{ width: "auto", height: "auto" }} />
                   )}
                 </button>
 
@@ -331,8 +392,8 @@ export default function UserDashboardLayout({
                         <Image src="/Display-Picture.svg" alt="User Profile" width={40} height={40} style={{ width: "auto", height: "auto" }} />
                         <div>
                           <h3 className="font-semibold text-gray-900">
-                            {userData?.firstName && userData?.lastName 
-                              ? `${userData.firstName} ${userData.lastName}` 
+                            {userData?.firstName && userData?.lastName
+                              ? `${userData.firstName} ${userData.lastName}`
                               : 'John Doe'}
                           </h3>
                           <p className="text-sm text-gray-500 flex items-center gap-1">
@@ -347,26 +408,26 @@ export default function UserDashboardLayout({
                     </div>
 
                     <div className="py-2">
-                      <button className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer">
+                      <button className="w-full cursor-pointer px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3">
                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         View profile
                       </button>
                       <Link
-                        href="/user-dashboard/settings"
-                        className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer"
+                        href="/company-admin/settings"
+                        className="w-full cursor-pointer px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3"
                         onClick={() => setIsDropdownOpen(false)}
                       >
                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756.426-1.756 2.924 0 3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                         </svg>
                         Settings
                       </Link>
                       <button
                         onClick={handleLogout}
-                        className="w-full px-4 py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3 cursor-pointer"
+                        className="w-full px-4 cursor-pointer py-2 text-left text-gray-700 hover:bg-gray-50 flex items-center gap-3"
                       >
                         <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
